@@ -11,8 +11,8 @@ public class MainGameController : MonoBehaviour
     public GameObject character1;
     public GameObject character2;
 
-    public GameObject MainChracter;
-    public GameObject[] OtherPlayers= new GameObject[20];
+    public GameObject mainChracter;
+    //public GameObject[] OtherPlayers= new GameObject[20];
     // Use this for initialization
     void Start()
     {
@@ -36,10 +36,10 @@ public class MainGameController : MonoBehaviour
     void OnIdentify(SocketIOEvent Obj)
     {
         //TO DO CREATE DYNAMICALLY AN OBJECT
-        MainChracter = Instantiate(character1, GetVectorPositonFromJson(Obj.data), Quaternion.identity);
-        Debug.Log("Second Commit Test");
+        mainChracter = Instantiate(character1, GetVectorPositonFromJson(Obj.data), Quaternion.identity);
+        //Debug.Log("Second Commit Test");
 
-        var players = Obj.data.GetField("allPlayersAtCurrentTime");
+       /* var players = Obj.data.GetField("allPlayersAtCurrentTime");
         int k = 0;
         for (int i = 0; i < players.list.Count; i++)
         {
@@ -53,7 +53,7 @@ public class MainGameController : MonoBehaviour
         for(int i = 0; i < OtherPlayers.Length; i++)
         {
             print(OtherPlayers[i].gameObject);
-        }
+        }*/
 
     }
 
