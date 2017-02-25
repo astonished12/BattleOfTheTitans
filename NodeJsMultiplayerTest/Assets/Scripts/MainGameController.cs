@@ -37,7 +37,7 @@ public class MainGameController : MonoBehaviour
     {
         //TO DO CREATE DYNAMICALLY AN OBJECT
         MainChracter = Instantiate(character1, GetVectorPositonFromJson(Obj.data), Quaternion.identity);
-        Debug.Log("wa moe");
+        Debug.Log("Second Commit Test");
 
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
         int k = 0;
