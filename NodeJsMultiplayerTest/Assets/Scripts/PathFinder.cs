@@ -38,18 +38,22 @@ public class PathFinder : MonoBehaviour {
             List<Node> neighbors = gridTable.GetNeighborsByNode(currentNode);
             foreach (Node neighbour in neighbors)
             {
-                if (closedList.Contains(neighbour))
-                    continue;
-
                 int costToCurrentNodeToHisNeighbour = currentNode.gCost + gridTable.GetHeuristicDistance(currentNode, neighbour);
-                if (costToCurrentNodeToHisNeighbour < neighbour.gCost || !openList.Contains(neighbour))  {
+
+                if (costToCurrentNodeToHisNeighbour < neighbour.gCost && openList.Contains(neighbour))
+                    openList.Remove(neighbour);
+                if (closedList.Contains(neighbour) && costToCurrentNodeToHisNeighbour < neighbour.gCost)
+                    closedList.Remove(neighbour);
+
+                if (!closedList.Contains(neighbour) && !openList.Contains(neighbour))
+                {
                     neighbour.gCost = costToCurrentNodeToHisNeighbour;
+                    openList.Add(neighbour);
                     neighbour.hCost = gridTable.GetHeuristicDistance(neighbour, target);
                     neighbour.parent = currentNode;
-
-                    if (!openList.Contains(neighbour))
-                        openList.Add(neighbour);
                 }
+
+               
 
             }
         } 

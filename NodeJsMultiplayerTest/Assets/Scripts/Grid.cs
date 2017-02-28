@@ -13,8 +13,8 @@ public class Grid : MonoBehaviour
 
     int gridSizeX, gridSizeY;
 
-    int costOfNonDiagonalMovement = 10;
-    int costOfDiagonalMovement = 14;
+    public int costOfNonDiagonalMovement = 10;
+    public int costOfDiagonalMovement = 14;
 
     void Start()
     {
@@ -44,7 +44,7 @@ public class Grid : MonoBehaviour
     //This heuristic is used for 8-way movement when the cost of diagonal movement differs from the non-diagonal cost. 
    // Remember that the cost of diagonal distance doesn’t need to be exact and is usually worth it to use a constant 
     //  multiplier rather than the square root as the square root operation is quite expensive.
-   /* internal int GetHeuristicDistance(Node start, Node target)
+    internal int GetHeuristicDistance(Node start, Node target)
     {
         //x10 work with int 
        
@@ -55,17 +55,9 @@ public class Grid : MonoBehaviour
             return costOfDiagonalMovement * distanceOfYCoordinate + 10 * (distanceOfXCoordinate - distanceOfYCoordinate);
 
         return costOfNonDiagonalMovement * distanceOfXCoordinate + costOfDiagonalMovement * (distanceOfYCoordinate - distanceOfXCoordinate);
-    }*/
-
-    public int GetHeuristicDistance(Node nodeA, Node nodeB)
-    {
-        int dstX = Mathf.Abs((int)nodeA.gridPosition.x - (int)nodeB.gridPosition.x);
-        int dstY = Mathf.Abs((int)nodeA.gridPosition.y - (int)nodeB.gridPosition.y);
-
-        if (dstX > dstY)
-            return 14 * dstY + 10 * (dstX - dstY);
-        return 14 * dstX + 10 * (dstY - dstX);
     }
+
+  
     public Node GetNodeFromWorldPoint(Vector3 positionOnWorldMap)
     {
         float percentX = (positionOnWorldMap.x + gridWorldSize.x / 2) / gridWorldSize.x;
