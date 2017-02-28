@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,6 +12,9 @@ public class Grid : MonoBehaviour
     Node[,] gridTable;
 
     int gridSizeX, gridSizeY;
+
+    int costOfNonDiagonalMovement = 10;
+    int costOfDiagonalMovement = 14;
 
     void Start()
     {
@@ -31,11 +35,37 @@ public class Grid : MonoBehaviour
              {
                 Vector3 pointInWorldMap = worldBottomLeft + new Vector3(1, 0, 0) * (x+0.5f) + new Vector3(0, 0, 1) * (y+0.5f);
                 bool checkIsWalkble = !(Physics.CheckSphere(pointInWorldMap, 0.5f, unwalkableMask));
-                gridTable[x, y] = new Node(checkIsWalkble, pointInWorldMap);
+                gridTable[x, y] = new Node(checkIsWalkble, pointInWorldMap, new Vector2(x,y));
             }
          }
     }
 
+
+    //This heuristic is used for 8-way movement when the cost of diagonal movement differs from the non-diagonal cost. 
+   // Remember that the cost of diagonal distance doesn’t need to be exact and is usually worth it to use a constant 
+    //  multiplier rather than the square root as the square root operation is quite expensive.
+   /* internal int GetHeuristicDistance(Node start, Node target)
+    {
+        //x10 work with int 
+       
+        int distanceOfXCoordinate = (int)Mathf.Abs(start.gridPosition.x - target.gridPosition.x);
+        int distanceOfYCoordinate = (int)Mathf.Abs(start.gridPosition.y - target.gridPosition.y);
+
+        if (distanceOfXCoordinate > distanceOfYCoordinate)
+            return costOfDiagonalMovement * distanceOfYCoordinate + 10 * (distanceOfXCoordinate - distanceOfYCoordinate);
+
+        return costOfNonDiagonalMovement * distanceOfXCoordinate + costOfDiagonalMovement * (distanceOfYCoordinate - distanceOfXCoordinate);
+    }*/
+
+    public int GetHeuristicDistance(Node nodeA, Node nodeB)
+    {
+        int dstX = Mathf.Abs((int)nodeA.gridPosition.x - (int)nodeB.gridPosition.x);
+        int dstY = Mathf.Abs((int)nodeA.gridPosition.y - (int)nodeB.gridPosition.y);
+
+        if (dstX > dstY)
+            return 14 * dstY + 10 * (dstX - dstY);
+        return 14 * dstX + 10 * (dstY - dstX);
+    }
     public Node GetNodeFromWorldPoint(Vector3 positionOnWorldMap)
     {
         float percentX = (positionOnWorldMap.x + gridWorldSize.x / 2) / gridWorldSize.x;
@@ -49,8 +79,45 @@ public class Grid : MonoBehaviour
         return gridTable[x, y];
     }
 
+    public List<Node> GetNeighborsByNode(Node node){
 
+        List<Node> neighbors = new List<Node>();
 
+        for (int i=-1;i<2;i++)
+        {
+            for(int j=-1;j<2;j++)
+            {
+                if (i == 0 && j == 0)
+                    continue;
+
+                int auxPosX = i+(int)node.gridPosition.x;
+                int auxPosY = j + (int)node.gridPosition.y;
+                if (CheckIsPositionAreValid(auxPosX, auxPosY) && gridTable[auxPosX,auxPosY].walkable)
+                        neighbors.Add(gridTable[auxPosX,auxPosY]);
+            }
+        }
+    
+        return neighbors;
+    }
+
+    public bool CheckIsPositionAreValid(int x,int y)
+    {
+        return x >= 0 && x <= gridSizeX - 1 &&  y >= 0 && y <= gridSizeY - 1;
+    }
+
+    public bool CheckIsADiagonalNeighbour(Node node,Node testNode){
+            try
+            {
+                return gridTable[(int)node.gridPosition.x - 1, (int)node.gridPosition.y - 1] == testNode || gridTable[(int)node.gridPosition.x + 1, (int)node.gridPosition.y + 1] == testNode || gridTable[(int)node.gridPosition.x + 1, (int)node.gridPosition.y] == testNode || gridTable[(int)node.gridPosition.x, (int)node.gridPosition.y + 1] == testNode;
+            }
+            catch(Exception e)
+            {
+                Debug.Log(e);
+            }
+        return false;
+        }
+
+    public List<Node> path;
     void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
@@ -66,6 +133,13 @@ public class Grid : MonoBehaviour
                     Gizmos.DrawCube(n.worldPosition, Vector3.one * (1));
                 }
                 Gizmos.color = (n.walkable) ? Color.white : Color.red;
+                if (path != null)
+                {
+                    if(path.Contains(n))
+                    {
+                        Gizmos.color = Color.black;
+                    }
+                }
                 Gizmos.DrawCube(n.worldPosition, Vector3.one * (1));
             }
         }
