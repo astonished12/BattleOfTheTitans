@@ -42,22 +42,22 @@ public class Grid : MonoBehaviour
 
 
     //This heuristic is used for 8-way movement when the cost of diagonal movement differs from the non-diagonal cost. 
-   // Remember that the cost of diagonal distance doesn’t need to be exact and is usually worth it to use a constant 
+    // Remember that the cost of diagonal distance doesn’t need to be exact and is usually worth it to use a constant 
     //  multiplier rather than the square root as the square root operation is quite expensive.
     internal int GetHeuristicDistance(Node start, Node target)
     {
         //x10 work with int 
-       
+
         int distanceOfXCoordinate = (int)Mathf.Abs(start.gridPosition.x - target.gridPosition.x);
         int distanceOfYCoordinate = (int)Mathf.Abs(start.gridPosition.y - target.gridPosition.y);
 
         if (distanceOfXCoordinate > distanceOfYCoordinate)
             return costOfDiagonalMovement * distanceOfYCoordinate + 10 * (distanceOfXCoordinate - distanceOfYCoordinate);
 
-        return costOfNonDiagonalMovement * distanceOfXCoordinate + costOfDiagonalMovement * (distanceOfYCoordinate - distanceOfXCoordinate);
+        return costOfDiagonalMovement * distanceOfXCoordinate + costOfNonDiagonalMovement * (distanceOfYCoordinate - distanceOfXCoordinate);
     }
 
-  
+
     public Node GetNodeFromWorldPoint(Vector3 positionOnWorldMap)
     {
         float percentX = (positionOnWorldMap.x + gridWorldSize.x / 2) / gridWorldSize.x;

@@ -19,49 +19,50 @@ public class PathFinder : MonoBehaviour {
     public List<Node> AStar(Vector3 startPosition, Vector3 targetPosition){
         Node start = gridTable.GetNodeFromWorldPoint(startPosition);
         Node target = gridTable.GetNodeFromWorldPoint(targetPosition);
-        List<Node> openList = new List<Node>();
+        Heap openList = new Heap(100);
         HashSet<Node> closedList = new HashSet<Node>();
 
-        openList.Add(start);
+        openList.Insert(start);
         start.gCost = 0;
         start.hCost = gridTable.GetHeuristicDistance(start, target);
         start.fCost = start.gCost + start.hCost;
-        while (openList.Count > 0) {
-            Node currentNode = GetNodeWithLowestCFost(openList);
+   
+
+        while (!openList.IsEmpty()) {
+            Node currentNode = openList.GetRoot();
             if (currentNode.Equals(target)) {
                 return ConstructPath(currentNode);
             }
 
-            openList.Remove(currentNode);
             closedList.Add(currentNode);
 
             List<Node> neighbors = gridTable.GetNeighborsByNode(currentNode);
             foreach (Node neighbour in neighbors)
             {
-                int costToCurrentNodeToHisNeighbour = currentNode.gCost + gridTable.GetHeuristicDistance(currentNode, neighbour);
+                if (closedList.Contains(neighbour))
+                    continue;
 
-                if (costToCurrentNodeToHisNeighbour < neighbour.gCost && openList.Contains(neighbour))
-                    openList.Remove(neighbour);
-                if (closedList.Contains(neighbour) && costToCurrentNodeToHisNeighbour < neighbour.gCost)
-                    closedList.Remove(neighbour);
-
-                if (!closedList.Contains(neighbour) && !openList.Contains(neighbour))
+                int newMovementCostToNeighbour = currentNode.gCost + gridTable.GetHeuristicDistance(currentNode, neighbour);
+                if (newMovementCostToNeighbour < neighbour.gCost || !openList.Contains(neighbour))
                 {
-                    neighbour.gCost = costToCurrentNodeToHisNeighbour;
-                    openList.Add(neighbour);
+                    neighbour.gCost = newMovementCostToNeighbour;
                     neighbour.hCost = gridTable.GetHeuristicDistance(neighbour, target);
                     neighbour.parent = currentNode;
+
+                    if (!openList.Contains(neighbour))
+                        openList.Insert(neighbour);
+                  
                 }
 
-               
 
             }
         } 
-        
+
         return new List<Node>();
     }
 
-    public Node GetNodeWithLowestCFost(List<Node> nodes){
+    //HEAP OPTIMIZATION
+    /*public Node GetNodeWithLowestCFost(List<Node> nodes){
         Node nodeWithLowestFCost = nodes[0];
         for (int i = 1; i < nodes.Count; i++)
         {
@@ -70,7 +71,7 @@ public class PathFinder : MonoBehaviour {
             
         }
         return nodeWithLowestFCost;
-    }
+    }*/
 
     public List<Node> ConstructPath(Node node)
     {
