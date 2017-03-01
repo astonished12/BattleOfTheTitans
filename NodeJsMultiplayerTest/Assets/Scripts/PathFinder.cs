@@ -4,17 +4,13 @@ using UnityEngine;
 using System.Linq;
 public class PathFinder : MonoBehaviour {
 
-    public Transform seeker, target;
     private Grid gridTable;
 
     private void Awake(){
         gridTable = GetComponent<Grid>();
     }
 
-    public void Update()
-    {
-        AStar(seeker.position, target.position);
-    }
+    
 
     public List<Node> AStar(Vector3 startPosition, Vector3 targetPosition){
         Node start = gridTable.GetNodeFromWorldPoint(startPosition);
