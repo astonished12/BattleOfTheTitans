@@ -12,9 +12,7 @@ public class MoveToClick : MonoBehaviour {
 
     public void OnClickPressed(Vector3 targetPosition)
     {
-        Debug.Log(targetPosition);
-        var resetGrid = GetComponent<Grid>();
-        resetGrid.ResetGrid();
+        targetIndex = 0;
         var pathfinder = GetComponent<PathFinder>();
         path = pathfinder.AStar(player.transform.position, targetPosition);
         StopCoroutine("FollowPath");
@@ -35,7 +33,7 @@ public class MoveToClick : MonoBehaviour {
                 currentWaypoint = path[targetIndex].worldPosition;
             }
 
-            player.transform.position = Vector3.MoveTowards(player.transform.position, currentWaypoint, 20 * Time.deltaTime);
+            player.transform.position = Vector3.MoveTowards(player.transform.position, currentWaypoint, 50 * Time.deltaTime);
             yield return null;
 
         }

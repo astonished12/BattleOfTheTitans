@@ -13,7 +13,7 @@ public class PathFinder : MonoBehaviour {
     
 
     public List<Node> AStar(Vector3 startPosition, Vector3 targetPosition){
-
+        gridTable.ResetGridTable();
         Node start = gridTable.GetNodeFromWorldPoint(startPosition);
         Node target = gridTable.GetNodeFromWorldPoint(targetPosition);
         Heap openList = new Heap(100);

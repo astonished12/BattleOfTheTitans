@@ -109,9 +109,18 @@ public class Grid : MonoBehaviour
         return false;
         }
 
-    public void ResetGrid()
+    public void ResetGridTable()
     {
-        MakeGrid();
+        for (int x = 0; x < gridSizeX; x++)
+        {
+            for (int y = 0; y < gridSizeY; y++)
+            {
+                gridTable[x, y].hCost = 0;
+                gridTable[x, y].gCost = 0;
+                gridTable[x, y].fCost = 0;
+                gridTable[x, y].parent = null;
+            }
+        }
     }
     public List<Node> path;
     void OnDrawGizmos()
