@@ -22,11 +22,10 @@ var ControllerPlayer = require("./Server/ControllerPlayer");
     
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
-    var player = new ControllerPlayer(socket.id,"Player1",1000);
+    var player = new ControllerPlayer(socket.id,"Player1");
     PLAYERS[socket.id] = player;
     SOCKET_LIST[socket.id] = socket;
     playerNo += 1;
-    //console.log(PLAYERS);
     socket.emit('identify',{
         x : 0,
         y : 0,
@@ -39,15 +38,15 @@ io.sockets.on('connection', function(socket){
     socket.broadcast.emit("anotherplayerconnected",{
         //TO DO find free position on map ( grid)
         socket_id:socket.id,
-        x : 64,
-        y : 64,
+        x : 128,
+        y : 0,
+        z : 128,
         name : PLAYERS[socket.id].name
 
     });
 
-    socket.on("ActionKey",onMoveClient);
     socket.on("disconnect",onSocketDisconnect)
-	
+	socket.on("move",onMoveClient);
 
 });
 
@@ -61,42 +60,12 @@ var onSocketDisconnect = function(){
 	playerNo --;
 }
 
-	var onMoveClient = function(data){
-	//console.log(PLAYERS[this.id]);
-	if(data.keyPressed=="S") {
-	    PLAYERS[this.id].input.down = true;
-	}
-	if(data.keyPressed=="W") {
-	    PLAYERS[this.id].input.up = true;
-	}
-	if(data.keyPressed=="A") {
-	    PLAYERS[this.id].input.left = true;
-	}
-	if(data.keyPressed=="D") {
-	    PLAYERS[this.id].input.right = true;
-	}
-}
-/*
-setInterval(function() {
-var pack = [];
-for (var i in PLAYERS) {
-    var player = PLAYERS[i];
-    //player.updatePosition();
-    pack.push({
-        socket_id : player.id,
-        cursors: player.input
-    });
-    player.input = {
-        left : false,
-        right : false,
-        up : false,
-        down : false
-    }
-}
-for (var i in SOCKET_LIST) {
-    var socket = SOCKET_LIST[i];
-    socket.emit('handleKeys', pack);
-}
-},40)*/
+	
+    var onMoveClient = function(data){
+        console.log(PLAYERS[this.id]+" is moving to "+JSON.stringify(data));
+        this.broadcast.emit("move",data);
+    };
+
+
 
 
