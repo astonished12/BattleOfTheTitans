@@ -7,10 +7,14 @@ public class NavagiateToPosition : MonoBehaviour
 {
     int targetIndex;
     private List<Node> path;
-    public float speed = 20f;
+    public float speed = 1f;
 
+    public bool targetSuccesfull = true;
     public void SetDestination(List<Node> _path)
     {
+        targetSuccesfull = false;
+        GetComponent<Animator>().SetBool("atDestination", false);
+
         path = _path;
         targetIndex = 0;
         StopCoroutine("FollowPath");
@@ -19,6 +23,7 @@ public class NavagiateToPosition : MonoBehaviour
     IEnumerator FollowPath()
     {
         Vector3 currentWaypoint = path[0].worldPosition;
+        currentWaypoint.y = 0.5f;
         while (true)
         {
             if (transform.position == currentWaypoint)
@@ -26,15 +31,24 @@ public class NavagiateToPosition : MonoBehaviour
                 targetIndex++;
                 if (targetIndex >= path.Count - 1)
                 {
+                    targetSuccesfull = true;
                     yield break;
                 }
                 currentWaypoint = path[targetIndex].worldPosition;
-            }
+                currentWaypoint.y = 0.5f;
 
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);
+            }
+            transform.rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime );
             yield return null;
 
         }
+    }
+
+    void Update()
+    {
+        if (targetSuccesfull)
+            GetComponent<Animator>().SetBool("atDestination", true);
     }
 
     
