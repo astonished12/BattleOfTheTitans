@@ -16,7 +16,7 @@ public class Grid : MonoBehaviour
     public int costOfNonDiagonalMovement = 10;
     public int costOfDiagonalMovement = 14;
 
-    void Start()
+    void Awake()
     {
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y);
@@ -109,6 +109,10 @@ public class Grid : MonoBehaviour
         return false;
         }
 
+    public void ResetGrid()
+    {
+        MakeGrid();
+    }
     public List<Node> path;
     void OnDrawGizmos()
     {

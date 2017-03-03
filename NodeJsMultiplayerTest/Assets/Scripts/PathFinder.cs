@@ -6,13 +6,14 @@ public class PathFinder : MonoBehaviour {
 
     private Grid gridTable;
 
-    private void Awake(){
+    private void Start(){
         gridTable = GetComponent<Grid>();
     }
 
     
 
     public List<Node> AStar(Vector3 startPosition, Vector3 targetPosition){
+
         Node start = gridTable.GetNodeFromWorldPoint(startPosition);
         Node target = gridTable.GetNodeFromWorldPoint(targetPosition);
         Heap openList = new Heap(100);
@@ -27,6 +28,7 @@ public class PathFinder : MonoBehaviour {
         while (!openList.IsEmpty()) {
             Node currentNode = openList.GetRoot();
             if (currentNode.Equals(target)) {
+                
                 return ConstructPath(currentNode);
             }
 
@@ -57,27 +59,22 @@ public class PathFinder : MonoBehaviour {
         return new List<Node>();
     }
 
-    //HEAP OPTIMIZATION
-    /*public Node GetNodeWithLowestCFost(List<Node> nodes){
-        Node nodeWithLowestFCost = nodes[0];
-        for (int i = 1; i < nodes.Count; i++)
-        {
-            if (nodes[i].fCost < nodeWithLowestFCost.fCost || nodes[i].fCost == nodeWithLowestFCost.fCost && nodes[i].hCost < nodeWithLowestFCost.hCost)
-                    nodeWithLowestFCost = nodes[i];
-            
-        }
-        return nodeWithLowestFCost;
-    }*/
+
 
     public List<Node> ConstructPath(Node node)
     {
+        //Debug.Log("DACA MA REPET DE AICI PICA");
+
         List<Node> path = new List<Node>();
         path.Add(node);
         while (node.parent != null)
         {
-            node = node.parent;
             path.Add(node);
+            node = node.parent;
+            //path.Add(node);
         }
+
+
          path.Reverse();
 
         gridTable.path = path;
