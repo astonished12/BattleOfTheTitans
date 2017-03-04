@@ -21,8 +21,8 @@ public class ScreenClicker : MonoBehaviour {
         if (Physics.Raycast(ray, out hit))
         {
             var clickMove = hit.collider.gameObject.GetComponent<MoveToClick>();
-            clickMove.OnClickPressed(hit.point);
-            
+            if(hit.collider.gameObject.name=="Ground")
+                clickMove.OnClickPressed(hit.point);            
         }
 
 
