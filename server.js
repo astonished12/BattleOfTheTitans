@@ -22,7 +22,7 @@ var ControllerPlayer = require("./Server/ControllerPlayer");
     
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
-    var player = new ControllerPlayer(socket.id,"Player1");
+    var player = new ControllerPlayer(socket.id,"Player1",2,0,1);
     PLAYERS[socket.id] = player;
     SOCKET_LIST[socket.id] = socket;
     playerNo += 1;
@@ -38,9 +38,9 @@ io.sockets.on('connection', function(socket){
     socket.broadcast.emit("anotherplayerconnected",{
         //TO DO find free position on map ( grid)
         socket_id:socket.id,
-        x : 128,
+        x : 0,
         y : 0,
-        z : 128,
+        z : 0,
         name : PLAYERS[socket.id].name
 
     });
@@ -56,15 +56,22 @@ var onSocketDisconnect = function(){
 	    socket_id : this.id,
 	    name: PLAYERS[this.id].name
 	});
+    console.log("Clinet id "+this.id+" disconnected.");
 	delete PLAYERS[this.id]
 	playerNo --;
 }
 
-	
-    var onMoveClient = function(data){
-        console.log(PLAYERS[this.id]+" is moving to "+JSON.stringify(data));
-        this.broadcast.emit("move",data);
-    };
+
+var onMoveClient = function(data){
+    //data.id = this.id;
+    console.log(PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
+    this.broadcast.emit("playerMove",{
+        socket_id:this.id,
+        x : data["x"],
+        y : data["y"],
+        z : data["z"],
+    });
+};
 
 
 

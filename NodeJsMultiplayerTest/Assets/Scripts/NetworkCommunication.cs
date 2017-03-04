@@ -5,15 +5,15 @@ using UnityEngine;
 
 public class NetworkCommunication : MonoBehaviour {
 
-    public SocketIOComponent SocketIO;
+   
 
-    public void sendLastPositionToNodeServer(Vector3 endPosition)
+    public void SendLastPositionToNodeServer(Vector3 endPosition)
     {
-        //SocketIO.Emit("move",new JSONObject(Vector3ToJsonObject(endPosition)));
+        NetworkScript.SocketIO.Emit("move",new JSONObject(Vector3ToJsonObject(endPosition)));
     }
 
     private string Vector3ToJsonObject(Vector3 vector)
     {
-        return string.Format(@"{{""x"":""{0}"",""y"":""{1}""}}", vector.x, vector.z);
+        return string.Format(@"{{""x"":""{0}"",""y"":""{1}"",""z"":""{2}""}}", vector.x, vector.y,vector.z);
     }
 }
