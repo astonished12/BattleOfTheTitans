@@ -7,10 +7,10 @@ public class PathFinder : MonoBehaviour {
     private Grid gridTable;
 
     private void Start(){
-        gridTable = GetComponent<Grid>();
-    }
+        GameObject ground = GameObject.Find("Ground");
 
-    
+        gridTable = ground.GetComponent<Grid>();
+    }    
 
     public List<Node> AStar(Vector3 startPosition, Vector3 targetPosition){
         gridTable.ResetGridTable();

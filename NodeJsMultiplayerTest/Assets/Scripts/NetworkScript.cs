@@ -9,8 +9,7 @@ public class NetworkScript : MonoBehaviour
 {
 
     public static SocketIOComponent SocketIO;
-    public GameObject character1;
-    public GameObject character2;
+    public GameObject playerPrefab;
 
     //public GameObject mainChracter;
     Dictionary<string, GameObject> OtherPlayersGameObjects;
@@ -51,7 +50,7 @@ public class NetworkScript : MonoBehaviour
              {
                 JSONObject playerData = (JSONObject)players.list[i];
                 // Process the player key and data as you need.
-                GameObject newPlayerGameObjects = Instantiate(character2, MakeInitialVectorOfPositions(playerData), Quaternion.identity);
+                GameObject newPlayerGameObjects = Instantiate(playerPrefab, MakeInitialVectorOfPositions(playerData), Quaternion.identity);
                 OtherPlayersGameObjects.Add(playerKey, newPlayerGameObjects);
             }
         }
@@ -79,7 +78,7 @@ public class NetworkScript : MonoBehaviour
     {
         Debug.Log("OTHER PLAYER");
         string socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
-        GameObject newGameObjectPlayer = Instantiate(character2, MakeInitialVectorOfPositions(Obj.data), Quaternion.identity);
+        GameObject newGameObjectPlayer = Instantiate(playerPrefab, MakeInitialVectorOfPositions(Obj.data), Quaternion.identity);
         OtherPlayersGameObjects.Add(socket_id, newGameObjectPlayer);
     }
     private void OnPlayerLeft(SocketIOEvent obj)
@@ -93,6 +92,10 @@ public class NetworkScript : MonoBehaviour
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         Debug.Log(GetVectorFromJson(obj.data));
+        Vector3 targetPostion = GetVectorFromJson(obj.data);
+        var otherPlayer = OtherPlayersGameObjects[socket_id];
+        var walker = otherPlayer.GetComponent<NavagiateToPosition>();
+        walker.SetTargetPosition(targetPostion);
     }
 }
 

@@ -10,13 +10,12 @@ public class MoveToClick : MonoBehaviour {
     
     public void OnClickPressed(Vector3 targetPosition)
     {
-        var pathfinder = GetComponent<PathFinder>();
-        path = pathfinder.AStar(player.transform.position, targetPosition);
+        
         var navigator = player.GetComponent<NavagiateToPosition>();
-        navigator.SetDestination(path);
+        navigator.SetTargetPosition(targetPosition);
 
         var networkCommunication = player.GetComponent<NetworkCommunication>();
-        networkCommunication.SendLastPositionToNodeServer(path[path.Count-1].worldPosition);       
+        networkCommunication.SendLastPositionToNodeServer(targetPosition);       
     }    
 
 }

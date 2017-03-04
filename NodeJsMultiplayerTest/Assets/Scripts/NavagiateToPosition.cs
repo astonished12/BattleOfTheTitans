@@ -7,9 +7,18 @@ public class NavagiateToPosition : MonoBehaviour
 {
     int targetIndex;
     private List<Node> path;
+    private Vector3 targetPositon;
     public float speed = 1f;
 
     public bool targetSuccesfull = true;
+
+    public void SetTargetPosition(Vector3 _targetPosition)
+    {
+        targetPositon = _targetPosition;
+        var pathfinder = GetComponent<PathFinder>();
+        path = pathfinder.AStar(transform.position, targetPositon);        
+        SetDestination(path);
+    }
     public void SetDestination(List<Node> _path)
     {
         targetSuccesfull = false;
@@ -50,6 +59,6 @@ public class NavagiateToPosition : MonoBehaviour
         if (targetSuccesfull)
             GetComponent<Animator>().SetBool("atDestination", true);
     }
-
+    
     
 }

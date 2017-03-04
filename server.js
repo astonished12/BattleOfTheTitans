@@ -65,6 +65,7 @@ var onSocketDisconnect = function(){
 var onMoveClient = function(data){
     //data.id = this.id;
     console.log(PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
+    PLAYERS[this.id].updatePositions(data);
     this.broadcast.emit("playerMove",{
         socket_id:this.id,
         x : data["x"],

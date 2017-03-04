@@ -4,8 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class NetworkCommunication : MonoBehaviour {
-
-   
+      
 
     public void SendLastPositionToNodeServer(Vector3 endPosition)
     {

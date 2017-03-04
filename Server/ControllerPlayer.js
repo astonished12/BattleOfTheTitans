@@ -8,6 +8,12 @@
         this.y = y;
         this.z = z;
         //TO POSITION ON MOVE UPDATE
-    };   
+    };
+
+ControllerPlayer.prototype.updatePositions = function(data){
+    this.x = data["x"];
+    this.y = data["y"];
+    this.z = data["z"];
+}
 
 module.exports = ControllerPlayer;
