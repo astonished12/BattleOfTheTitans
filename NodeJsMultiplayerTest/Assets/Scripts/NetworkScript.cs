@@ -50,7 +50,7 @@ public class NetworkScript : MonoBehaviour
              {
                 JSONObject playerData = (JSONObject)players.list[i];
                 // Process the player key and data as you need.
-                GameObject newPlayerGameObjects = Instantiate(playerPrefab, MakeInitialVectorOfPositions(playerData), Quaternion.identity);
+                GameObject newPlayerGameObjects = Instantiate(playerPrefab, GetVectorFromJson(playerData), Quaternion.identity);
                 OtherPlayersGameObjects.Add(playerKey, newPlayerGameObjects);
             }
         }
