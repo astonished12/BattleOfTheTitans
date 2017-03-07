@@ -16,7 +16,7 @@ public class PathFinder : MonoBehaviour {
         gridTable.ResetGridTable();
         Node start = gridTable.GetNodeFromWorldPoint(startPosition);
         Node target = gridTable.GetNodeFromWorldPoint(targetPosition);
-        Heap openList = new Heap(100);
+        Heap openList = new Heap(1000);
         HashSet<Node> closedList = new HashSet<Node>();
 
         openList.Insert(start);
