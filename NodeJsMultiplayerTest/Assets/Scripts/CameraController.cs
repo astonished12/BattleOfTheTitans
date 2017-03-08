@@ -9,8 +9,9 @@ public class CameraController : MonoBehaviour {
 
     void Start()
     {
-        offSet = transform.position - player.transform.position;
+        offSet = new Vector3(0,12,-7);        
     }
+
 
      void LateUpdate()
     {

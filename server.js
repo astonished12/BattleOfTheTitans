@@ -22,14 +22,23 @@ var ControllerPlayer = require("./Server/ControllerPlayer");
     
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
-    var player = new ControllerPlayer(socket.id,"Player1",2,0,1);
-    PLAYERS[socket.id] = player;
-    SOCKET_LIST[socket.id] = socket;
-    playerNo += 1;
-    socket.emit('identify',{
-        x : 0,
-        y : 0,
-        z : 0,
+    if(playerNo==1)
+    {
+        var player = new ControllerPlayer(socket.id,"Player1",-47,0,18.5);
+        PLAYERS[socket.id] = player;
+        SOCKET_LIST[socket.id] = socket;
+        playerNo += 1;
+    }
+    else{
+         var player = new ControllerPlayer(socket.id,"Player1",47,0,-18.5);
+        PLAYERS[socket.id] = player;
+        SOCKET_LIST[socket.id] = socket;
+        playerNo += 1;
+    }
+    socket.emit('identify',{     
+        x : PLAYERS[socket.id].x,
+        y : PLAYERS[socket.id].y,
+        z :PLAYERS[socket.id].z,
         name : PLAYERS[socket.id].name,
         socket_id : socket.id,
         allPlayersAtCurrentTime: PLAYERS
@@ -38,9 +47,9 @@ io.sockets.on('connection', function(socket){
     socket.broadcast.emit("anotherplayerconnected",{
         //TO DO find free position on map ( grid)
         socket_id:socket.id,
-        x : 0,
-        y : 0,
-        z : 0,
+        x : PLAYERS[socket.id].x,
+        y : PLAYERS[socket.id].y,
+        z :PLAYERS[socket.id].z,
         name : PLAYERS[socket.id].name
 
     });

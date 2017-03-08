@@ -10,7 +10,7 @@ public class NetworkScript : MonoBehaviour
 
     public static SocketIOComponent SocketIO;
     public GameObject playerPrefab;
-
+    public GameObject player;
     //public GameObject mainChracter;
     Dictionary<string, GameObject> OtherPlayersGameObjects;
     private void Awake()
@@ -40,6 +40,7 @@ public class NetworkScript : MonoBehaviour
     void OnIdentify(SocketIOEvent Obj)
     {
         Debug.Log("IDENTIFY");
+        player.transform.position = GetVectorFromJson(Obj.data);
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
         var socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
         for (int i = 0; i < players.list.Count; i++)
