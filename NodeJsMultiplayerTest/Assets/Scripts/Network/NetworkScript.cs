@@ -9,13 +9,13 @@ public class NetworkScript : MonoBehaviour
 {
 
     public static SocketIOComponent SocketIO;
-    public GameObject playerPrefab;
+    public SpawnerPlayer spawner;
     public GameObject player;
     //public GameObject mainChracter;
-    Dictionary<string, GameObject> OtherPlayersGameObjects;
+  
     private void Awake()
     {
-        OtherPlayersGameObjects = new Dictionary<string, GameObject>();
+        
         SocketIO = GetComponent<SocketIOComponent>();
         Debug.Log("In network script " + SocketIO.GetInstanceID());
     }
@@ -50,9 +50,7 @@ public class NetworkScript : MonoBehaviour
             if (playerKey != socket_id)
              {
                 JSONObject playerData = (JSONObject)players.list[i];
-                // Process the player key and data as you need.
-                GameObject newPlayerGameObjects = Instantiate(playerPrefab, GetVectorFromJson(playerData), Quaternion.identity);
-                OtherPlayersGameObjects.Add(playerKey, newPlayerGameObjects);
+                spawner.SpawnPlayer(playerKey, GetVectorFromJson(playerData));
             }
         }
         
@@ -65,36 +63,29 @@ public class NetworkScript : MonoBehaviour
     }
 
 
-    Vector3 MakeInitialVectorOfPositions(JSONObject Json)
-    {
-        return new Vector3(float.Parse(Json["x"].ToString()), float.Parse(Json["y"].ToString()), float.Parse(Json["z"].ToString()));
-    }
-
+ 
     Vector3 GetVectorFromJson(JSONObject Json)
     {
         return new Vector3(float.Parse(Json["x"].ToString().Replace("\"","")), float.Parse(Json["y"].ToString().Replace("\"","")), float.Parse(Json["z"].ToString().Replace("\"", "")));
-
     }
     void OtherPlayer(SocketIOEvent Obj)
     {
         Debug.Log("OTHER PLAYER");
         string socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
-        GameObject newGameObjectPlayer = Instantiate(playerPrefab, MakeInitialVectorOfPositions(Obj.data), Quaternion.identity);
-        OtherPlayersGameObjects.Add(socket_id, newGameObjectPlayer);
+        spawner.SpawnPlayer(socket_id, GetVectorFromJson(Obj.data));
     }
     private void OnPlayerLeft(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];
-        Destroy(OtherPlayersGameObjects[socket_id]);
-        OtherPlayersGameObjects.Remove(socket_id);
+        spawner.PlayerLeft(socket_id);
+       
     }
 
     private void OnMove(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-        Debug.Log(GetVectorFromJson(obj.data));
+        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];      
         Vector3 targetPostion = GetVectorFromJson(obj.data);
-        var otherPlayer = OtherPlayersGameObjects[socket_id];
+        var otherPlayer = spawner.OtherPlayersGameObjects[socket_id];
         var walker = otherPlayer.GetComponent<NavagiateToPosition>();
         walker.SetTargetPosition(targetPostion);
     }

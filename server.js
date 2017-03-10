@@ -22,7 +22,7 @@ var ControllerPlayer = require("./Server/ControllerPlayer");
     
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
-    if(playerNo==1)
+    /*if(playerNo==1)
     {
         var player = new ControllerPlayer(socket.id,"Player1",-47,0,18.5);
         PLAYERS[socket.id] = player;
@@ -30,11 +30,13 @@ io.sockets.on('connection', function(socket){
         playerNo += 1;
     }
     else{
-         var player = new ControllerPlayer(socket.id,"Player1",47,0,-18.5);
+       var player = new ControllerPlayer(socket.id,"Player1",47,0,-18.5);
         PLAYERS[socket.id] = player;
         SOCKET_LIST[socket.id] = socket;
         playerNo += 1;
-    }
+    }*/
+    var player = new ControllerPlayer(socket.id,"Player1",-47,0,18.5);
+    PLAYERS[socket.id] = player;
     socket.emit('identify',{     
         x : PLAYERS[socket.id].x,
         y : PLAYERS[socket.id].y,
