@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class Follower : MonoBehaviour {
 
-    public Transform target;
+    private Transform target;
     NavagiateToPosition navigator;
-    public float scanFrequnecy = 0.5f;
-    public float stopFollowDistance = 3;
+    public float scanFrequnecy = 0.1f;
+    public float stopFollowDistance = 1;
     float lastScanTime = 0;
     private void Start()
     {
@@ -16,17 +16,25 @@ public class Follower : MonoBehaviour {
         
     }
 
+    public void SetTarget(Transform _target)
+    {
+        target = _target;
+
+        Debug.Log(transform.position + " " + target.position);
+
+    }
     private void Update()
     {
+        //Debug.Log(transform.position + " " + target.position);
         if(isReadyToScan() && !isInRange())
         {
-            navigator.SetTargetPosition(target.position-new Vector3(0.5f,0.5f,0.5f));            
+            navigator.SetTargetPosition(target.position);            
         }
     }
 
     private bool isInRange()
     {
-        var currentDistance = Vector3.Distance(transform.position, target.position- new Vector3(0.5f, 0.5f, 0.5f));        
+        var currentDistance = Vector3.Distance(transform.position, target.position);        
         return currentDistance < stopFollowDistance;
     }
 

@@ -5,12 +5,21 @@ using UnityEngine;
 
 public class NavagiateToPosition : MonoBehaviour
 {
+
+    Follower follower;
+
+
     int targetIndex;
     private List<Node> path;
     private Vector3 targetPositon;
     public float speed = 1f;
 
     public bool targetSuccesfull = true;
+
+    public void Awake()
+    {
+        follower = GetComponent<Follower>();
+    }
 
     public void SetTargetPosition(Vector3 _targetPosition)
     {
@@ -40,6 +49,7 @@ public class NavagiateToPosition : MonoBehaviour
                 if (targetIndex >= path.Count - 1)
                 {
                     targetSuccesfull = true;
+                    follower.SetTarget(null);
                     yield break;
                 }
                 currentWaypoint = path[targetIndex].worldPosition;

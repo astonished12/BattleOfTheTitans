@@ -97,14 +97,18 @@ public class NetworkScript : MonoBehaviour
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        Debug.Log("Clientul " + socket_id + " vrea sa il urmareasca pe " + target_id);
+
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
         //client player
         var target = spawner.OtherPlayersGameObjects[target_id];
-        Debug.Log(playerWhoDoRequest + "  " + target);
-        var follower = playerWhoDoRequest.GetComponent<FollowToClick>().myPlayerFollower;
-        Debug.Log(follower);
-        follower.target = target.transform;
+
+        Debug.Log(playerWhoDoRequest.name+" "+target.name);
+        Debug.Log(playerWhoDoRequest.transform.position + " " + target.transform.position);
+
+        var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Follower>();
+        followerOfPlaeryRequested.SetTarget(target.transform);
     }
 
 }
