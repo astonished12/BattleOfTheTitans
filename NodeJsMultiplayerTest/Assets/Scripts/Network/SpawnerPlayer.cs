@@ -12,8 +12,11 @@ public class SpawnerPlayer : MonoBehaviour {
     public void SpawnPlayer(string id, Vector3 positions)
     {
         GameObject newGameObjectPlayer = Instantiate(EnemyPrefab, positions, Quaternion.identity);
+        //ADDED REFERENCE INSTANTIATED PLAYER
+        newGameObjectPlayer.GetComponent<FollowToClick>().myPlayerFollower = player.GetComponent<Follower>();
+        newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
         OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
-        
+
     }
 
     internal void PlayerLeft(string socket_id)
@@ -21,4 +24,11 @@ public class SpawnerPlayer : MonoBehaviour {
         Destroy(OtherPlayersGameObjects[socket_id]);
         OtherPlayersGameObjects.Remove(socket_id);
     }
+
+    internal void AddMyPlayer(string id,GameObject myObject)
+    {
+        OtherPlayersGameObjects.Add(id, myObject);
+    }
+
+   
 }

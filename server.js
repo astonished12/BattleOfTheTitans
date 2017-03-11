@@ -58,7 +58,7 @@ io.sockets.on('connection', function(socket){
 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
-
+    socket.on("follow",onFollowClient)
 });
 
 
@@ -84,6 +84,16 @@ var onMoveClient = function(data){
         z : data["z"],
     });
 };
+
+var onFollowClient = function(data){
+    console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
+    
+    this.broadcast.emit("followPlayer",{
+        socket_id:this.id,
+        target_id:data["idTarget"]
+    });
+}
+
 
 
 

@@ -4,9 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ScreenClicker : MonoBehaviour {
-
-  
-
     // Update is called once per frame
     void Update () {
         if (Input.GetButtonDown("Fire2")){
@@ -14,9 +11,6 @@ public class ScreenClicker : MonoBehaviour {
         }
       
 	}
-
-  
-
     private void OnClick()
     {
         var ray = Camera.main.ScreenPointToRay(Input.mousePosition);

@@ -23,7 +23,6 @@ public class NavagiateToPosition : MonoBehaviour
     {
         targetSuccesfull = false;
         GetComponent<Animator>().SetBool("atDestination", false);
-
         path = _path;
         targetIndex = 0;
         StopCoroutine("FollowPath");

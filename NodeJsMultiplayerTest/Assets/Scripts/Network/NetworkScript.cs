@@ -27,10 +27,10 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("anotherplayerconnected", OtherPlayer);
         SocketIO.On("playerLeft", OnPlayerLeft);
         SocketIO.On("playerMove", OnMove);
+        SocketIO.On("followPlayer", OnFollow);
     }
 
-   
-
+  
     IEnumerator ConnectToServer()
     {
         yield return new WaitForSeconds(0.5f);
@@ -40,9 +40,12 @@ public class NetworkScript : MonoBehaviour
     void OnIdentify(SocketIOEvent Obj)
     {
         Debug.Log("IDENTIFY");
-        player.transform.position = GetVectorFromJson(Obj.data);
+        player.transform.position = GetVectorPositionFromJson(Obj.data);     
+
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
         var socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
+        player.GetComponent<NetworkEntity>().Id = socket_id;
+        spawner.AddMyPlayer(socket_id, player);
         for (int i = 0; i < players.list.Count; i++)
         {
 
@@ -50,7 +53,7 @@ public class NetworkScript : MonoBehaviour
             if (playerKey != socket_id)
              {
                 JSONObject playerData = (JSONObject)players.list[i];
-                spawner.SpawnPlayer(playerKey, GetVectorFromJson(playerData));
+                spawner.SpawnPlayer(playerKey, GetVectorPositionFromJson(playerData));
             }
         }
         
@@ -61,18 +64,18 @@ public class NetworkScript : MonoBehaviour
         string[] newString = Regex.Split(target, "\"");
         return newString;
     }
-
-
  
-    Vector3 GetVectorFromJson(JSONObject Json)
+    Vector3 GetVectorPositionFromJson(JSONObject Json)
     {
         return new Vector3(float.Parse(Json["x"].ToString().Replace("\"","")), float.Parse(Json["y"].ToString().Replace("\"","")), float.Parse(Json["z"].ToString().Replace("\"", "")));
     }
+
+   
     void OtherPlayer(SocketIOEvent Obj)
     {
         Debug.Log("OTHER PLAYER");
         string socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
-        spawner.SpawnPlayer(socket_id, GetVectorFromJson(Obj.data));
+        spawner.SpawnPlayer(socket_id, GetVectorPositionFromJson(Obj.data));
     }
     private void OnPlayerLeft(SocketIOEvent obj)
     {
@@ -84,10 +87,25 @@ public class NetworkScript : MonoBehaviour
     private void OnMove(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];      
-        Vector3 targetPostion = GetVectorFromJson(obj.data);
+        Vector3 targetPostion = GetVectorPositionFromJson(obj.data);
         var otherPlayer = spawner.OtherPlayersGameObjects[socket_id];
         var walker = otherPlayer.GetComponent<NavagiateToPosition>();
         walker.SetTargetPosition(targetPostion);
     }
+
+    private void OnFollow(SocketIOEvent obj)
+    {
+        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        //remote
+        var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
+        //client player
+        var target = spawner.OtherPlayersGameObjects[target_id];
+        Debug.Log(playerWhoDoRequest + "  " + target);
+        var follower = playerWhoDoRequest.GetComponent<FollowToClick>().myPlayerFollower;
+        Debug.Log(follower);
+        follower.target = target.transform;
+    }
+
 }
 
