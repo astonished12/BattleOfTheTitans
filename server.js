@@ -98,7 +98,7 @@ var onFollowClient = function(data){
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
     
-    this.broadcast.emit("attackPlayer",{
+    io.sockets.emit("attackPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });

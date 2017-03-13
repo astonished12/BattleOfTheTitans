@@ -110,11 +110,11 @@ public class NetworkScript : MonoBehaviour
     public void OnAttack(SocketIOEvent obj)
     {
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
 
-       
         var targetOfAttacker = spawner.OtherPlayersGameObjects[target_id];
-
-         Debug.Log(obj.data);
+        targetOfAttacker.GetComponent<Alive>().health -= 10;
+        Debug.Log(socket_id + "   " + target_id);    
     }
 
 }
