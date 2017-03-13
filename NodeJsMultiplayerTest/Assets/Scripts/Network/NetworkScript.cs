@@ -38,7 +38,6 @@ public class NetworkScript : MonoBehaviour
   
     void OnIdentify(SocketIOEvent Obj)
     {
-        Debug.Log("IDENTIFY");
         player.transform.position = GetVectorPositionFromJson(Obj.data);     
 
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
@@ -72,7 +71,6 @@ public class NetworkScript : MonoBehaviour
    
     void OtherPlayer(SocketIOEvent Obj)
     {
-        Debug.Log("OTHER PLAYER");
         string socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
         spawner.SpawnPlayer(socket_id, GetVectorPositionFromJson(Obj.data));
     }
@@ -96,15 +94,13 @@ public class NetworkScript : MonoBehaviour
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
-        Debug.Log("Clientul " + socket_id + " vrea sa il urmareasca pe " + target_id);
 
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
         //client player
         var target = spawner.OtherPlayersGameObjects[target_id];
 
-        Debug.Log(playerWhoDoRequest.name+" "+target.name);
-        Debug.Log(playerWhoDoRequest.transform.position + " " + target.transform.position);
+        
 
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);

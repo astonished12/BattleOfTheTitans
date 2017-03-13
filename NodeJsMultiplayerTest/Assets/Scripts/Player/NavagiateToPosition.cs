@@ -59,7 +59,6 @@ public class NavagiateToPosition : MonoBehaviour
                 if (targetIndex >= path.Count - 1)
                 {
                     targetSuccesfull = true;
-                    target.SetTargetTransform(null);
                     yield break;
                 }
                 currentWaypoint = path[targetIndex].worldPosition;
