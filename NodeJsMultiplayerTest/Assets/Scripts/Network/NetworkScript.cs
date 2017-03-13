@@ -106,8 +106,8 @@ public class NetworkScript : MonoBehaviour
         Debug.Log(playerWhoDoRequest.name+" "+target.name);
         Debug.Log(playerWhoDoRequest.transform.position + " " + target.transform.position);
 
-        var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Follower>();
-        followerOfPlaeryRequested.SetTarget(target.transform);
+        var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
+        followerOfPlaeryRequested.SetTargetTransform(target.transform);
     }
 
 }

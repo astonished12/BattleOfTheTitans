@@ -6,7 +6,7 @@ using UnityEngine;
 public class NavagiateToPosition : MonoBehaviour
 {
 
-    Follower follower;
+    Target target;
 
 
     int targetIndex;
@@ -18,7 +18,7 @@ public class NavagiateToPosition : MonoBehaviour
 
     public void Awake()
     {
-        follower = GetComponent<Follower>();
+        target = GetComponent<Target>();
     }
 
     public void SetTargetPosition(Vector3 _targetPosition)
@@ -27,7 +27,7 @@ public class NavagiateToPosition : MonoBehaviour
         var pathfinder = GetComponent<PathFinder>();
         path = pathfinder.AStar(transform.position, targetPositon);        
         SetDestination(path);
-        follower.SetTarget(null);
+        target.SetTargetTransform(null);
     }
 
     public void SetTargetFollowPosition(Vector3 _targetPosition)
@@ -36,6 +36,7 @@ public class NavagiateToPosition : MonoBehaviour
         var pathfinder = GetComponent<PathFinder>();
         path = pathfinder.AStar(transform.position, targetPositon);
         SetDestination(path);
+
     }
     public void SetDestination(List<Node> _path)
     {
@@ -58,7 +59,7 @@ public class NavagiateToPosition : MonoBehaviour
                 if (targetIndex >= path.Count - 1)
                 {
                     targetSuccesfull = true;
-                    follower.SetTarget(null);
+                    target.SetTargetTransform(null);
                     yield break;
                 }
                 currentWaypoint = path[targetIndex].worldPosition;

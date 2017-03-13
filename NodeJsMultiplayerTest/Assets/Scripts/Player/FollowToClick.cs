@@ -5,16 +5,20 @@ using UnityEngine;
 
 public class FollowToClick : MonoBehaviour,IClickable{
 
-    public Follower myPlayerFollower;
+    public GameObject myPlayer;
     private NetworkEntity networkEntity;
+
+    Target myPlayerTarget;
 
     private void Start()
     {
         networkEntity = GetComponent<NetworkEntity>();
+        myPlayerTarget = myPlayer.GetComponent<Target>();
     }
     public void OnClick(RaycastHit hit)
     {
-        myPlayerFollower.SetTarget(transform);
+
+        myPlayerTarget.targetTransform = transform;
 
         var networkCommunication = GetComponent<NetworkCommunication>();
         networkCommunication.SendPlayerIdToFollow(networkEntity.Id);
