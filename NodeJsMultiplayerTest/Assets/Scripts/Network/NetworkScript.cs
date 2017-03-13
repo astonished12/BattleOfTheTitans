@@ -27,6 +27,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("playerLeft", OnPlayerLeft);
         SocketIO.On("playerMove", OnMove);
         SocketIO.On("followPlayer", OnFollow);
+        SocketIO.On("attackPlayer", OnAttack);
     }
 
   
@@ -104,6 +105,16 @@ public class NetworkScript : MonoBehaviour
 
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);
+    }
+
+    public void OnAttack(SocketIOEvent obj)
+    {
+        string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+
+       
+        var targetOfAttacker = spawner.OtherPlayersGameObjects[target_id];
+
+         Debug.Log(obj.data);
     }
 
 }

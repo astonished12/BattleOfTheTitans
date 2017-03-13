@@ -17,8 +17,6 @@ public class FollowToClick : MonoBehaviour,IClickable{
     }
     public void OnClick(RaycastHit hit)
     {
-
-
         myPlayerTarget.targetTransform = transform;
         var networkCommunication = GetComponent<NetworkCommunication>();
         networkCommunication.SendPlayerIdToFollow(networkEntity.Id);

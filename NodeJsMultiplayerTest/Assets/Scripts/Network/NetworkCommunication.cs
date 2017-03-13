@@ -10,8 +10,7 @@ public class NetworkCommunication : MonoBehaviour {
     {
         NetworkScript.SocketIO.Emit("move",new JSONObject(Vector3ToJsonObject(endPosition)));
     }
-
-
+    
 
     public void SendPlayerIdToFollow(string id)
     {
@@ -26,6 +25,11 @@ public class NetworkCommunication : MonoBehaviour {
     private string PlayerIdToJson(string id)
     {
         return string.Format(@"{{""idTarget"":""{0}""}}", id);
+    }
+
+    public void SendAttackerId(string id)
+    {
+        NetworkScript.SocketIO.Emit("attack", new JSONObject(PlayerIdToJson(id))); 
     }
 
 

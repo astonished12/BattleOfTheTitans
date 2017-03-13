@@ -8,10 +8,13 @@ public class Attack : MonoBehaviour {
     public float attackDistance;
     public float lastAttackTime;
     public float attackRate;
-
+    NetworkEntity networkEntity;
+    NetworkCommunication networkCommunication;
     void Start()
     {
         target = GetComponent<Target>();
+        networkCommunication = GetComponent<NetworkCommunication>();
+        networkEntity = GetComponent<NetworkEntity>();
     }
 
     void Update()
@@ -19,7 +22,8 @@ public class Attack : MonoBehaviour {
         if (isReadyToAttack() && target.IsInRange(attackDistance))            
         {
             lastAttackTime = Time.time;
-            Debug.Log("ATTACK");
+            var networkEntityIdOfTarget = target.GetComponent<NetworkEntity>().Id;
+             networkCommunication.SendAttackerId(networkEntityIdOfTarget);
         }
     }
 

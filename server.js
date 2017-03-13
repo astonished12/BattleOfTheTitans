@@ -58,7 +58,8 @@ io.sockets.on('connection', function(socket){
 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
-    socket.on("follow",onFollowClient)
+    socket.on("follow",onFollowClient);
+    socket.on("attack",onClientAttack);
 });
 
 
@@ -89,6 +90,15 @@ var onFollowClient = function(data){
     console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
     
     this.broadcast.emit("followPlayer",{
+        socket_id:this.id,
+        target_id:data["idTarget"]
+    });
+};
+
+var onClientAttack = function(data){
+    console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
+    
+    this.broadcast.emit("attackPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });
