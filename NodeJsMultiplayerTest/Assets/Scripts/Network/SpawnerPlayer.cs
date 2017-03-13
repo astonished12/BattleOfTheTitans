@@ -16,7 +16,6 @@ public class SpawnerPlayer : MonoBehaviour {
         newGameObjectPlayer.GetComponent<FollowToClick>().myPlayerFollower = player.GetComponent<Follower>();
         newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
         OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
-
     }
 
     internal void PlayerLeft(string socket_id)

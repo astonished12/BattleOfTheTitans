@@ -21,8 +21,7 @@ public class NetworkScript : MonoBehaviour
     }
     // Use this for initialization
     void Start()
-    {
-        
+    {        
         SocketIO.On("identify", OnIdentify);
         SocketIO.On("anotherplayerconnected", OtherPlayer);
         SocketIO.On("playerLeft", OnPlayerLeft);

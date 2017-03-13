@@ -12,23 +12,18 @@ public class Follower : MonoBehaviour {
     float lastScanTime = 0;
     private void Start()
     {
-        navigator = GetComponent<NavagiateToPosition>();
-        
+        navigator = GetComponent<NavagiateToPosition>();        
     }
 
     public void SetTarget(Transform _target)
     {
         target = _target;
-
-        Debug.Log(transform.position + " " + target.position);
-
     }
     private void Update()
-    {
-        //Debug.Log(transform.position + " " + target.position);
-        if(isReadyToScan() && !isInRange())
+    {   
+        if (isReadyToScan() && !isInRange())
         {
-            navigator.SetTargetPosition(target.position);            
+            navigator.SetTargetFollowPosition(target.position);
         }
     }
 

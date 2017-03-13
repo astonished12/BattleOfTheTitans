@@ -27,6 +27,15 @@ public class NavagiateToPosition : MonoBehaviour
         var pathfinder = GetComponent<PathFinder>();
         path = pathfinder.AStar(transform.position, targetPositon);        
         SetDestination(path);
+        follower.SetTarget(null);
+    }
+
+    public void SetTargetFollowPosition(Vector3 _targetPosition)
+    {
+        targetPositon = _targetPosition;
+        var pathfinder = GetComponent<PathFinder>();
+        path = pathfinder.AStar(transform.position, targetPositon);
+        SetDestination(path);
     }
     public void SetDestination(List<Node> _path)
     {
