@@ -47,7 +47,6 @@ public class NetworkScript : MonoBehaviour
         spawner.AddMyPlayer(socket_id, player);
         for (int i = 0; i < players.list.Count; i++)
         {
-
             string playerKey = (string)players.keys[i];
             if (playerKey != socket_id)
              {
@@ -99,9 +98,7 @@ public class NetworkScript : MonoBehaviour
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
         //client player
-        var target = spawner.OtherPlayersGameObjects[target_id];
-
-        
+        var target = spawner.OtherPlayersGameObjects[target_id];        
 
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);
@@ -114,9 +111,12 @@ public class NetworkScript : MonoBehaviour
 
         var targetOfAttacker = spawner.OtherPlayersGameObjects[target_id];
         var attacker = spawner.OtherPlayersGameObjects[socket_id];
+        targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
+        attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
 
         targetOfAttacker.GetComponent<Alive>().health -= 10;
         attacker.GetComponent<Attack>().MakeAttack();
+
         //Debug.Log(socket_id + "   " + target_id);    
     }
 

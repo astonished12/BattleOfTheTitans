@@ -36,6 +36,6 @@ public class Attack : MonoBehaviour {
 
     public void MakeAttack()
     {
-        //myAnimator.SetTrigger("attack");
+        myAnimator.SetTrigger("attack");
     }
 }

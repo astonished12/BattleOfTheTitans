@@ -11,6 +11,7 @@ public class Follower : MonoBehaviour {
     public float scanFrequnecy = 0.1f;
     public float stopFollowDistance = 1;
     float lastScanTime = 0;
+    private Vector3 offSet;
     private void Start()
     {
         navigator = GetComponent<NavagiateToPosition>();
@@ -22,7 +23,12 @@ public class Follower : MonoBehaviour {
         
         if (isReadyToScan() && !target.IsInRange(stopFollowDistance)) 
         {
-            navigator.SetTargetFollowPosition(target.targetTransform.position);
+            if (target.transform.position.x > target.targetTransform.position.x)
+                offSet = Vector3.left;
+            else if (target.transform.position.x < target.targetTransform.position.x)
+                offSet = Vector3.right;
+
+            navigator.SetTargetPosition(target.targetTransform.position- offSet);
         }
     }
 

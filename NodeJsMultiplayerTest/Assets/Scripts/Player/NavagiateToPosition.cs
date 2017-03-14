@@ -30,15 +30,6 @@ public class NavagiateToPosition : MonoBehaviour
         target.SetTargetTransform(null);
     }
 
-    public void SetTargetFollowPosition(Vector3 _targetPosition)
-    {
-        targetPositon = _targetPosition;
-        var pathfinder = GetComponent<PathFinder>();
-        path = pathfinder.AStar(transform.position, targetPositon);
-       //path.RemoveAt(path.Count - 1);
-        SetDestination(path);
-
-    }
     public void SetDestination(List<Node> _path)
     {
         targetSuccesfull = false;
@@ -64,10 +55,9 @@ public class NavagiateToPosition : MonoBehaviour
                 }
                 currentWaypoint = path[targetIndex].worldPosition;
                 currentWaypoint.y = 0.5f;
-
             }
             transform.rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime );
+            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime);
             yield return null;
 
         }
