@@ -113,7 +113,7 @@ public class NetworkScript : MonoBehaviour
         var attacker = spawner.OtherPlayersGameObjects[socket_id];
         targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
         attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
-
+        
         targetOfAttacker.GetComponent<Alive>().health -= 10;
         attacker.GetComponent<Attack>().MakeAttack();
 

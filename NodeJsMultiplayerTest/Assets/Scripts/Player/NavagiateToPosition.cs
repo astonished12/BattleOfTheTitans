@@ -29,7 +29,7 @@ public class NavagiateToPosition : MonoBehaviour
         path = pathfinder.AStar(transform.position, targetPositon);        
         SetDestination(path);
         target.SetTargetTransform(null);
-        animator.SetBool("Attack", false);
+        animator.SetBool("attack", false);
     }
 
     public void SetDestination(List<Node> _path)
