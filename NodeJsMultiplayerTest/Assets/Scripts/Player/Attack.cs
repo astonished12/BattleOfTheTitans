@@ -10,11 +10,13 @@ public class Attack : MonoBehaviour {
     public float attackRate;
     NetworkEntity networkEntity;
     NetworkCommunication networkCommunication;
+    Animator myAnimator;
     void Start()
     {
         target = GetComponent<Target>();
         networkCommunication = GetComponent<NetworkCommunication>();
         networkEntity = GetComponent<NetworkEntity>();
+        myAnimator = GetComponent<Animator>();
     }
 
     void Update()
@@ -30,5 +32,10 @@ public class Attack : MonoBehaviour {
     private bool isReadyToAttack()
     {
         return (Time.time - lastAttackTime > attackRate && target.targetTransform);
+    }
+
+    public void MakeAttack()
+    {
+        //myAnimator.SetTrigger("attack");
     }
 }

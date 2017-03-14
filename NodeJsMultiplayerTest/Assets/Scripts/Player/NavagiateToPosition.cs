@@ -35,6 +35,7 @@ public class NavagiateToPosition : MonoBehaviour
         targetPositon = _targetPosition;
         var pathfinder = GetComponent<PathFinder>();
         path = pathfinder.AStar(transform.position, targetPositon);
+       //path.RemoveAt(path.Count - 1);
         SetDestination(path);
 
     }
