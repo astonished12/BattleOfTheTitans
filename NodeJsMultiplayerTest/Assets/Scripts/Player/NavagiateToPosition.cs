@@ -7,7 +7,7 @@ public class NavagiateToPosition : MonoBehaviour
 {
 
     Target target;
-
+    Animator animator;
 
     int targetIndex;
     private List<Node> path;
@@ -19,6 +19,7 @@ public class NavagiateToPosition : MonoBehaviour
     public void Awake()
     {
         target = GetComponent<Target>();
+        animator = GetComponent<Animator>();
     }
 
     public void SetTargetPosition(Vector3 _targetPosition)
@@ -28,6 +29,7 @@ public class NavagiateToPosition : MonoBehaviour
         path = pathfinder.AStar(transform.position, targetPositon);        
         SetDestination(path);
         target.SetTargetTransform(null);
+        animator.SetBool("Attack", false);
     }
 
     public void SetDestination(List<Node> _path)
