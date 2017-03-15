@@ -21,6 +21,13 @@ public class Attack : MonoBehaviour {
 
     void Update()
     {
+        if (!isReadyToAttack())
+            return;
+        if (!target.targetTransform.GetComponent<Alive>().isAlive)
+        {
+            target.SetTargetTransform(null);
+            return;
+        }
         if (isReadyToAttack() && target.IsInRange(attackDistance))            
         {
             lastAttackTime = Time.time;
