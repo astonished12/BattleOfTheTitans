@@ -12,20 +12,19 @@ public class Alive : MonoBehaviour {
     {
         animator = GetComponent<Animator>();
     }
-    public void OnHit()
+    public void OnHit(int damage)
     {
-        health -= 10;
+        health -= damage;
         if (!isAlive)
         {
             animator.SetTrigger("dead");
             Invoke("Respawn", respawnTime);
         }
-
-
     }
 
     void Respawn()
     {
+        //To DO SPAWNER POSITION FOR EACH PLAYER + NO INPUTS 
         transform.position = new Vector3(-47f, 0f, 16.5f);
         health = 100;
         animator.SetTrigger("Respawn");

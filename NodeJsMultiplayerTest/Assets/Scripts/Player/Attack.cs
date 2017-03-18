@@ -22,7 +22,7 @@ public class Attack : MonoBehaviour {
     void Update()
     {
         if (!isReadyToAttack())
-            return;
+              return;
         if (!target.targetTransform.GetComponent<Alive>().isAlive)
         {
             target.SetTargetTransform(null);
@@ -41,8 +41,5 @@ public class Attack : MonoBehaviour {
         return (Time.time - lastAttackTime > attackRate && target.targetTransform);
     }
 
-    public void MakeAttack()
-    {
-        myAnimator.SetTrigger("attack");
-    }
+   
 }

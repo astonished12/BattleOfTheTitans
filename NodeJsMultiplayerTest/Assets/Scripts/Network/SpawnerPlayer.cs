@@ -7,6 +7,7 @@ public class SpawnerPlayer : MonoBehaviour {
 
     public GameObject EnemyPrefab;
     public GameObject player;
+    public GameObject bulletPro;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
 
     public void SpawnPlayer(string id, Vector3 positions)
@@ -27,6 +28,11 @@ public class SpawnerPlayer : MonoBehaviour {
     internal void AddMyPlayer(string id,GameObject myObject){
         OtherPlayersGameObjects.Add(id, myObject);
     }
+    public void SpawnBullet(Vector3 positions,Transform target)
+    {
+        GameObject newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);
+        newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
+    }
 
-   
+
 }

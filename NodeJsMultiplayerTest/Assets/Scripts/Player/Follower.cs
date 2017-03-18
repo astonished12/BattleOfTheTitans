@@ -9,7 +9,7 @@ public class Follower : MonoBehaviour {
 
     NavagiateToPosition navigator;
     public float scanFrequnecy = 0.1f;
-    public float stopFollowDistance = 1;
+    public float stopFollowDistance;
     float lastScanTime = 0;
     private Vector3 offSet;
     private void Start()
@@ -19,16 +19,16 @@ public class Follower : MonoBehaviour {
     }
  
     private void Update()
-    {
-        
+    {        
         if (isReadyToScan() && !target.IsInRange(stopFollowDistance)) 
         {
-            if (target.transform.position.x > target.targetTransform.position.x)
-                offSet = Vector3.left;
-            else if (target.transform.position.x < target.targetTransform.position.x)
-                offSet = Vector3.right;
+            Debug.Log("Poate sa se miste");
+            if (transform.position.x > target.targetTransform.position.x)
+                offSet = Vector3.left*stopFollowDistance*0.75f;
+            else if (transform.position.x < target.targetTransform.position.x)
+                offSet = Vector3.right* stopFollowDistance * 0.75f;
 
-            navigator.SetTargetPosition(target.targetTransform.position- offSet);
+            navigator.SetTargetPosition(target.targetTransform.position-offSet);
         }
     }
 

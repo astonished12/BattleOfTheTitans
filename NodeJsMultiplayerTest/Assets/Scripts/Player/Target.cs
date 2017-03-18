@@ -5,8 +5,10 @@ using UnityEngine;
 public class Target : MonoBehaviour
 {
 
+    public string targetName;
     public Transform targetTransform;
-
+    public Vector3 pos;
+    public float offset = 0.5f;
     public void SetTargetTransform(Transform _transform)
     {
         targetTransform = _transform;

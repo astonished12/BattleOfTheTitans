@@ -8,7 +8,7 @@ public class FollowToClick : MonoBehaviour,IClickable{
     public GameObject myPlayer;
     private NetworkEntity networkEntity;
 
-    Target myPlayerTarget;
+    public Target myPlayerTarget;
 
     private void Start()
     {
@@ -17,7 +17,9 @@ public class FollowToClick : MonoBehaviour,IClickable{
     }
     public void OnClick(RaycastHit hit)
     {
-        myPlayerTarget.SetTargetTransform(transform);
+        myPlayerTarget.targetTransform = gameObject.transform;
+        myPlayerTarget.targetName = gameObject.name;
+
 
         var networkCommunication = GetComponent<NetworkCommunication>();
         networkCommunication.SendPlayerIdToFollow(networkEntity.Id);

@@ -30,6 +30,7 @@ public class NavagiateToPosition : MonoBehaviour
         SetDestination(path);
         target.SetTargetTransform(null);
         animator.SetBool("attack", false);
+
     }
 
     public void SetDestination(List<Node> _path)

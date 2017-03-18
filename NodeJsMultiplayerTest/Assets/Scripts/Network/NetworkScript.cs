@@ -111,13 +111,13 @@ public class NetworkScript : MonoBehaviour
 
         var targetOfAttacker = spawner.OtherPlayersGameObjects[target_id];
         var attacker = spawner.OtherPlayersGameObjects[socket_id];
-        targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
-        attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
-        
-        targetOfAttacker.GetComponent<Alive>().OnHit();
-        attacker.GetComponent<Attack>().MakeAttack();
 
-        //Debug.Log(socket_id + "   " + target_id);    
+
+        targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
+        attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);             
+   
+        attacker.GetComponent<Animator>().SetTrigger("attack");
+        spawner.SpawnBullet(attacker.transform.position, targetOfAttacker.transform);
     }
 
 }
