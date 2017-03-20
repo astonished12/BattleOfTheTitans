@@ -16,8 +16,9 @@ public class NetworkScript : MonoBehaviour
     private void Awake()
     {
         
-        SocketIO = GetComponent<SocketIOComponent>();
-        Debug.Log("In network script " + SocketIO.GetInstanceID());
+        //SocketIO = GetComponent<SocketIOComponent>();
+        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+        //Debug.Log("In network script " + SocketIO.GetInstanceID());
     }
     // Use this for initialization
     void Start()

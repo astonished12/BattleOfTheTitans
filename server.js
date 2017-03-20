@@ -35,33 +35,35 @@ io.sockets.on('connection', function(socket){
         SOCKET_LIST[socket.id] = socket;
         playerNo += 1;
     }*/
-    var player = new ControllerPlayer(socket.id,"Player1",-47,0,18.5);
-    PLAYERS[socket.id] = player;
-    socket.emit('identify',{     
-        x : PLAYERS[socket.id].x,
-        y : PLAYERS[socket.id].y,
-        z :PLAYERS[socket.id].z,
-        name : PLAYERS[socket.id].name,
-        socket_id : socket.id,
-        allPlayersAtCurrentTime: PLAYERS
-    });
-
-    socket.broadcast.emit("anotherplayerconnected",{
-        //TO DO find free position on map ( grid)
-        socket_id:socket.id,
-        x : PLAYERS[socket.id].x,
-        y : PLAYERS[socket.id].y,
-        z :PLAYERS[socket.id].z,
-        name : PLAYERS[socket.id].name
-
-    });
-
+    
+    socket.on("play",onPlay); 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
     socket.on("follow",onFollowClient);
     socket.on("attack",onClientAttack);
 });
+var onPlay = function(){
+     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5);
+    PLAYERS[this.id] = player;
+    this.emit('identify',{     
+        x : PLAYERS[this.id].x,
+        y : PLAYERS[this.id].y,
+        z :PLAYERS[this.id].z,
+        name : PLAYERS[this.id].name,
+        socket_id : this.id,
+        allPlayersAtCurrentTime: PLAYERS
+    });
 
+    this.broadcast.emit("anotherplayerconnected",{
+        //TO DO find free position on map ( grid)
+        socket_id:this.id,
+        x : PLAYERS[this.id].x,
+        y : PLAYERS[this.id].y,
+        z :PLAYERS[this.id].z,
+        name : PLAYERS[this.id].name
+
+    });
+}
 
 var onSocketDisconnect = function(){
 	this.broadcast.emit('playerLeft', {
