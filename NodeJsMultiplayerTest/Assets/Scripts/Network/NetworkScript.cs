@@ -114,10 +114,12 @@ public class NetworkScript : MonoBehaviour
 
 
         targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
-        attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);             
-   
+        attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
+
+        attacker.GetComponent<Animator>().SetFloat("multiplier", 2);
         attacker.GetComponent<Animator>().SetTrigger("attack");
-        spawner.SpawnBullet(attacker.transform.position, targetOfAttacker.transform);
+
+        spawner.SpawnBullet(socket_id,attacker.transform.position, targetOfAttacker.transform);
     }
 
 }

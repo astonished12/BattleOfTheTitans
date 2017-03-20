@@ -10,13 +10,10 @@ public class Attack : MonoBehaviour {
     public float attackRate;
     NetworkEntity networkEntity;
     NetworkCommunication networkCommunication;
-    Animator myAnimator;
     void Start()
     {
         target = GetComponent<Target>();
         networkCommunication = GetComponent<NetworkCommunication>();
-        networkEntity = GetComponent<NetworkEntity>();
-        myAnimator = GetComponent<Animator>();
     }
 
     void Update()

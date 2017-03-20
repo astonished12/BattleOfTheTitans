@@ -28,8 +28,9 @@ public class SpawnerPlayer : MonoBehaviour {
     internal void AddMyPlayer(string id,GameObject myObject){
         OtherPlayersGameObjects.Add(id, myObject);
     }
-    public void SpawnBullet(Vector3 positions,Transform target)
+    public void SpawnBullet(string id, Vector3 positions,Transform target)
     {
+        //TO DO ADD DAMAGE FROM PLAYER CLASS ATTRIBUTES
         GameObject newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);
         newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
     }

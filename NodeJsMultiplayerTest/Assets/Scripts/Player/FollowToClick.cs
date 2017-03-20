@@ -19,7 +19,7 @@ public class FollowToClick : MonoBehaviour,IClickable{
     {
         myPlayerTarget.targetTransform = gameObject.transform;
         myPlayerTarget.targetName = gameObject.name;
-
+        
 
         var networkCommunication = GetComponent<NetworkCommunication>();
         networkCommunication.SendPlayerIdToFollow(networkEntity.Id);
