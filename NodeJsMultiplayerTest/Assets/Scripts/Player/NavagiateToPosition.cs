@@ -45,7 +45,6 @@ public class NavagiateToPosition : MonoBehaviour
     IEnumerator FollowPath()
     {
         Vector3 currentWaypoint = path[0].worldPosition;
-        currentWaypoint.y = 0.5f;
         while (true)
         {
             if (transform.position == currentWaypoint)
@@ -57,7 +56,7 @@ public class NavagiateToPosition : MonoBehaviour
                     yield break;
                 }
                 currentWaypoint = path[targetIndex].worldPosition;
-                currentWaypoint.y = 0.5f;
+               
             }
             transform.rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime);
