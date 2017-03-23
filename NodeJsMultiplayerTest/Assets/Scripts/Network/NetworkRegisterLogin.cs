@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class NetworkRegisterLogin : MonoBehaviour
 {
@@ -13,10 +14,17 @@ public class NetworkRegisterLogin : MonoBehaviour
         DontDestroyOnLoad(this.gameObject);
 
         SocketIO = GetComponent<SocketIOComponent>();
+        SocketIO.On("newRoom", OnNewRoom);
+    }     
+
+    public void SendLoginData()
+    {
+       //SocketIO.Emit("login");
     }
 
-    public void SendPlay()
+    public void OnNewRoom(SocketIOEvent obj)
     {
-        SocketIO.Emit("play");
+        Debug.Log("new room here");
     }
+   
 }

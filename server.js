@@ -35,13 +35,17 @@ io.sockets.on('connection', function(socket){
         SOCKET_LIST[socket.id] = socket;
         playerNo += 1;
     }*/
-    
+    socket.on("newRoom",onNewRoom);
     socket.on("play",onPlay); 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
     socket.on("follow",onFollowClient);
     socket.on("attack",onClientAttack);
 });
+
+var onNewRoom = function(){
+    this.broadcast.emit("newRoom");
+}
 var onPlay = function(){
      var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5);
     PLAYERS[this.id] = player;
