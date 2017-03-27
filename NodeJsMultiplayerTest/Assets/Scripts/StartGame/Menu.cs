@@ -11,6 +11,7 @@ public class Menu : MonoBehaviour {
     public Button joinRoomButton;
     public Button exitButton;
     public Button refreshRoomList;
+    public Button backToMenuFromJoin;
     public SocketIOComponent SocketIO;
     
     public Text joinStatus;
@@ -22,7 +23,7 @@ public class Menu : MonoBehaviour {
 
     public GameObject itemListPrefab;
     public GameObject roomListParent;
-
+    private List<GameObject> roomItemList = new List<GameObject>();
     public Button closeRoom;
     //private Button playButton;
     // Use this for initialization
@@ -51,24 +52,29 @@ public class Menu : MonoBehaviour {
             menu.SetActive(false);
             createMenu.SetActive(false);
             joinMenu.SetActive(true);
-            if (NetworkRegisterLogin.RoomList.Count==0)
-            {
-                joinStatus.text = "There is no room here";
-            }
-            else
-            {
-                foreach(string room in NetworkRegisterLogin.RoomList)
-                {
-                    GameObject roomListItemGo = Instantiate(itemListPrefab);
-                    roomListItemGo.transform.SetParent(roomListParent.transform);
-                }
-            }
+            RefreshList();
+
+
+
         });
         /*playButton.onClick.AddListener(() => {
             SocketIO.Emit("play");
             SceneManager.LoadScene(2);
         });*/
-        exitButton.onClick.AddListener(() => { Application.Quit(); });
+        refreshRoomList.onClick.AddListener(() =>
+        {
+            RefreshList();
+        });
+        backToMenuFromJoin.onClick.AddListener(() =>
+        {
+            createMenu.SetActive(false);
+            joinMenu.SetActive(false);
+            menu.SetActive(true);
+
+        });
+        exitButton.onClick.AddListener(() => {
+            SocketIO.Emit("closeRoom");
+            Application.Quit(); });
 
     }
 
@@ -81,4 +87,25 @@ public class Menu : MonoBehaviour {
     void Update () {
 		
 	}
+
+    public void RefreshList()
+    {
+        if (NetworkRegisterLogin.RoomList.Count == 0)
+        {
+            joinStatus.text = "There is no room here";
+        }
+
+        for (int i = 0; i < roomItemList.Count; i++)
+        {
+            Destroy(roomItemList[i]);
+        }
+        roomItemList.Clear();
+
+        foreach (string room in NetworkRegisterLogin.RoomList)
+        {
+            GameObject roomListItemGo = Instantiate(itemListPrefab);
+            roomItemList.Add(roomListItemGo);
+            roomListItemGo.transform.SetParent(roomListParent.transform);
+        }
+    }
 }

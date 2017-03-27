@@ -37,6 +37,12 @@ io.sockets.on('connection', function(socket){
         SOCKET_LIST[socket.id] = socket;
         playerNo += 1;
     }*/
+    
+    socket.emit('allRooms',{    
+        socket_id : socket.id,
+        allRoomsAtCurrentTime: ROOMS
+    });
+    
     socket.on("newRoom",onNewRoom);
     socket.on("closeRoom",closeRoom);
     socket.on("play",onPlay); 
@@ -61,7 +67,7 @@ var closeRoom = function(){
     });
 }
 var onPlay = function(){
-     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5);
+     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
     PLAYERS[this.id] = player;
     this.emit('identify',{     
         x : PLAYERS[this.id].x,
@@ -84,13 +90,23 @@ var onPlay = function(){
 }
 
 var onSocketDisconnect = function(){
-	this.broadcast.emit('playerLeft', {
-	    socket_id : this.id,
-	    name: PLAYERS[this.id].name
-	});
-    console.log("Clinet id "+this.id+" disconnected.");
-	delete PLAYERS[this.id]
-	playerNo --;
+    //TO DO PLAYER IN ROOM CHECKER
+     if(PLAYERS[this.id])
+    {
+        this.broadcast.emit('playerLeft', {
+            socket_id : this.id,
+            name: PLAYERS[this.id].name
+        });
+        console.log("Clinet id "+this.id+" disconnected.");
+        delete PLAYERS[this.id]
+        playerNo --;
+    }
+    else
+    {
+         if(ROOMS[this.id]) 
+             delete ROOMS[this.id];
+         console.log("Clinet id "+this.id+" disconnected.");
+    }
 }
 
 
