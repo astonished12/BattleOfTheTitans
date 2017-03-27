@@ -17,9 +17,11 @@ var io = require('socket.io')(serv,{});
 
 var playerNo = 0;
 var PLAYERS = {};
+var ROOMS = {};
 var SOCKET_LIST = {};
 var ControllerPlayer = require("./Server/ControllerPlayer");
-    
+var Room = require("./Server/Room.js");
+
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
     /*if(playerNo==1)
@@ -36,6 +38,7 @@ io.sockets.on('connection', function(socket){
         playerNo += 1;
     }*/
     socket.on("newRoom",onNewRoom);
+    socket.on("closeRoom",closeRoom);
     socket.on("play",onPlay); 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
@@ -44,7 +47,18 @@ io.sockets.on('connection', function(socket){
 });
 
 var onNewRoom = function(){
-    this.broadcast.emit("newRoom");
+    var room = new Room(this.id);
+    ROOMS[this.id] = room;
+    this.broadcast.emit("newRoom",{
+         socket_id : this.id,
+    });
+}
+
+var closeRoom = function(){
+     delete ROOMS[this.id];
+     this.broadcast.emit("closeRoom",{
+         socket_id : this.id,
+    });
 }
 var onPlay = function(){
      var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5);
