@@ -62,11 +62,12 @@ public class NetworkRegisterLogin : MonoBehaviour
     {
         Debug.Log("JOIN SUCCES");
         //string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-        string room_id = ElementFromJsonToString(obj.data["room_id"].ToString())[1];
+      /*  string room_id = ElementFromJsonToString(obj.data["room_id"].ToString())[1];
         Debug.Log(room_id);     
        
-        //RoomList[room_id].currentNumberOfPlayers++;
-        // AICI E PROBLEMA CU room_id TO DOOOOOoo
+        RoomList[room_id].currentNumberOfPlayers++;
+        // AICI E PROBLEMA CU room_id TO DOOOOOoo*/
+        //ROOM SAU NU E BAGAT IN VECTOR NU TREBUIE CRED
         SceneManager.LoadScene(2);
         SocketIO.Emit("play");
 
