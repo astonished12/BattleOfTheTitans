@@ -16,6 +16,7 @@ var io = require('socket.io')(serv,{});
 
 
 var playerNo = 0;
+var roomNo = 0;
 var PLAYERS = {};
 var ROOMS = {};
 var SOCKET_LIST = {};
@@ -52,16 +53,22 @@ io.sockets.on('connection', function(socket){
     socket.on("attack",onClientAttack);
 });
 
-var onNewRoom = function(){
-    var room = new Room(this.id);
+var onNewRoom = function(data){
+    var roomName = "Room "+roomNo;
+    roomNo++;
+    var room = new Room(this.id,roomName,2);
     ROOMS[this.id] = room;
     this.broadcast.emit("newRoom",{
-         socket_id : this.id,
+         socket_id : ROOMS[this.id].id,
+         maxPlayers : ROOMS[this.id].maxPlayers,
+         currentPlayers : ROOMS[this.id].currentPlayers,
+         name : ROOMS[this.id].name
     });
 }
 
 var closeRoom = function(){
      delete ROOMS[this.id];
+     roomNo--;
      this.broadcast.emit("closeRoom",{
          socket_id : this.id,
     });

@@ -9,7 +9,7 @@ public class NetworkRegisterLogin : MonoBehaviour
 {
 
 	SocketIOComponent SocketIO;
-    public static List<string> RoomList = new List<string>();
+    public static Dictionary<string,Room> RoomList = new Dictionary<string,Room>();
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -34,15 +34,18 @@ public class NetworkRegisterLogin : MonoBehaviour
         {
             string room_id = (string)rooms.keys[i];
             if (room_id != socket_id)
-            {                
-                RoomList.Add(room_id);
+            {
+                JSONObject roomData = (JSONObject)rooms.list[i];
+                Room aux = new Room(int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), roomData["name"].ToString().Replace("\"", ""));             
+                RoomList.Add(room_id,aux);
             }
         }
     } 
     public void OnNewRoom(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-        RoomList.Add(socket_id);
+        Room aux = new Room(int.Parse(obj.data["currentPlayers"].ToString().Replace("\"", "")), int.Parse(obj.data["maxPlayers"].ToString().Replace("\"", "")), obj.data["name"].ToString().Replace("\"", ""));
+        RoomList.Add(socket_id, aux);
         Debug.Log("new room here ");
     }
 

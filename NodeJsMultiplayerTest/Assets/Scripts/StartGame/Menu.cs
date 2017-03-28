@@ -53,9 +53,6 @@ public class Menu : MonoBehaviour {
             createMenu.SetActive(false);
             joinMenu.SetActive(true);
             RefreshList();
-
-
-
         });
         /*playButton.onClick.AddListener(() => {
             SocketIO.Emit("play");
@@ -101,9 +98,10 @@ public class Menu : MonoBehaviour {
         }
         roomItemList.Clear();
 
-        foreach (string room in NetworkRegisterLogin.RoomList)
+        foreach (KeyValuePair<string,Room> room in NetworkRegisterLogin.RoomList)
         {
             GameObject roomListItemGo = Instantiate(itemListPrefab);
+            roomListItemGo.GetComponent<JoinGame>().SetupRoom(room.Value.nameRoom,room.Value.currentNumberOfPlayers,room.Value.maxNumberOfPlayers);
             roomItemList.Add(roomListItemGo);
             roomListItemGo.transform.SetParent(roomListParent.transform);
         }
