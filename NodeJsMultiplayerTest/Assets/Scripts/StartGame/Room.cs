@@ -8,6 +8,7 @@ public class Room {
     public int maxNumberOfPlayers;
     public string nameRoom;
 
+    NetworkEntity networkEntity;
     public Room(int _currentNumberOfPlayers, int _maxNumberOfPlayers, string _nameRoom)
     {
         currentNumberOfPlayers = _currentNumberOfPlayers;

@@ -19,6 +19,12 @@ public class JoinGame : MonoBehaviour {
 
     public void JoinOnRoom()
     {
-        Debug.Log("Joining");
+        string id = GetComponent<NetworkEntity>().Id;
+        SocketIO.Emit("joinRoom", new JSONObject(RoomIdToJson(id)));
+    }
+
+      private string RoomIdToJson(string id)
+    {
+        return string.Format(@"{{""idRoom"":""{0}""}}", id);
     }
 }

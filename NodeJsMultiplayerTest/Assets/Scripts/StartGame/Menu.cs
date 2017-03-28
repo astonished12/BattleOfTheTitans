@@ -81,9 +81,7 @@ public class Menu : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update () {
-		
-	}
+  
 
     public void RefreshList()
     {
@@ -101,6 +99,7 @@ public class Menu : MonoBehaviour {
         foreach (KeyValuePair<string,Room> room in NetworkRegisterLogin.RoomList)
         {
             GameObject roomListItemGo = Instantiate(itemListPrefab);
+            roomListItemGo.GetComponent<NetworkEntity>().Id = room.Key;
             roomListItemGo.GetComponent<JoinGame>().SetupRoom(room.Value.nameRoom,room.Value.currentNumberOfPlayers,room.Value.maxNumberOfPlayers);
             roomItemList.Add(roomListItemGo);
             roomListItemGo.transform.SetParent(roomListParent.transform);

@@ -46,6 +46,7 @@ io.sockets.on('connection', function(socket){
     
     socket.on("newRoom",onNewRoom);
     socket.on("closeRoom",closeRoom);
+    socket.on("joinRoom",onJoinRoom);
     socket.on("play",onPlay); 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
@@ -72,6 +73,10 @@ var closeRoom = function(){
      this.broadcast.emit("closeRoom",{
          socket_id : this.id,
     });
+}
+
+var onJoinRoom = function(data){
+    console.log("joining on "+ data["idRoom"]);
 }
 var onPlay = function(){
      var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
