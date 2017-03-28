@@ -7,13 +7,13 @@ public class Room {
     public int currentNumberOfPlayers;
     public int maxNumberOfPlayers;
     public string nameRoom;
-
-    NetworkEntity networkEntity;
-    public Room(int _currentNumberOfPlayers, int _maxNumberOfPlayers, string _nameRoom)
+    public string idRoom;
+    public Room(int _currentNumberOfPlayers, int _maxNumberOfPlayers, string _nameRoom,string _idRoom)
     {
         currentNumberOfPlayers = _currentNumberOfPlayers;
         maxNumberOfPlayers = _maxNumberOfPlayers;
         nameRoom = _nameRoom;
+        idRoom = _idRoom;
     }
 
 }

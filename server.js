@@ -19,7 +19,7 @@ var playerNo = 0;
 var roomNo = 0;
 var PLAYERS = {};
 var ROOMS = {};
-var SOCKET_LIST = {};
+//var SOCKET_LIST = {};
 var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
 
@@ -58,7 +58,9 @@ var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
     roomNo++;
     var room = new Room(this.id,roomName,2);
+    room.SOCKET_LIST[this.id] = this;
     ROOMS[this.id] = room;
+
     this.broadcast.emit("newRoom",{
          socket_id : ROOMS[this.id].id,
          maxPlayers : ROOMS[this.id].maxPlayers,
@@ -76,11 +78,27 @@ var closeRoom = function(){
 }
 
 var onJoinRoom = function(data){
-    console.log("joining on "+ data["idRoom"]);
+    if(ROOMS[data["idRoom"]].currentPlayers >= ROOMS[data["idRoom"]].maxPlayers)
+    {
+        this.emit("roomIsFull");
+    }
+    else
+    {
+        ROOMS[data["idRoom"]].SOCKET_LIST[this.id] = this;
+        ROOMS[data["idRoom"]].currentPlayers++;
+        //TO DO ONLY FOR SCOKETS IN ROOM
+        for(var socket in ROOMS[data["idRoom"]].SOCKET_LIST){
+               ROOMS[data["idRoom"]].SOCKET_LIST[socket].emit("joinSuccesFull",{
+               socket_id : socket,
+               room_id :  data["idRoom"] 
+           });
+        }
+    }
+   
 }
 var onPlay = function(){
      var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
-    PLAYERS[this.id] = player;
+     PLAYERS[this.id] = player;
     this.emit('identify',{     
         x : PLAYERS[this.id].x,
         y : PLAYERS[this.id].y,
@@ -89,7 +107,8 @@ var onPlay = function(){
         socket_id : this.id,
         allPlayersAtCurrentTime: PLAYERS
     });
-
+   
+    console.log(PLAYERS);
     this.broadcast.emit("anotherplayerconnected",{
         //TO DO find free position on map ( grid)
         socket_id:this.id,

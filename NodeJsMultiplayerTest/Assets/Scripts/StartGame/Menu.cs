@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System;
 
 public class Menu : MonoBehaviour {
 
@@ -32,6 +33,7 @@ public class Menu : MonoBehaviour {
         joinMenu.SetActive(false);
         createMenu.SetActive(false);
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+        SocketIO.On("roomIsFull", OnRoomIsFull);
 
         closeRoom.onClick.AddListener(() => {
             joinMenu.SetActive(false);
@@ -54,10 +56,8 @@ public class Menu : MonoBehaviour {
             joinMenu.SetActive(true);
             RefreshList();
         });
-        /*playButton.onClick.AddListener(() => {
-            SocketIO.Emit("play");
-            SceneManager.LoadScene(2);
-        });*/
+
+       
         refreshRoomList.onClick.AddListener(() =>
         {
             RefreshList();
@@ -75,16 +75,22 @@ public class Menu : MonoBehaviour {
 
     }
 
+ 
     public void SendPlay()
     {
         SocketIO.Emit("play");
     }
 
+    private void OnRoomIsFull(SocketIOEvent obj)
+    {
+        joinStatus.text = "Room is full. Refresh and chose another";
+    }
     // Update is called once per frame
-  
+
 
     public void RefreshList()
     {
+        joinStatus.text = "";
         if (NetworkRegisterLogin.RoomList.Count == 0)
         {
             joinStatus.text = "There is no room here";
@@ -99,8 +105,7 @@ public class Menu : MonoBehaviour {
         foreach (KeyValuePair<string,Room> room in NetworkRegisterLogin.RoomList)
         {
             GameObject roomListItemGo = Instantiate(itemListPrefab);
-            roomListItemGo.GetComponent<NetworkEntity>().Id = room.Key;
-            roomListItemGo.GetComponent<JoinGame>().SetupRoom(room.Value.nameRoom,room.Value.currentNumberOfPlayers,room.Value.maxNumberOfPlayers);
+            roomListItemGo.GetComponent<JoinGame>().SetupRoom(room.Value.nameRoom,room.Value.currentNumberOfPlayers,room.Value.maxNumberOfPlayers,room.Value.idRoom);
             roomItemList.Add(roomListItemGo);
             roomListItemGo.transform.SetParent(roomListParent.transform);
         }

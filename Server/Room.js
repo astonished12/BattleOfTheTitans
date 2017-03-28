@@ -3,6 +3,7 @@
         this.maxPlayers = maxPlayers;
         this.name = name;
         this.currentPlayers = 1;
+        this.SOCKET_LIST = {};
     };
 
 

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using System.Text.RegularExpressions;
+using UnityEngine.SceneManagement;
 
 public class NetworkRegisterLogin : MonoBehaviour
 {
@@ -18,6 +19,7 @@ public class NetworkRegisterLogin : MonoBehaviour
         SocketIO.On("allRooms", OnEnter);
         SocketIO.On("newRoom", OnNewRoom);
         SocketIO.On("closeRoom", OnCloseRoom);
+        SocketIO.On("joinSuccesFull", OnJoinSucces);
     }
 
     public void SendLoginData()
@@ -36,7 +38,7 @@ public class NetworkRegisterLogin : MonoBehaviour
             if (room_id != socket_id)
             {
                 JSONObject roomData = (JSONObject)rooms.list[i];
-                Room aux = new Room(int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), roomData["name"].ToString().Replace("\"", ""));             
+                Room aux = new Room(int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), roomData["name"].ToString().Replace("\"", ""), room_id);             
                 RoomList.Add(room_id,aux);
             }
         }
@@ -44,7 +46,7 @@ public class NetworkRegisterLogin : MonoBehaviour
     public void OnNewRoom(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-        Room aux = new Room(int.Parse(obj.data["currentPlayers"].ToString().Replace("\"", "")), int.Parse(obj.data["maxPlayers"].ToString().Replace("\"", "")), obj.data["name"].ToString().Replace("\"", ""));
+        Room aux = new Room(int.Parse(obj.data["currentPlayers"].ToString().Replace("\"", "")), int.Parse(obj.data["maxPlayers"].ToString().Replace("\"", "")), obj.data["name"].ToString().Replace("\"", ""), socket_id);
         RoomList.Add(socket_id, aux);
         Debug.Log("new room here ");
     }
@@ -55,6 +57,22 @@ public class NetworkRegisterLogin : MonoBehaviour
         RoomList.Remove(socket_id);
         Debug.Log("Room closed ");
     }
+
+    private void OnJoinSucces(SocketIOEvent obj)
+    {
+        Debug.Log("JOIN SUCCES");
+        //string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string room_id = ElementFromJsonToString(obj.data["room_id"].ToString())[1];
+        Debug.Log(room_id);     
+       
+        //RoomList[room_id].currentNumberOfPlayers++;
+        // AICI E PROBLEMA CU room_id TO DOOOOOoo
+        SceneManager.LoadScene(2);
+        SocketIO.Emit("play");
+
+    }
+
+
 
 
     string[] ElementFromJsonToString(string target)

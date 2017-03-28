@@ -14,11 +14,8 @@ public class NetworkScript : MonoBehaviour
     //public GameObject mainChracter;
   
     private void Awake()
-    {
-        
-        //SocketIO = GetComponent<SocketIOComponent>();
-        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
-        //Debug.Log("In network script " + SocketIO.GetInstanceID());
+    {        
+      SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
     }
     // Use this for initialization
     void Start()
@@ -32,11 +29,7 @@ public class NetworkScript : MonoBehaviour
     }
 
   
-    IEnumerator ConnectToServer()
-    {
-        yield return new WaitForSeconds(0.5f);
-
-    }
+  
   
     void OnIdentify(SocketIOEvent Obj)
     {
