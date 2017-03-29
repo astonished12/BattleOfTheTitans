@@ -17,27 +17,13 @@ var io = require('socket.io')(serv,{});
 
 var playerNo = 0;
 var roomNo = 0;
-var PLAYERS = {};
 var ROOMS = {};
-var SOCKET_LIST = {};
 var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
+var mapingSocketRoom = {};
 
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
-    /*if(playerNo==1)
-    {
-        var player = new ControllerPlayer(socket.id,"Player1",-47,0,18.5);
-        PLAYERS[socket.id] = player;
-        SOCKET_LIST[socket.id] = socket;
-        playerNo += 1;
-    }
-    else{
-       var player = new ControllerPlayer(socket.id,"Player1",47,0,-18.5);
-        PLAYERS[socket.id] = player;
-        SOCKET_LIST[socket.id] = socket;
-        playerNo += 1;
-    }*/
     
     socket.emit('allRooms',{    
         socket_id : socket.id,
@@ -57,11 +43,12 @@ io.sockets.on('connection', function(socket){
 var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
     roomNo++;
-    var room = new Room(this.id,roomName,2);
     
-    SOCKET_LIST[this.id] = [];
-    SOCKET_LIST[this.id].push(this);
+    var room = new Room(this.id,roomName,2); 
+    var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
+    room.PLAYERS[this.id] = player;    
     ROOMS[this.id] = room;
+    mapingSocketRoom[this.id] =  ROOMS[this.id];
     this.join(ROOMS[this.id]);
     
     this.broadcast.emit("newRoom",{
@@ -74,6 +61,7 @@ var onNewRoom = function(data){
 
 var closeRoom = function(){
      delete ROOMS[this.id];
+     delete mapingSocketRoom[this.id];
      roomNo--;
      this.broadcast.emit("closeRoom",{
          socket_id : this.id,
@@ -87,54 +75,49 @@ var onJoinRoom = function(data){
     }
     else
     {
-        SOCKET_LIST[data["idRoom"]].push(this);
         ROOMS[data["idRoom"]].currentPlayers++;
         this.join(ROOMS[data["idRoom"]]);
-        //TO DO ONLY FOR SCOKETS IN ROOM
-        /*for(var socket in SOCKET_LIST[data["idRoom"]]){
-               SOCKET_LIST[data["idRoom"]][socket].emit("joinSuccesFull",{
-               socket_id : socket.id,
-               room_id :  data["idRoom"] 
-           });
-        }*/
+        mapingSocketRoom[this.id] = ROOMS[data["idRoom"]];
+        var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
+        ROOMS[data["idRoom"]].PLAYERS[this.id] = player; 
+        //console.log(ROOMS[data["idRoom"]].PLAYERS);
         io.sockets.in(ROOMS[data["idRoom"]]).emit("joinSuccesFull",{
                room_id :  data["idRoom"]}); 
     }
    
 }
 var onPlay = function(){
-     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
-    PLAYERS[this.id] = player;
+     console.log(mapingSocketRoom[this.id].PLAYERS);
     this.emit('identify',{     
-        x : PLAYERS[this.id].x,
-        y : PLAYERS[this.id].y,
-        z :PLAYERS[this.id].z,
-        name : PLAYERS[this.id].name,
+        x : mapingSocketRoom[this.id].PLAYERS[this.id].x,
+        y : mapingSocketRoom[this.id].PLAYERS[this.id].y,
+        z :mapingSocketRoom[this.id].PLAYERS[this.id].z,
+        name : mapingSocketRoom[this.id].PLAYERS[this.id].name,
         socket_id : this.id,
-        allPlayersAtCurrentTime: PLAYERS
+        allPlayersAtCurrentTime: mapingSocketRoom[this.id].PLAYERS
     });
 
-    this.broadcast.emit("anotherplayerconnected",{
+    /*this.broadcast.in(mapingSocketRoom[this.id]).emit("anotherplayerconnected",{
         //TO DO find free position on map ( grid)
         socket_id:this.id,
-        x : PLAYERS[this.id].x,
-        y : PLAYERS[this.id].y,
-        z :PLAYERS[this.id].z,
-        name : PLAYERS[this.id].name
+        x : mapingSocketRoom[this.id].PLAYERS[this.id].x,
+        y : mapingSocketRoom[this.id].PLAYERS[this.id].y,
+        z :mapingSocketRoom[this.id].PLAYERS[this.id].z,
+        name : mapingSocketRoom[this.id].PLAYERS[this.id].name
 
-    });
+    });*/
 }
 
 var onSocketDisconnect = function(){
     //TO DO PLAYER IN ROOM CHECKER
-     if(PLAYERS[this.id])
+  if(mapingSocketRoom[this.id])
     {
         this.broadcast.emit('playerLeft', {
             socket_id : this.id,
-            name: PLAYERS[this.id].name
+            name: mapingSocketRoom[this.id].PLAYERS[this.id].name
         });
         console.log("Clinet id "+this.id+" disconnected.");
-        delete PLAYERS[this.id]
+        delete mapingSocketRoom[this.id].PLAYERS[this.id]
         playerNo --;
     }
     else
@@ -147,9 +130,9 @@ var onSocketDisconnect = function(){
 
 
 var onMoveClient = function(data){
-    console.log(PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
-    PLAYERS[this.id].updatePositions(data);
-    this.broadcast.emit("playerMove",{
+    console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
+    mapingSocketRoom[this.id].PLAYERS[this.id].updatePositions(data);
+    this.broadcast.in(mapingSocketRoom[this.id]).emit("playerMove",{
         socket_id:this.id,
         x : data["x"],
         y : data["y"],
@@ -160,7 +143,7 @@ var onMoveClient = function(data){
 var onFollowClient = function(data){
     console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
     
-    this.broadcast.emit("followPlayer",{
+    this.broadcast.in(mapingSocketRoom[this.id]).emit("followPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });
@@ -169,7 +152,7 @@ var onFollowClient = function(data){
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
     
-    io.sockets.emit("attackPlayer",{
+    io.sockets.in(mapingSocketRoom[this.id]).emit("attackPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });
