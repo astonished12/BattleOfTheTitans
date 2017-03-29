@@ -28,7 +28,7 @@ public class JoinGame : MonoBehaviour {
     }
 
       private string RoomIdToJson(string id)
-    {
-        return string.Format(@"{{""idRoom"":""{0}""}}", id);
-    }
+      {
+            return string.Format(@"{{""idRoom"":""{0}""}}", id);
+      }
 }

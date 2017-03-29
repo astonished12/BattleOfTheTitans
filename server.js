@@ -62,7 +62,8 @@ var onNewRoom = function(data){
     SOCKET_LIST[this.id] = [];
     SOCKET_LIST[this.id].push(this);
     ROOMS[this.id] = room;
-
+    this.join(ROOMS[this.id]);
+    
     this.broadcast.emit("newRoom",{
          socket_id : ROOMS[this.id].id,
          maxPlayers : ROOMS[this.id].maxPlayers,
@@ -88,13 +89,16 @@ var onJoinRoom = function(data){
     {
         SOCKET_LIST[data["idRoom"]].push(this);
         ROOMS[data["idRoom"]].currentPlayers++;
+        this.join(ROOMS[data["idRoom"]]);
         //TO DO ONLY FOR SCOKETS IN ROOM
-        for(var socket in SOCKET_LIST[data["idRoom"]]){
+        /*for(var socket in SOCKET_LIST[data["idRoom"]]){
                SOCKET_LIST[data["idRoom"]][socket].emit("joinSuccesFull",{
                socket_id : socket.id,
                room_id :  data["idRoom"] 
            });
-        }
+        }*/
+        io.sockets.in(ROOMS[data["idRoom"]]).emit("joinSuccesFull",{
+               room_id :  data["idRoom"]}); 
     }
    
 }
@@ -143,7 +147,6 @@ var onSocketDisconnect = function(){
 
 
 var onMoveClient = function(data){
-    //data.id = this.id;
     console.log(PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
     PLAYERS[this.id].updatePositions(data);
     this.broadcast.emit("playerMove",{
