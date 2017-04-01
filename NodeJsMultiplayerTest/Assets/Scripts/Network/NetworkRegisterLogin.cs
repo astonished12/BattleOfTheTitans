@@ -20,6 +20,7 @@ public class NetworkRegisterLogin : MonoBehaviour
         SocketIO.On("newRoom", OnNewRoom);
         SocketIO.On("closeRoom", OnCloseRoom);
         SocketIO.On("joinSuccesFull", OnJoinSucces);
+        SocketIO.On("roomFull", OnRoomFull);
     }
 
     public void SendLoginData()
@@ -38,7 +39,7 @@ public class NetworkRegisterLogin : MonoBehaviour
             if (room_id != socket_id)
             {
                 JSONObject roomData = (JSONObject)rooms.list[i];
-                Room aux = new Room(int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), roomData["name"].ToString().Replace("\"", ""), room_id);             
+                Room aux = new Room(int.Parse(roomData["currentPlayers"].ToString().Replace("\"", "")), int.Parse(roomData["maxPlayers"].ToString().Replace("\"", "")), roomData["name"].ToString().Replace("\"", ""), room_id);             
                 RoomList.Add(room_id,aux);
             }
         }
@@ -60,20 +61,17 @@ public class NetworkRegisterLogin : MonoBehaviour
 
     private void OnJoinSucces(SocketIOEvent obj)
     {
-        Debug.Log("JOIN SUCCES");
-        //string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-      /*  string room_id = ElementFromJsonToString(obj.data["room_id"].ToString())[1];
-        Debug.Log(room_id);     
-       
-        RoomList[room_id].currentNumberOfPlayers++;
-        // AICI E PROBLEMA CU room_id TO DOOOOOoo*/
-        //ROOM SAU NU E BAGAT IN VECTOR NU TREBUIE CRED
         SceneManager.LoadScene(2);
         SocketIO.Emit("play");
 
     }
 
-
+    private void OnRoomFull(SocketIOEvent obj)
+    {
+        string room_id = ElementFromJsonToString(obj.data["room_id"].ToString())[1];
+        Debug.Log(room_id);
+        RoomList[room_id].currentNumberOfPlayers++;
+    }
 
 
     string[] ElementFromJsonToString(string target)

@@ -82,7 +82,10 @@ var onJoinRoom = function(data){
         ROOMS[data["idRoom"]].PLAYERS[this.id] = player; 
         //console.log(ROOMS[data["idRoom"]].PLAYERS);
         io.sockets.in(ROOMS[data["idRoom"]]).emit("joinSuccesFull",{
-               room_id :  data["idRoom"]}); 
+               room_id :  data["idRoom"]});
+        
+        io.sockets.emit("roomFull",{
+            room_id : data["idRoom"]});
     }
    
 }

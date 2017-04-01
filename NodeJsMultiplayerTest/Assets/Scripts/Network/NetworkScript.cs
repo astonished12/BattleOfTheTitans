@@ -71,8 +71,7 @@ public class NetworkScript : MonoBehaviour
     private void OnPlayerLeft(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];
-        spawner.PlayerLeft(socket_id);
-       
+        spawner.PlayerLeft(socket_id);       
     }
 
     private void OnMove(SocketIOEvent obj)
