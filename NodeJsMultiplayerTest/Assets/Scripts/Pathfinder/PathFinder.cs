@@ -6,7 +6,7 @@ public class PathFinder : MonoBehaviour {
 
     private Grid gridTable;
 
-    private void Start(){
+    private void Awake(){
         GameObject ground = GameObject.Find("Ground");
 
         gridTable = ground.GetComponent<Grid>();

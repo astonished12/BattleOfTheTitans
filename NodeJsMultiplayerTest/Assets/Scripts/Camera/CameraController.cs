@@ -4,13 +4,17 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour {
 
-    public GameObject player;
+    private GameObject player;
+    public GameObject listOfCharacter;
+
     private Vector3 offSet;
 
     void Start()
     {
-        offSet = new Vector3(0,15,7);        
+        offSet = new Vector3(0,15,7);
+        player = listOfCharacter.transform.GetChild(1).gameObject;
     }
+
 
 
      void LateUpdate()

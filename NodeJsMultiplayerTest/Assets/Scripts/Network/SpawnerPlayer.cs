@@ -6,7 +6,7 @@ using UnityEngine;
 public class SpawnerPlayer : MonoBehaviour {
 
     public GameObject EnemyPrefab;
-    public GameObject player;
+    public GameObject listOfCharacter;
     public GameObject bulletPro;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
 
@@ -15,8 +15,8 @@ public class SpawnerPlayer : MonoBehaviour {
         if (!OtherPlayersGameObjects.ContainsKey(id))
         {
             GameObject newGameObjectPlayer = Instantiate(EnemyPrefab, positions, Quaternion.identity);
-            //ADDED REFERENCE INSTANTIATED PLAYER
-            newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = player;
+            //ADDED REFERENCE INSTANTIATED PLAYER INDEX OF CHARACTER LIST FROM SELECTION MENU
+            newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(1).gameObject;
             newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
         }

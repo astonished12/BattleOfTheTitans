@@ -8,7 +8,9 @@ public class Grid : MonoBehaviour
 
     public LayerMask unwalkableMask;
     public Vector2 gridWorldSize;
-    public GameObject player;
+    private GameObject player;
+    public GameObject listOfCharacter;
+
     Node[,] gridTable;
 
     int gridSizeX, gridSizeY;
@@ -18,6 +20,7 @@ public class Grid : MonoBehaviour
 
     void Awake()
     {
+        player = listOfCharacter.transform.GetChild(1).gameObject;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y);
         MakeGrid();

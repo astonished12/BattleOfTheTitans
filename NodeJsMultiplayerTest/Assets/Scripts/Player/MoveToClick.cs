@@ -5,9 +5,15 @@ using UnityEngine;
 
 public class MoveToClick : MonoBehaviour, IClickable {
 
-    public GameObject player;
+    private GameObject player;
+    public GameObject listOfCharacter;
     private List<Node> path;
-    
+
+
+    private void Awake()
+    {
+        player = listOfCharacter.transform.GetChild(1).gameObject;
+    }
     public void OnClick(RaycastHit hit)
     {
         

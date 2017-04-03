@@ -10,12 +10,14 @@ public class NetworkScript : MonoBehaviour
 
     public static SocketIOComponent SocketIO;
     public SpawnerPlayer spawner;
-    public GameObject player;
+    private GameObject player;
+    public GameObject listOfChracter;
     //public GameObject mainChracter;
   
     private void Awake()
-    {        
-      SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+    {
+        player = listOfChracter.transform.GetChild(1).gameObject;   
+        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
     }
     // Use this for initialization
     void Start()
