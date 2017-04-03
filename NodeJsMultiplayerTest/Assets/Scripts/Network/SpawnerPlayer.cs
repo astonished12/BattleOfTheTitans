@@ -16,7 +16,7 @@ public class SpawnerPlayer : MonoBehaviour {
         {
             GameObject newGameObjectPlayer = Instantiate(listOfCharactersRemote.transform.GetChild(numberCharacter).gameObject, positions, Quaternion.identity);
             //ADDED REFERENCE INSTANTIATED PLAYER INDEX OF CHARACTER LIST FROM SELECTION MENU
-            newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(numberCharacter).gameObject;
+            newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
             newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
         }
