@@ -11,6 +11,7 @@ public class NetworkRegisterLogin : MonoBehaviour
 
 	SocketIOComponent SocketIO;
     public static Dictionary<string,Room> RoomList = new Dictionary<string,Room>();
+    public static int noCharacter;
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -21,6 +22,13 @@ public class NetworkRegisterLogin : MonoBehaviour
         SocketIO.On("closeRoom", OnCloseRoom);
         SocketIO.On("joinSuccesFull", OnJoinSucces);
         SocketIO.On("roomFull", OnRoomFull);
+        SocketIO.On("canPlay", OnCanPlay);
+    }
+
+    private void OnCanPlay(SocketIOEvent obj)
+    {
+        SceneManager.LoadScene(3);
+        SocketIO.Emit("play");
     }
 
     public void SendLoginData()
@@ -61,9 +69,7 @@ public class NetworkRegisterLogin : MonoBehaviour
 
     private void OnJoinSucces(SocketIOEvent obj)
     {
-        SceneManager.LoadScene(2);
-        SocketIO.Emit("play");
-
+        SceneManager.LoadScene(2);       
     }
 
     private void OnRoomFull(SocketIOEvent obj)
@@ -79,4 +85,5 @@ public class NetworkRegisterLogin : MonoBehaviour
         string[] newString = Regex.Split(target, "\"");
         return newString;
     }
+    
 }

@@ -33,6 +33,7 @@ io.sockets.on('connection', function(socket){
     socket.on("newRoom",onNewRoom);
     socket.on("closeRoom",closeRoom);
     socket.on("joinRoom",onJoinRoom);
+    socket.on("characterId",onCharacterIdSelected);
     socket.on("play",onPlay); 
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
@@ -88,6 +89,15 @@ var onJoinRoom = function(data){
             room_id : data["idRoom"]});
     }
    
+}
+
+var onCharacterIdSelected = function(data){
+    console.log("Id character selected "+data["idCharacter"]);
+    mapingSocketRoom[this.id].PLAYERS[this.id].characterNumber = data["idCharacter"];
+    mapingSocketRoom[this.id].confirmedCharacters += 1;
+    if(mapingSocketRoom[this.id].confirmedCharacters == 2){
+        io.sockets.in(mapingSocketRoom[this.id]).emit("canPlay");
+    }
 }
 var onPlay = function(){
      console.log(mapingSocketRoom[this.id].PLAYERS);

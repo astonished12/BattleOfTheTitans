@@ -9,6 +9,7 @@
         this.z = z;
         //TO POSITION ON MOVE UPDATE
         this.Room = Room;
+        this.characterNumber = -99;
     };
 
 ControllerPlayer.prototype.updatePositions = function(data){

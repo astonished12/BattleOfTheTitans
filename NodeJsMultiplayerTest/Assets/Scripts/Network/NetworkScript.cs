@@ -16,14 +16,14 @@ public class NetworkScript : MonoBehaviour
   
     private void Awake()
     {
-        player = listOfChracter.transform.GetChild(1).gameObject;   
+        player = listOfChracter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;   
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
     }
     // Use this for initialization
     void Start()
     {        
         SocketIO.On("identify", OnIdentify);
-        SocketIO.On("anotherplayerconnected", OtherPlayer);
+        //SocketIO.On("anotherplayerconnected", OtherPlayer);
         SocketIO.On("playerLeft", OnPlayerLeft);
         SocketIO.On("playerMove", OnMove);
         SocketIO.On("followPlayer", OnFollow);
@@ -47,7 +47,9 @@ public class NetworkScript : MonoBehaviour
             if (playerKey != socket_id)
              {
                 JSONObject playerData = (JSONObject)players.list[i];
-                spawner.SpawnPlayer(playerKey, GetVectorPositionFromJson(playerData));
+                int noRemoteCharacters = int.Parse(ElementFromJsonToString(playerData.GetField("characterNumber").ToString())[1]);
+                Debug.Log(noRemoteCharacters);
+                spawner.SpawnPlayer(playerKey, noRemoteCharacters,GetVectorPositionFromJson(playerData));
             }
         }
         
@@ -65,11 +67,11 @@ public class NetworkScript : MonoBehaviour
     }
 
    
-    void OtherPlayer(SocketIOEvent Obj)
+    /*void OtherPlayer(SocketIOEvent Obj)
     {
         string socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
         spawner.SpawnPlayer(socket_id, GetVectorPositionFromJson(Obj.data));
-    }
+    }*/
     private void OnPlayerLeft(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];

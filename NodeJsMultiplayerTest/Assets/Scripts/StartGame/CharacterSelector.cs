@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SocketIO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +8,10 @@ public class CharacterSelector : MonoBehaviour {
     // Use this for initialization
     private GameObject[] characterList;
     public int index = 0;
-	void Start () {
+    private SocketIOComponent SocketIO;
+
+    void Start () {
+        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
         characterList = new GameObject[transform.childCount];
         for(int i=0;i<transform.childCount;i++)
         {
@@ -54,6 +58,12 @@ public class CharacterSelector : MonoBehaviour {
 
     public void Confirm()
     {
+        NetworkRegisterLogin.noCharacter = index;
+        SocketIO.Emit("characterId", new JSONObject(CharacterIdToJson(index.ToString())));
+    }
 
+    private string CharacterIdToJson(string id)
+    {
+        return string.Format(@"{{""idCharacter"":""{0}""}}", id);
     }
 }

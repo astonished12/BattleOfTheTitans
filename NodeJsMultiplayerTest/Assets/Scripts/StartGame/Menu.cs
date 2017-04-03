@@ -76,10 +76,10 @@ public class Menu : MonoBehaviour {
     }
 
  
-    public void SendPlay()
+   /* public void SendPlay()
     {
         SocketIO.Emit("play");
-    }
+    }*/
 
     private void OnRoomIsFull(SocketIOEvent obj)
     {

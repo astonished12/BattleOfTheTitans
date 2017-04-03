@@ -4,6 +4,7 @@
         this.name = name;
         this.currentPlayers = 1;
         this.PLAYERS = {};
+        this.confirmedCharacters = 0;
     };
 
 

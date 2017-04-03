@@ -20,7 +20,7 @@ public class Grid : MonoBehaviour
 
     void Awake()
     {
-        player = listOfCharacter.transform.GetChild(1).gameObject;
+        player = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
         gridSizeX = Mathf.RoundToInt(gridWorldSize.x);
         gridSizeY = Mathf.RoundToInt(gridWorldSize.y);
         MakeGrid();

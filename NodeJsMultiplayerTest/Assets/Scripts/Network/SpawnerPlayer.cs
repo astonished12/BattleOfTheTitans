@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class SpawnerPlayer : MonoBehaviour {
 
-    public GameObject EnemyPrefab;
+    public GameObject listOfCharactersRemote;
     public GameObject listOfCharacter;
     public GameObject bulletPro;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
 
-    public void SpawnPlayer(string id, Vector3 positions)
+    public void SpawnPlayer(string id,int numberCharacter, Vector3 positions)
     {
         if (!OtherPlayersGameObjects.ContainsKey(id))
         {
-            GameObject newGameObjectPlayer = Instantiate(EnemyPrefab, positions, Quaternion.identity);
+            GameObject newGameObjectPlayer = Instantiate(listOfCharactersRemote.transform.GetChild(numberCharacter).gameObject, positions, Quaternion.identity);
             //ADDED REFERENCE INSTANTIATED PLAYER INDEX OF CHARACTER LIST FROM SELECTION MENU
-            newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(1).gameObject;
+            newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(numberCharacter).gameObject;
             newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
         }

@@ -12,7 +12,7 @@ public class CameraController : MonoBehaviour {
     void Start()
     {
         offSet = new Vector3(0,15,7);
-        player = listOfCharacter.transform.GetChild(1).gameObject;
+        player = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
     }
 
 

@@ -12,7 +12,7 @@ public class MoveToClick : MonoBehaviour, IClickable {
 
     private void Awake()
     {
-        player = listOfCharacter.transform.GetChild(1).gameObject;
+        player = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
     }
     public void OnClick(RaycastHit hit)
     {
