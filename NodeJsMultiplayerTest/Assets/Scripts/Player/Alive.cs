@@ -34,7 +34,10 @@ public class Alive : MonoBehaviour {
     {
         //To DO SPAWNER POSITION FOR EACH PLAYER + NO INPUTS 
         transform.position = new Vector3(-47f, 0f, 16.5f);
-        curHealth = 100;
+        curHealth = maxHealth;
+               
+        healthBar.rectTransform.localScale = new Vector3(1, 1, 1);
+
         animator.SetTrigger("Respawn");
     }
 

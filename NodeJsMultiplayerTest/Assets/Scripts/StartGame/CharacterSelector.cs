@@ -9,8 +9,10 @@ public class CharacterSelector : MonoBehaviour {
     private GameObject[] characterList;
     public int index = 0;
     private SocketIOComponent SocketIO;
+    public GameObject panelConfirm;
 
     void Start () {
+        panelConfirm.SetActive(false);
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
         characterList = new GameObject[transform.childCount];
         for(int i=0;i<transform.childCount;i++)
@@ -58,6 +60,7 @@ public class CharacterSelector : MonoBehaviour {
 
     public void Confirm()
     {
+        panelConfirm.SetActive(true);
         NetworkRegisterLogin.noCharacter = index;
         SocketIO.Emit("characterId", new JSONObject(CharacterIdToJson(index.ToString())));
     }
