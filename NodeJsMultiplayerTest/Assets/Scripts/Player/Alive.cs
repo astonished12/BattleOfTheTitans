@@ -32,8 +32,20 @@ public class Alive : MonoBehaviour {
 
     void Respawn()
     {
-        //To DO SPAWNER POSITION FOR EACH PLAYER + NO INPUTS 
-        transform.position = new Vector3(-47f, 0f, 16.5f);
+        Debug.Log("A murit ownerul camerei ?!" + GetComponent<NetworkEntity>().ownerFlag);
+        //To DO SPAWNER POSITION FOR EACH PLAYER + NO INPUTS
+        if (GetComponent<NetworkEntity>().ownerFlag)
+        {
+            transform.position = GameObject.Find("Base1").transform.position;
+            Debug.Log("Ma duc in baza rosie "+ GameObject.Find("Base1").transform.position);
+        }
+        else
+        {
+            transform.position = GameObject.Find("Base2").transform.position;
+            Debug.Log("Ma duc in baza blue "+ GameObject.Find("Base2").transform.position);
+
+        }
+
         curHealth = maxHealth;
                
         healthBar.rectTransform.localScale = new Vector3(1, 1, 1);

@@ -46,7 +46,7 @@ var onNewRoom = function(data){
     roomNo++;
     
     var room = new Room(this.id,roomName,2); 
-    var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
+    var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,"true");
     room.PLAYERS[this.id] = player;    
     ROOMS[this.id] = room;
     mapingSocketRoom[this.id] =  ROOMS[this.id];
@@ -79,7 +79,7 @@ var onJoinRoom = function(data){
         ROOMS[data["idRoom"]].currentPlayers++;
         this.join(ROOMS[data["idRoom"]]);
         mapingSocketRoom[this.id] = ROOMS[data["idRoom"]];
-        var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,true);
+        var player = new ControllerPlayer(this.id,"Player1",47,0,-18.5,"false");
         ROOMS[data["idRoom"]].PLAYERS[this.id] = player; 
         //console.log(ROOMS[data["idRoom"]].PLAYERS);
         io.sockets.in(ROOMS[data["idRoom"]]).emit("joinSuccesFull",{
@@ -105,20 +105,12 @@ var onPlay = function(){
         x : mapingSocketRoom[this.id].PLAYERS[this.id].x,
         y : mapingSocketRoom[this.id].PLAYERS[this.id].y,
         z :mapingSocketRoom[this.id].PLAYERS[this.id].z,
+        owner : mapingSocketRoom[this.id].PLAYERS[this.id].isOwner,
         name : mapingSocketRoom[this.id].PLAYERS[this.id].name,
         socket_id : this.id,
         allPlayersAtCurrentTime: mapingSocketRoom[this.id].PLAYERS
     });
 
-    /*this.broadcast.in(mapingSocketRoom[this.id]).emit("anotherplayerconnected",{
-        //TO DO find free position on map ( grid)
-        socket_id:this.id,
-        x : mapingSocketRoom[this.id].PLAYERS[this.id].x,
-        y : mapingSocketRoom[this.id].PLAYERS[this.id].y,
-        z :mapingSocketRoom[this.id].PLAYERS[this.id].z,
-        name : mapingSocketRoom[this.id].PLAYERS[this.id].name
-
-    });*/
 }
 
 var onSocketDisconnect = function(){

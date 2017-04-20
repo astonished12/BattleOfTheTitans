@@ -10,7 +10,7 @@ public class SpawnerPlayer : MonoBehaviour {
     public GameObject bulletPro;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
 
-    public void SpawnPlayer(string id,int numberCharacter, Vector3 positions)
+    public void SpawnPlayer(string id,int numberCharacter, Vector3 positions,bool ownerOfRoom)
     {
         if (!OtherPlayersGameObjects.ContainsKey(id))
         {
@@ -18,6 +18,8 @@ public class SpawnerPlayer : MonoBehaviour {
             //ADDED REFERENCE INSTANTIATED PLAYER INDEX OF CHARACTER LIST FROM SELECTION MENU
             newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
             newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
+            Debug.Log("Metoda spawn player are flagul " + ownerOfRoom);
+            newGameObjectPlayer.GetComponent<NetworkEntity>().ownerFlag = ownerOfRoom;
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
         }
     }

@@ -12,6 +12,7 @@ public class NetworkScript : MonoBehaviour
     public SpawnerPlayer spawner;
     private GameObject player;
     public GameObject listOfChracter;
+    private  bool ownerFlag;
     //public GameObject mainChracter;
   
     private void Awake()
@@ -35,11 +36,13 @@ public class NetworkScript : MonoBehaviour
   
     void OnIdentify(SocketIOEvent Obj)
     {
-        player.transform.position = GetVectorPositionFromJson(Obj.data);     
-
+        player.transform.position = GetVectorPositionFromJson(Obj.data);
+        ownerFlag = Convert.ToBoolean(ElementFromJsonToString(Obj.data.GetField("owner").ToString())[1]);
+        Debug.Log(" Hostul are owner " + Obj.data["owner"] +ownerFlag);
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
         var socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
         player.GetComponent<NetworkEntity>().Id = socket_id;
+        player.GetComponent<NetworkEntity>().ownerFlag = ownerFlag;
         spawner.AddMyPlayer(socket_id, player);
         for (int i = 0; i < players.list.Count; i++)
         {
@@ -48,8 +51,9 @@ public class NetworkScript : MonoBehaviour
              {
                 JSONObject playerData = (JSONObject)players.list[i];
                 int noRemoteCharacters = int.Parse(ElementFromJsonToString(playerData.GetField("characterNumber").ToString())[1]);
-                Debug.Log(noRemoteCharacters);
-                spawner.SpawnPlayer(playerKey, noRemoteCharacters,GetVectorPositionFromJson(playerData));
+                bool ownerFlagAux = Convert.ToBoolean(ElementFromJsonToString(playerData.GetField("isOwner").ToString())[1]);
+                Debug.Log(" la remote avem owner " + playerData["isOwner"]+ " "+ ownerFlagAux);
+                spawner.SpawnPlayer(playerKey, noRemoteCharacters,GetVectorPositionFromJson(playerData), ownerFlagAux);
             }
         }
         
@@ -67,11 +71,7 @@ public class NetworkScript : MonoBehaviour
     }
 
    
-    /*void OtherPlayer(SocketIOEvent Obj)
-    {
-        string socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
-        spawner.SpawnPlayer(socket_id, GetVectorPositionFromJson(Obj.data));
-    }*/
+
     private void OnPlayerLeft(SocketIOEvent obj)
     {
         string socket_id = ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];

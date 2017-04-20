@@ -5,4 +5,5 @@ using UnityEngine;
 public class NetworkEntity : MonoBehaviour
 {
     public string Id;
+    public bool ownerFlag;
 }
