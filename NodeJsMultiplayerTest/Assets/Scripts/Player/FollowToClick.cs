@@ -8,7 +8,7 @@ public class FollowToClick : MonoBehaviour,IClickable{
     public GameObject myPlayer;
     private NetworkEntity networkEntity;
 
-    public Target myPlayerTarget;
+    private Target myPlayerTarget;
 
     private void Start()
     {

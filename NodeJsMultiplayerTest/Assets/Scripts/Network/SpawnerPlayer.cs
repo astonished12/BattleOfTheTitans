@@ -20,7 +20,19 @@ public class SpawnerPlayer : MonoBehaviour {
             newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
             Debug.Log("Metoda spawn player are flagul " + ownerOfRoom);
             newGameObjectPlayer.GetComponent<NetworkEntity>().ownerFlag = ownerOfRoom;
+
+            //IDENITY TOWERS
+            GameObject[] objects = GameObject.FindGameObjectsWithTag("Base2");
+            var objectCount = objects.Length;
+            foreach (var obj in objects)
+            {
+                obj.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
+            }
+
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
+
+
+
         }
     }
 

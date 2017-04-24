@@ -7,7 +7,6 @@ public class MoveToClick : MonoBehaviour, IClickable {
 
     private GameObject player;
     public GameObject listOfCharacter;
-    private List<Node> path;
 
 
     private void Awake()
