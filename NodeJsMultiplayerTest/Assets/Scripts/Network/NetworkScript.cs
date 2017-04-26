@@ -17,6 +17,8 @@ public class NetworkScript : MonoBehaviour
 
     private bool ownerFlag;
     private GameObject[] objects;
+    private GameObject targetOfAttacker;
+    private GameObject attacker;
     //public GameObject mainChracter;
 
     private void Awake()
@@ -137,18 +139,26 @@ public class NetworkScript : MonoBehaviour
     {
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-
-        var targetOfAttacker = spawner.OtherPlayersGameObjects[target_id];
-        var attacker = spawner.OtherPlayersGameObjects[socket_id];
-
-
-        targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
-        attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
+        attacker = spawner.OtherPlayersGameObjects[socket_id];
+        Debug.Log(socket_id + " " + target_id);
+        
+        if (spawner.OtherPlayersGameObjects.ContainsKey(target_id))
+        {
+            Debug.Log("Attack inamic");
+            targetOfAttacker = spawner.OtherPlayersGameObjects[target_id];       
+            targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
+            attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
+        }
+        else if(towersData.ContainsKey(target_id))
+        {
+            Debug.Log("Attack tureta");          
+            targetOfAttacker = towersData[target_id];
+            attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
+        }
 
         attacker.GetComponent<Animator>().SetFloat("multiplier", 2);
         attacker.GetComponent<Animator>().SetTrigger("attack");
-
-        spawner.SpawnBullet(socket_id,attacker.transform.position, targetOfAttacker.transform);
+        spawner.SpawnBullet(socket_id, attacker.transform.position, targetOfAttacker.transform);
     }
 
 }

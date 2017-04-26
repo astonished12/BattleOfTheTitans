@@ -23,10 +23,14 @@ public class Alive : MonoBehaviour {
     {
         curHealth -= damage;
         UpdateHealthBar();
-        if (!isAlive)
+        if (!isAlive && GetComponent<FollowTower>()==null)
         {
             animator.SetTrigger("dead");
             Invoke("Respawn", respawnTime);
+        }
+        else if(!isAlive && GetComponent<FollowTower>())
+        {
+            Invoke("DestroyTower", 1.0f);
         }
     }
 
@@ -52,7 +56,10 @@ public class Alive : MonoBehaviour {
 
         animator.SetTrigger("Respawn");
     }
-
+    private void DestroyTower()
+    {
+        Destroy(gameObject);
+    }
     void UpdateHealthBar()
     {
         float ratio = curHealth / maxHealth;
