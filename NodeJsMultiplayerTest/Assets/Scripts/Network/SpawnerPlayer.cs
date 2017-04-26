@@ -8,6 +8,7 @@ public class SpawnerPlayer : MonoBehaviour {
     public GameObject listOfCharactersRemote;
     public GameObject listOfCharacter;
     public GameObject bulletPro;
+    public GameObject maxinon;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
 
     public void SpawnPlayer(string id,int numberCharacter, Vector3 positions,bool ownerOfRoom)
@@ -21,7 +22,7 @@ public class SpawnerPlayer : MonoBehaviour {
             Debug.Log("Metoda spawn player are flagul " + ownerOfRoom);
             newGameObjectPlayer.GetComponent<NetworkEntity>().ownerFlag = ownerOfRoom;
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);
-        }
+        }        
     }
 
     internal void PlayerLeft(string socket_id)
@@ -38,6 +39,13 @@ public class SpawnerPlayer : MonoBehaviour {
         //TO DO ADD DAMAGE FROM PLAYER CLASS ATTRIBUTES
         GameObject newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);
         newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
+    }
+
+    public void SpawnMinions(string id)
+    {
+        Debug.Log("SPAWN MINIONS");
+        GameObject maxinon1 = Instantiate(maxinon, new Vector3(30f, 0f, 10f), Quaternion.identity);
+        maxinon1.GetComponent<Target>().targetTransform = OtherPlayersGameObjects[id].gameObject.transform;
     }
 
 

@@ -134,6 +134,8 @@ public class NetworkScript : MonoBehaviour
 
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);
+
+        
     }
     public void OnAttack(SocketIOEvent obj)
     {
@@ -159,6 +161,9 @@ public class NetworkScript : MonoBehaviour
         attacker.GetComponent<Animator>().SetFloat("multiplier", 2);
         attacker.GetComponent<Animator>().SetTrigger("attack");
         spawner.SpawnBullet(socket_id, attacker.transform.position, targetOfAttacker.transform);
+
+        //TEST
+        spawner.SpawnMinions(socket_id);
     }
 
 }
