@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var serv = require('http').Server(app);
+var shortid = require('shortid');
+ 
 
 app.get('/',function(req, res) {
     res.sendFile(__dirname + '/Client/Index.html');
@@ -22,6 +24,9 @@ var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
 var mapingSocketRoom = {};
 
+
+var idTowers = [];
+
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
     
@@ -38,6 +43,7 @@ io.sockets.on('connection', function(socket){
     socket.on("disconnect",onSocketDisconnect)
 	socket.on("move",onMoveClient);
     socket.on("follow",onFollowClient);
+    socket.on("followTower",onFollowTower);
     socket.on("attack",onClientAttack);
 });
 
@@ -47,10 +53,19 @@ var onNewRoom = function(data){
     
     var room = new Room(this.id,roomName,2); 
     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,"true");
-    room.PLAYERS[this.id] = player;    
+    room.PLAYERS[this.id] = player;
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    
     ROOMS[this.id] = room;
     mapingSocketRoom[this.id] =  ROOMS[this.id];
     this.join(ROOMS[this.id]);
+    
+    
     
     this.broadcast.emit("newRoom",{
          socket_id : ROOMS[this.id].id,
@@ -99,8 +114,10 @@ var onCharacterIdSelected = function(data){
         io.sockets.in(mapingSocketRoom[this.id]).emit("canPlay");
     }
 }
-var onPlay = function(){
-     console.log(mapingSocketRoom[this.id].PLAYERS);
+var onPlay = function(){  
+        
+     //console.log(mapingSocketRoom[this.id].PLAYERS);
+   
     this.emit('identify',{     
         x : mapingSocketRoom[this.id].PLAYERS[this.id].x,
         y : mapingSocketRoom[this.id].PLAYERS[this.id].y,
@@ -108,7 +125,8 @@ var onPlay = function(){
         owner : mapingSocketRoom[this.id].PLAYERS[this.id].isOwner,
         name : mapingSocketRoom[this.id].PLAYERS[this.id].name,
         socket_id : this.id,
-        allPlayersAtCurrentTime: mapingSocketRoom[this.id].PLAYERS
+        allPlayersAtCurrentTime: mapingSocketRoom[this.id].PLAYERS,
+        towersId : mapingSocketRoom[this.id].towersId
     });
 
 }
@@ -154,6 +172,16 @@ var onFollowClient = function(data){
     });
 };
 
+var onFollowTower = function(data){
+    console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
+    
+    this.broadcast.in(mapingSocketRoom[this.id]).emit("followTower",{
+        socket_id:this.id,
+        target_id:data["idTarget"]
+    });
+};
+
+
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
     
@@ -164,6 +192,11 @@ var onClientAttack = function(data){
 }
 
 
+
+
+
+   
+    
 
 
 

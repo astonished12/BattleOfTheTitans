@@ -12,9 +12,11 @@ public class NetworkScript : MonoBehaviour
     public SpawnerPlayer spawner;
     private GameObject player;
     public GameObject listOfChracter;
+
     private  bool ownerFlag;
+    private GameObject[] objects;
     //public GameObject mainChracter;
-  
+
     private void Awake()
     {
         player = listOfChracter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;   
@@ -28,29 +30,37 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("playerLeft", OnPlayerLeft);
         SocketIO.On("playerMove", OnMove);
         SocketIO.On("followPlayer", OnFollow);
+        SocketIO.On("followTower", OnFollowTower);
         SocketIO.On("attackPlayer", OnAttack);
-    }  
-  
-  
+    }
+
+    
+
     void OnIdentify(SocketIOEvent Obj)
     {
         player.transform.position = GetVectorPositionFromJson(Obj.data);
         ownerFlag = Convert.ToBoolean(ElementFromJsonToString(Obj.data.GetField("owner").ToString())[1]);
         //Debug.Log(" Hostul are owner " + Obj.data["owner"] +ownerFlag);
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
+        var idTowers = Obj.data.GetField("towersId");
+        Debug.Log(idTowers);
         var socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
         player.GetComponent<NetworkEntity>().Id = socket_id;
         player.GetComponent<NetworkEntity>().ownerFlag = ownerFlag;
 
-        //IDENTIFY TOWERS
-        /*GameObject[] objects = GameObject.FindGameObjectsWithTag("Base1");
+        //IDENTIFY TOWERS      
+        objects = GameObject.FindGameObjectsWithTag("clickable");       
         var objectCount = objects.Length;
+        int k = 0;  
         foreach (var obj in objects)
-        {
-            obj.GetComponent<FollowToClick>().myPlayer = player;
-        }
-        */
+        {            
+            obj.GetComponent<FollowTower>().myPlayer = player;
+            obj.GetComponent<NetworkEntity>().Id = idTowers[k].ToString();
+            k++;        
+        }    
+          
         spawner.AddMyPlayer(socket_id, player);
+
         for (int i = 0; i < players.list.Count; i++)
         {
             string playerKey = (string)players.keys[i];
@@ -107,7 +117,13 @@ public class NetworkScript : MonoBehaviour
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);
     }
+    private void OnFollowTower(SocketIOEvent obj)
+    {
+        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
 
+        Debug.Log("CINE PE CINE "+socket_id + " " + target_id);
+    }
     public void OnAttack(SocketIOEvent obj)
     {
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];

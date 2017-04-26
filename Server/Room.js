@@ -5,6 +5,7 @@
         this.currentPlayers = 1;
         this.PLAYERS = {};
         this.confirmedCharacters = 0;
+        this.towersId = [];
     };
 
 
