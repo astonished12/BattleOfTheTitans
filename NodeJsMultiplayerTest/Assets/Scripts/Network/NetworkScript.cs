@@ -12,8 +12,10 @@ public class NetworkScript : MonoBehaviour
     public SpawnerPlayer spawner;
     private GameObject player;
     public GameObject listOfChracter;
+    public Dictionary<string, GameObject> towersData = new Dictionary<string, GameObject>();
 
-    private  bool ownerFlag;
+
+    private bool ownerFlag;
     private GameObject[] objects;
     //public GameObject mainChracter;
 
@@ -55,7 +57,9 @@ public class NetworkScript : MonoBehaviour
         foreach (var obj in objects)
         {            
             obj.GetComponent<FollowTower>().myPlayer = player;
-            obj.GetComponent<NetworkEntity>().Id = idTowers[k].ToString();
+            string idTower = idTowers[k].ToString().Replace("\"", "");
+            obj.GetComponent<NetworkEntity>().Id = idTower;
+            towersData.Add(idTower, obj);
             k++;        
         }    
           
@@ -121,8 +125,13 @@ public class NetworkScript : MonoBehaviour
     {
         string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        //remote
+        var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
+        //client player
+        var target = towersData[target_id];
 
-        Debug.Log("CINE PE CINE "+socket_id + " " + target_id);
+        var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
+        followerOfPlaeryRequested.SetTargetTransform(target.transform);
     }
     public void OnAttack(SocketIOEvent obj)
     {
