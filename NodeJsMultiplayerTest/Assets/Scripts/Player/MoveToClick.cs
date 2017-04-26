@@ -15,12 +15,14 @@ public class MoveToClick : MonoBehaviour, IClickable {
     }
     public void OnClick(RaycastHit hit)
     {
-        
-        var navigator = player.GetComponent<NavagiateToPosition>();
-        navigator.SetTargetPosition(hit.point);
+        if (player.GetComponent<Alive>().isAlive)
+        {
+            var navigator = player.GetComponent<NavagiateToPosition>();
+            navigator.SetTargetPosition(hit.point);
 
-        var networkCommunication = player.GetComponent<NetworkCommunication>();
-        networkCommunication.SendLastPositionToNodeServer(hit.point);       
+            var networkCommunication = player.GetComponent<NetworkCommunication>();
+            networkCommunication.SendLastPositionToNodeServer(hit.point);
+        }
     }    
 
 }
