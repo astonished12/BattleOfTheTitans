@@ -33,6 +33,17 @@ public class NavagiateToPosition : MonoBehaviour
 
     }
 
+    public void SetTargetBase(Vector3 _targetPosition)
+    {
+        targetPositon = _targetPosition;
+        var pathfinder = GetComponent<PathFinder>();
+        path = pathfinder.AStar(transform.position, targetPositon);
+        SetDestination(path);
+        target.SetTargetTransform(null);
+        //animator.SetBool("attack", false);
+
+    }
+
     public void SetDestination(List<Node> _path)
     {
         targetSuccesfull = false;

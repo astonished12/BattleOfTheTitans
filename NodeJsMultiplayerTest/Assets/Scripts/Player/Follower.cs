@@ -28,8 +28,11 @@ public class Follower : MonoBehaviour {
             else if (transform.position.x < target.targetTransform.position.x)
                 offSet = Vector3.right* stopFollowDistance * 0.75f;
 
-            navigator.SetTargetPosition(target.targetTransform.position-offSet);
-        }
+            if (!GetComponent<CreepAi>())
+                navigator.SetTargetPosition(target.targetTransform.position-offSet);
+            else
+                navigator.SetTargetBase(target.targetTransform.position - offSet);
+        }       
     }
 
 

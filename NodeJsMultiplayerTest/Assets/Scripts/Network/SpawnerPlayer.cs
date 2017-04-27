@@ -41,11 +41,18 @@ public class SpawnerPlayer : MonoBehaviour {
         newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
     }
 
-    public void SpawnMinions(string id)
+    public void SpawnMinions()
     {
         Debug.Log("SPAWN MINIONS");
-        GameObject maxinon1 = Instantiate(maxinon, new Vector3(30f, 0f, 10f), Quaternion.identity);
-        maxinon1.GetComponent<Target>().targetTransform = OtherPlayersGameObjects[id].gameObject.transform;
+        GameObject spawnPointA = GameObject.Find("SpawnPointMinionsA");
+        GameObject spawnPointB = GameObject.Find("SpawnPointMinionsB");
+
+        GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
+        maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
+
+        GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
+        maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
+
     }
 
 

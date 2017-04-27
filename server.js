@@ -13,15 +13,15 @@ serv.listen(process.env.PORT||3000);
 
 console.log("Server started.");
 
-
+var ControllerPlayer = require("./Server/ControllerPlayer");
+var Room = require("./Server/Room.js");
 var io = require('socket.io')(serv,{});
 
 
 var playerNo = 0;
 var roomNo = 0;
 var ROOMS = {};
-var ControllerPlayer = require("./Server/ControllerPlayer");
-var Room = require("./Server/Room.js");
+
 var mapingSocketRoom = {};
 
 
@@ -51,7 +51,7 @@ var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
     roomNo++;
     
-    var room = new Room(this.id,roomName,2); 
+    var room = new Room(io,this.id,roomName,2); 
     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,"true");
     room.PLAYERS[this.id] = player;
     room.towersId.push(shortid.generate());
@@ -128,6 +128,9 @@ var onPlay = function(){
         allPlayersAtCurrentTime: mapingSocketRoom[this.id].PLAYERS,
         towersId : mapingSocketRoom[this.id].towersId
     });
+    
+        var timer = new Date();
+        mapingSocketRoom[this.id].lastTimeSpawn = timer.getTime();
 
 }
 
@@ -191,9 +194,13 @@ var onClientAttack = function(data){
     });
 }
 
+setInterval(function(){
+   for(var roomId in ROOMS){
+        ROOMS[roomId].SpawnMinions();
+   }
+},40);
 
-
-
+module.exports = mapingSocketRoom;
 
    
     

@@ -36,6 +36,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("followPlayer", OnFollow);
         SocketIO.On("followTower", OnFollowTower);
         SocketIO.On("attackPlayer", OnAttack);
+        SocketIO.On("spawnMinions",OnSpawnMinions);
     }
 
     
@@ -163,7 +164,12 @@ public class NetworkScript : MonoBehaviour
         spawner.SpawnBullet(socket_id, attacker.transform.position, targetOfAttacker.transform);
 
         //TEST
-        spawner.SpawnMinions(socket_id);
+        //spawner.SpawnMinions(socket_id);
+    }
+
+    private void OnSpawnMinions(SocketIOEvent obj)
+    {        
+        spawner.SpawnMinions();
     }
 
 }
