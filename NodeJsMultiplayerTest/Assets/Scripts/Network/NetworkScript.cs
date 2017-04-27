@@ -167,9 +167,16 @@ public class NetworkScript : MonoBehaviour
         //spawner.SpawnMinions(socket_id);
     }
 
-    private void OnSpawnMinions(SocketIOEvent obj)
-    {        
-        spawner.SpawnMinions();
+    private void OnSpawnMinions(SocketIOEvent Obj)
+    {
+        var idTowers = Obj.data.GetField("minionsId");
+        List<string> myIdTowers = new List<string>();
+        for (int i=0;i< idTowers.Count;i++)
+        {
+            myIdTowers.Add(idTowers[i].ToString().Replace("\"", ""));
+        }
+
+        StartCoroutine(spawner.SpawnMinions(myIdTowers));
     }
 
 }

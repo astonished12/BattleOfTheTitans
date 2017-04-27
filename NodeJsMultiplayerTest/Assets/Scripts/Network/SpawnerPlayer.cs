@@ -41,17 +41,25 @@ public class SpawnerPlayer : MonoBehaviour {
         newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
     }
 
-    public void SpawnMinions()
+    public IEnumerator SpawnMinions(List<string> idTowers)
     {
         Debug.Log("SPAWN MINIONS");
         GameObject spawnPointA = GameObject.Find("SpawnPointMinionsA");
         GameObject spawnPointB = GameObject.Find("SpawnPointMinionsB");
 
-        GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
-        maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
+        foreach (string towerId in idTowers)
+        {
+            GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
+            maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
+            //TO DO : SPAWN MINIONS + REMOTE ...
+            maxinon1.GetComponent<NetworkEntity>().Id = towerId;
 
-        GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
-        maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
+            GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
+            maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
+            yield return new WaitForSeconds(1.0f);
+        }
+        yield return null;
+
 
     }
 
