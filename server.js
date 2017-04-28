@@ -15,7 +15,7 @@ console.log("Server started.");
 
 var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
-var io = require('socket.io')(serv,{});
+var     io = require('socket.io')(serv,{});
 
 
 var playerNo = 0;
@@ -26,13 +26,27 @@ var mapingSocketRoom = {};
 
 
 var idTowers = [];
-
+/*var makeSendableRooms = function(rooms){
+    var sendRooms = {};
+    for(var roomKey in rooms){
+        for(var key in rooms[roomKey])
+            {
+                if( sendRooms[roomKey] === undefined){
+                    sendRooms[roomKey] = {};
+                }
+                    if(key != "io"){
+                        sendRooms[roomKey][key] = rooms[roomKey][key];
+                    }
+            }
+    }
+}*/
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
     
     socket.emit('allRooms',{    
         socket_id : socket.id,
-        allRoomsAtCurrentTime: ROOMS
+        //allRoomsAtCurrentTime: makeSendableRooms(ROOMS)
+        allRoomsAtCurrentTime : ROOMS
     });
     
     socket.on("newRoom",onNewRoom);
@@ -51,9 +65,10 @@ var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
     roomNo++;
     
-    var room = new Room(io,this.id,roomName,2); 
+    var room = new Room(this.id,roomName,2); 
     var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,"true");
     room.PLAYERS[this.id] = player;
+    
     room.towersId.push(shortid.generate());
     room.towersId.push(shortid.generate());
     room.towersId.push(shortid.generate());
@@ -62,10 +77,10 @@ var onNewRoom = function(data){
     room.towersId.push(shortid.generate());
     
     ROOMS[this.id] = room;
+    
     mapingSocketRoom[this.id] =  ROOMS[this.id];
-    this.join(ROOMS[this.id]);
     
-    
+    this.join(ROOMS[this.id].name);   
     
     this.broadcast.emit("newRoom",{
          socket_id : ROOMS[this.id].id,
@@ -73,6 +88,7 @@ var onNewRoom = function(data){
          currentPlayers : ROOMS[this.id].currentPlayers,
          name : ROOMS[this.id].name
     });
+    
 }
 
 var closeRoom = function(){
@@ -91,17 +107,19 @@ var onJoinRoom = function(data){
     }
     else
     {
-        ROOMS[data["idRoom"]].currentPlayers++;
-        this.join(ROOMS[data["idRoom"]]);
-        mapingSocketRoom[this.id] = ROOMS[data["idRoom"]];
+        io.sockets.emit("roomFull",{
+            room_id : data["idRoom"]});
+        
+        ROOMS[data["idRoom"]].currentPlayers++;            
         var player = new ControllerPlayer(this.id,"Player1",47,0,-18.5,"false");
         ROOMS[data["idRoom"]].PLAYERS[this.id] = player; 
         //console.log(ROOMS[data["idRoom"]].PLAYERS);
-        io.sockets.in(ROOMS[data["idRoom"]]).emit("joinSuccesFull",{
-               room_id :  data["idRoom"]});
+        mapingSocketRoom[this.id] = ROOMS[data["idRoom"]];        
+        this.join(ROOMS[data["idRoom"]].name);
         
-        io.sockets.emit("roomFull",{
-            room_id : data["idRoom"]});
+        io.to(ROOMS[data["idRoom"]].name).emit("joinSuccesFull",{
+               room_id :  data["idRoom"]});     
+
     }
    
 }
@@ -111,7 +129,7 @@ var onCharacterIdSelected = function(data){
     mapingSocketRoom[this.id].PLAYERS[this.id].characterNumber = data["idCharacter"];
     mapingSocketRoom[this.id].confirmedCharacters += 1;
     if(mapingSocketRoom[this.id].confirmedCharacters == 2){
-        io.sockets.in(mapingSocketRoom[this.id]).emit("canPlay");
+        io.to(mapingSocketRoom[this.id].name).emit("canPlay");
     }
 }
 var onPlay = function(){  
@@ -158,7 +176,7 @@ var onSocketDisconnect = function(){
 var onMoveClient = function(data){
     console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
     mapingSocketRoom[this.id].PLAYERS[this.id].updatePositions(data);
-    this.broadcast.in(mapingSocketRoom[this.id]).emit("playerMove",{
+    this.broadcast.to(mapingSocketRoom[this.id].name).emit("playerMove",{
         socket_id:this.id,
         x : data["x"],
         y : data["y"],
@@ -169,7 +187,7 @@ var onMoveClient = function(data){
 var onFollowClient = function(data){
     console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
     
-    this.broadcast.in(mapingSocketRoom[this.id]).emit("followPlayer",{
+    this.broadcast.to(mapingSocketRoom[this.id].name).emit("followPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });
@@ -178,7 +196,7 @@ var onFollowClient = function(data){
 var onFollowTower = function(data){
     console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
     
-    this.broadcast.in(mapingSocketRoom[this.id]).emit("followTower",{
+    this.broadcast.to(mapingSocketRoom[this.id].name).emit("followTower",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });
@@ -188,21 +206,20 @@ var onFollowTower = function(data){
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
     
-    io.sockets.in(mapingSocketRoom[this.id]).emit("attackPlayer",{
+    io.to(mapingSocketRoom[this.id].name).emit("attackPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
     });
 }
 
 setInterval(function(){
-   for(var roomId in ROOMS){
-        ROOMS[roomId].SpawnMinions();
-   }
+   for(var roomId in mapingSocketRoom)
+        mapingSocketRoom[roomId].SpawnMinions(io);    
+   
 },40);
 
-module.exports = mapingSocketRoom;
 
-   
+
     
 
 

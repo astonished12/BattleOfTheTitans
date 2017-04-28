@@ -1,7 +1,7 @@
 var shortid = require('shortid');
 
-var  Room = function (io,id,name, maxPlayers) {
-        this.io = io;
+var  Room = function (id,name, maxPlayers) {
+        //this.io = io;
         this.id = id;
         this.maxPlayers = maxPlayers;
         this.name = name;
@@ -11,33 +11,31 @@ var  Room = function (io,id,name, maxPlayers) {
         this.towersId = [];
         this.minionsId = [];
         this.lastTimeSpawn = -999;
-        this.onceCalled = false;
-        self = this;
+        //self = this;
     };
 
-Room.prototype.SpawnMinions = function(){
+Room.prototype.SpawnMinions = function(io){
     var timer = new Date();
-    if(timer.getTime() - self.lastTimeSpawn > Math.pow(2,4)*1000 && self.lastTimeSpawn > 0 )
+    if(timer.getTime() - this.lastTimeSpawn > Math.pow(2,4)*1000 && this.lastTimeSpawn > 0)
     {
-        self.lastTimeSpawn = timer.getTime();
-        console.log("O SA SPAWNEZ MINIONI "+self);
-        self.GenerateIdForMinions();
-       
-            self.io.sockets.in(self).emit("spawnMinions",{
-            minionsId : self.minionsId
+        this.lastTimeSpawn = timer.getTime();
+        console.log("O SA SPAWNEZ MINIONI IN CAMERA "+this.name);
+        this.GenerateIdForMinions();  
+        io.to(this.name).emit("spawnMinions",{
+                minionsId : this.minionsId
         });
-    
+          
     }
 }
 
 Room.prototype.GenerateIdForMinions = function(){
-    self.minionsId = [];
-    self.minionsId.push(shortid.generate());
-    self.minionsId.push(shortid.generate());
-    self.minionsId.push(shortid.generate());
-    self.minionsId.push(shortid.generate());
-    self.minionsId.push(shortid.generate());
-    self.minionsId.push(shortid.generate());
+    this.minionsId = [];
+    this.minionsId.push(shortid.generate());
+    this.minionsId.push(shortid.generate());
+    this.minionsId.push(shortid.generate());
+    this.minionsId.push(shortid.generate());
+    this.minionsId.push(shortid.generate());
+    this.minionsId.push(shortid.generate());
 }
-    
+
 module.exports = Room;

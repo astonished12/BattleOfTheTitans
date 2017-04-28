@@ -69,6 +69,7 @@ public class NetworkRegisterLogin : MonoBehaviour
 
     private void OnJoinSucces(SocketIOEvent obj)
     {
+        Debug.Log("JOIN CU SUCCES");
         SceneManager.LoadScene(2);       
     }
 
