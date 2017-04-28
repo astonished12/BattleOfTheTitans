@@ -32,12 +32,12 @@ public class Attack : MonoBehaviour {
             networkCommunication.SendAttackerId(networkEntityIdOfTarget);
         }
 
-        /*if (isReadyToAttack() && target.IsInRange(attackDistance) && GetComponent<Alive>().isAlive && GetComponent<CreepAi>())
+        if (isReadyToAttack() && target.IsInRange(attackDistance) && GetComponent<Alive>().isAlive && GetComponent<CreepAi>())
         {
             lastAttackTime = Time.time;
             var networkEntityIdOfTarget = target.targetTransform.GetComponent<NetworkEntity>().Id;
             networkCommunication.SendAttackerId(networkEntityIdOfTarget);
-        }*/
+        }
     }
 
     private bool isReadyToAttack()

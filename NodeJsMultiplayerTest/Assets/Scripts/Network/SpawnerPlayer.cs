@@ -9,7 +9,9 @@ public class SpawnerPlayer : MonoBehaviour {
     public GameObject listOfCharacter;
     public GameObject bulletPro;
     public GameObject maxinon;
+    public GameObject maxinonRemote;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
+    public Dictionary<string, GameObject> minionsData = new Dictionary<string, GameObject>();
 
     public void SpawnPlayer(string id,int numberCharacter, Vector3 positions,bool ownerOfRoom)
     {
@@ -41,23 +43,46 @@ public class SpawnerPlayer : MonoBehaviour {
         newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
     }
 
-    public IEnumerator SpawnMinions(List<string> idTowers)
+    public IEnumerator SpawnMinions(List<string> idTowers, bool checkOwner)
     {
         Debug.Log("SPAWN MINIONS");
         GameObject spawnPointA = GameObject.Find("SpawnPointMinionsA");
         GameObject spawnPointB = GameObject.Find("SpawnPointMinionsB");
 
-        foreach (string towerId in idTowers)
+        for(int k=0;k<idTowers.Count;k++)
         {
-            GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
-            maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
-            //TO DO : SPAWN MINIONS + REMOTE ...
-            maxinon1.GetComponent<NetworkEntity>().Id = towerId;
 
-            GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
-            maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
-            yield return new WaitForSeconds(1.0f);
-        }
+            if (checkOwner)
+            {                
+                GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
+                maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
+                maxinon1.GetComponent<NetworkEntity>().Id = idTowers[k];
+                minionsData.Add(idTowers[k], maxinon1);
+                k++;
+
+                GameObject maxinon2 = Instantiate(maxinonRemote, spawnPointB.transform.position, Quaternion.identity);
+                maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
+                maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
+                minionsData.Add(idTowers[k], maxinon2);
+
+                yield return new WaitForSeconds(1.0f);                
+            }
+            if (!checkOwner)
+            {
+                GameObject maxinon1 = Instantiate(maxinonRemote, spawnPointA.transform.position, Quaternion.identity);
+                maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
+                maxinon1.GetComponent<NetworkEntity>().Id = idTowers[k];
+                minionsData.Add(idTowers[k], maxinon1);
+                k++;
+
+                GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
+                maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
+                maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
+                minionsData.Add(idTowers[k], maxinon2);
+
+                yield return new WaitForSeconds(1.0f);
+            }
+           }
         yield return null;
 
 

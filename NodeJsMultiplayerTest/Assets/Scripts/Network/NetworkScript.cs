@@ -13,7 +13,7 @@ public class NetworkScript : MonoBehaviour
     private GameObject player;
     public GameObject listOfChracter;
     public Dictionary<string, GameObject> towersData = new Dictionary<string, GameObject>();
-
+    public Dictionary<string, GameObject> minionsData = new Dictionary<string, GameObject>();
 
     private bool ownerFlag;
     private GameObject[] objects;
@@ -174,9 +174,10 @@ public class NetworkScript : MonoBehaviour
         for (int i=0;i< idTowers.Count;i++)
         {
             myIdTowers.Add(idTowers[i].ToString().Replace("\"", ""));
+
         }
 
-        StartCoroutine(spawner.SpawnMinions(myIdTowers));
+        StartCoroutine(spawner.SpawnMinions(myIdTowers,ownerFlag));
     }
 
 }
