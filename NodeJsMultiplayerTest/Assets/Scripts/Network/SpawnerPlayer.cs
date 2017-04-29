@@ -63,6 +63,7 @@ public class SpawnerPlayer : MonoBehaviour {
                 GameObject maxinon2 = Instantiate(maxinonRemote, spawnPointB.transform.position, Quaternion.identity);
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
+                maxinon2.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
                 minionsData.Add(idTowers[k], maxinon2);
 
                 yield return new WaitForSeconds(1.0f);                
@@ -72,17 +73,22 @@ public class SpawnerPlayer : MonoBehaviour {
                 GameObject maxinon1 = Instantiate(maxinonRemote, spawnPointA.transform.position, Quaternion.identity);
                 maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
                 maxinon1.GetComponent<NetworkEntity>().Id = idTowers[k];
+                maxinon1.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
                 minionsData.Add(idTowers[k], maxinon1);
                 k++;
-
+                
                 GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
-                minionsData.Add(idTowers[k], maxinon2);
+                minionsData.Add(idTowers[k], maxinon2);               
 
                 yield return new WaitForSeconds(1.0f);
             }
-           }
+            CreepAi.numberOrder++;
+        }
+
+        CreepAi.numberOrder = 0;
+
         yield return null;
 
 

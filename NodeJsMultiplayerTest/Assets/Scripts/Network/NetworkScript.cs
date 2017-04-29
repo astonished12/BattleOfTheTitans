@@ -158,6 +158,12 @@ public class NetworkScript : MonoBehaviour
             targetOfAttacker = towersData[target_id];
             attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
         }
+        else if (spawner.minionsData.ContainsKey(target_id))
+        {
+            Debug.Log("Attack maxinon");
+            targetOfAttacker = spawner.minionsData[target_id];
+            attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
+        }
 
         attacker.GetComponent<Animator>().SetFloat("multiplier", 2);
         attacker.GetComponent<Animator>().SetTrigger("attack");

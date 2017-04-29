@@ -31,7 +31,7 @@ public class Follower : MonoBehaviour {
             if (!GetComponent<CreepAi>())
                 navigator.SetTargetPosition(target.targetTransform.position-offSet);
             else
-                navigator.SetTargetBase(target.targetTransform.position - offSet);
+                navigator.SetTargetBase(target.targetTransform.position - GetComponent<CreepAi>().ComputeOffset());
         }       
     }
 
