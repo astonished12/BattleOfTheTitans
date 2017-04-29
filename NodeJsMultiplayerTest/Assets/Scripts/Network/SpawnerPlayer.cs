@@ -36,11 +36,12 @@ public class SpawnerPlayer : MonoBehaviour {
     internal void AddMyPlayer(string id,GameObject myObject){
         OtherPlayersGameObjects.Add(id, myObject);
     }
-    public void SpawnBullet(string id, Vector3 positions,Transform target)
+    public void SpawnBullet(GameObject owner, Vector3 positions,Transform target)
     {
         //TO DO ADD DAMAGE FROM PLAYER CLASS ATTRIBUTES
-        GameObject newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);
+        GameObject newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);       
         newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
+        newGameObjectPlayer.GetComponent<Bullet>().ownerBullet = owner;
     }
 
     public IEnumerator SpawnMinions(List<string> idTowers, bool checkOwner)

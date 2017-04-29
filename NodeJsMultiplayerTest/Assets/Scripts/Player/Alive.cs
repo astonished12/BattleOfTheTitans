@@ -19,14 +19,16 @@ public class Alive : MonoBehaviour {
         curHealth = maxHealth;
         UpdateHealthBar();
     }
-    public void OnHit(int damage)
+    public void OnHit(GameObject owner,int damage)
     {
         curHealth -= damage;
         UpdateHealthBar();
         if (!isAlive && !GetComponent<FollowTower>())
         {
             animator.SetTrigger("dead");
+            owner.GetComponent<Target>().targetTransform = null;
             Invoke("Respawn", respawnTime);
+           
         }
         else if(!isAlive && GetComponent<FollowTower>())
         {

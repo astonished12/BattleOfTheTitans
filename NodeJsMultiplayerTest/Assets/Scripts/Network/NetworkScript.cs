@@ -167,7 +167,8 @@ public class NetworkScript : MonoBehaviour
 
         attacker.GetComponent<Animator>().SetFloat("multiplier", 2);
         attacker.GetComponent<Animator>().SetTrigger("attack");
-        spawner.SpawnBullet(socket_id, attacker.transform.position, targetOfAttacker.transform);
+        
+        spawner.SpawnBullet(attacker, attacker.transform.position, targetOfAttacker.transform);
 
         
     }

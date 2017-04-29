@@ -8,7 +8,7 @@ public class Bullet : MonoBehaviour
     public int damage = 10;
     public float vel, acel, force;
     public Transform targetTransform;
-
+    public GameObject ownerBullet;
     void Update()
     {
         if (targetTransform == null)
@@ -22,7 +22,7 @@ public class Bullet : MonoBehaviour
             acel = force * Time.deltaTime;
             if (Vector3.Distance(transform.position, targetTransform.position) < 0.5f)
             {
-                targetTransform.GetComponent<Alive>().OnHit(damage);
+                targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damage);
                 Destroy(gameObject);
             }
         }
