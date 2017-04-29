@@ -66,7 +66,7 @@ var onNewRoom = function(data){
     roomNo++;
     
     var room = new Room(this.id,roomName,2); 
-    var player = new ControllerPlayer(this.id,"Player1",-47,0,18.5,"true");
+    var player = new ControllerPlayer(this.id,"Player1",-47,0,7,"true");
     room.PLAYERS[this.id] = player;
     
     room.towersId.push(shortid.generate());
@@ -111,7 +111,7 @@ var onJoinRoom = function(data){
             room_id : data["idRoom"]});
         
         ROOMS[data["idRoom"]].currentPlayers++;            
-        var player = new ControllerPlayer(this.id,"Player1",47,0,-18.5,"false");
+        var player = new ControllerPlayer(this.id,"Player1",47,0,-5,"false");
         ROOMS[data["idRoom"]].PLAYERS[this.id] = player; 
         //console.log(ROOMS[data["idRoom"]].PLAYERS);
         mapingSocketRoom[this.id] = ROOMS[data["idRoom"]];        

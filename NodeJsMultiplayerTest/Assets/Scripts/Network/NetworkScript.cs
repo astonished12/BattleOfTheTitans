@@ -169,8 +169,7 @@ public class NetworkScript : MonoBehaviour
         attacker.GetComponent<Animator>().SetTrigger("attack");
         spawner.SpawnBullet(socket_id, attacker.transform.position, targetOfAttacker.transform);
 
-        //TEST
-        //spawner.SpawnMinions(socket_id);
+        
     }
 
     private void OnSpawnMinions(SocketIOEvent Obj)

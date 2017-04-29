@@ -23,7 +23,7 @@ public class Alive : MonoBehaviour {
     {
         curHealth -= damage;
         UpdateHealthBar();
-        if (!isAlive && GetComponent<FollowTower>()==null)
+        if (!isAlive && !GetComponent<FollowTower>())
         {
             animator.SetTrigger("dead");
             Invoke("Respawn", respawnTime);

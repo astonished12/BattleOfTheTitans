@@ -20,7 +20,7 @@ public class Follower : MonoBehaviour {
  
     private void Update()
     {        
-        if (isReadyToScan() && !target.IsInRange(stopFollowDistance)) 
+        if (isReadyToScan() && !target.IsInRange(stopFollowDistance) && navigator.targetSuccesfull==false) 
         {
             Debug.Log("Poate sa se miste");
             if (transform.position.x > target.targetTransform.position.x)

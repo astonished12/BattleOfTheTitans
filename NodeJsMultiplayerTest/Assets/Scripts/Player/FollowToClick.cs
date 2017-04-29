@@ -25,5 +25,5 @@ public class FollowToClick : MonoBehaviour,IClickable{
         networkCommunication.SendPlayerIdToFollow(networkEntity.Id);
     }
 
-   
+  
 }

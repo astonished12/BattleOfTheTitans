@@ -25,7 +25,7 @@ public class Attack : MonoBehaviour {
             target.SetTargetTransform(null);
             return;
         }
-        if (isReadyToAttack() && target.IsInRange(attackDistance) && GetComponent<Alive>().isAlive)            
+        if (isReadyToAttack() && target.IsInRange(attackDistance))            
         {
             lastAttackTime = Time.time;
             var networkEntityIdOfTarget = target.targetTransform.GetComponent<NetworkEntity>().Id;
