@@ -7,7 +7,7 @@ public class Follower : MonoBehaviour {
 
     public Target target;
 
-    NavagiateToPosition navigator;
+    public NavagiateToPosition navigator;
     public float scanFrequnecy = 0.1f;
     public float stopFollowDistance;
     float lastScanTime = 0;
