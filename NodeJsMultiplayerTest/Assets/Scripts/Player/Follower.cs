@@ -29,9 +29,14 @@ public class Follower : MonoBehaviour {
                 offSet = Vector3.right* stopFollowDistance * 0.75f;
 
             if (!GetComponent<CreepAi>())
-                navigator.SetTargetPosition(target.targetTransform.position-offSet);
-            else
+            {
+                navigator.SetTargetPosition(target.targetTransform.position - offSet);
+            }
+            else if(GetComponent<CreepAi>().isMovingOn)
+            {
                 navigator.SetTargetBase(target.targetTransform.position - GetComponent<CreepAi>().ComputeOffset());
+            }
+           //TO DO POSITIONATE MINIONS AT STOP
         }       
     }
 

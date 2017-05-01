@@ -37,6 +37,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("followTower", OnFollowTower);
         SocketIO.On("attackPlayer", OnAttack);
         SocketIO.On("spawnMinions",OnSpawnMinions);
+        SocketIO.On("minionFollowMinion", OnMinionFollowMinion);
     }
 
     
@@ -186,5 +187,27 @@ public class NetworkScript : MonoBehaviour
         StartCoroutine(spawner.SpawnMinions(myIdTowers,ownerFlag));
     }
 
+    private void OnMinionFollowMinion(SocketIOEvent Obj)
+    {
+        string follower_id = ElementFromJsonToString(Obj.data["id_follower"].ToString())[1];
+        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+
+       
+        if(spawner.minionsData.ContainsKey(follower_id) && spawner.minionsData.ContainsKey(follower_id))
+        {
+            var follower = spawner.minionsData[follower_id];
+            var target = spawner.minionsData[target_id];
+
+            //target.GetComponent<NavagiateToPosition>().SetTargetBase(follower.transform.position);
+            //follower. GetComponent<NavagiateToPosition>().SetTargetBase(target.transform.position);
+            target.GetComponent<Target>().targetTransform = follower.transform;
+            follower.GetComponent<Target>().targetTransform = target.transform;
+
+        }
+        else
+        {
+            Debug.Log("Problem with minion id follwings on minion follow minion");
+        }
+    }
 }
 

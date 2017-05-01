@@ -27,7 +27,7 @@ public class Attack : MonoBehaviour {
             return;
         }
 
-        if (isReadyToAttack() && target.IsInRange(attackDistance) && target.targetTransform.GetComponent<Alive>().isAlive)            
+        if (isReadyToAttack() && target.IsInRange(attackDistance) && target.targetTransform.GetComponent<Alive>().isAlive && !GetComponent<CreepAi>())            
         {
             lastAttackTime = Time.time;
             var networkEntityIdOfTarget = target.targetTransform.GetComponent<NetworkEntity>().Id;

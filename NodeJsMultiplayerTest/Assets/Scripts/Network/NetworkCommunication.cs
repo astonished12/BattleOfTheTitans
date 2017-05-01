@@ -26,6 +26,10 @@ public class NetworkCommunication : MonoBehaviour {
     {
         return string.Format(@"{{""idTarget"":""{0}""}}", id);
     }
+    private string MinionsDataToJson(string idFollower,string id)
+    {
+        return string.Format(@"{{""idFollower"":""{0}"",""idTarget"":""{1}""}}", idFollower, id);
+    }
 
 
     public void SendAttackerId(string id)
@@ -39,4 +43,10 @@ public class NetworkCommunication : MonoBehaviour {
         NetworkScript.SocketIO.Emit("followTower", new JSONObject(TargetIdToJson(idTower)));
     }
 
+
+    public void SendMinionDataToFollow(string idFollower,string idMinion)
+    {
+        //Debug.Log("Seding that minion id "+idFollower+" urmareste pe minion id " + idMinion);
+        NetworkScript.SocketIO.Emit("minionFollowMinion", new JSONObject(MinionsDataToJson(idFollower, idMinion)));
+    }
 }

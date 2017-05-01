@@ -58,6 +58,7 @@ io.sockets.on('connection', function(socket){
 	socket.on("move",onMoveClient);
     socket.on("follow",onFollowClient);
     socket.on("followTower",onFollowTower);
+    socket.on("minionFollowMinion",onMinionFollowMinion);
     socket.on("attack",onClientAttack);
 });
 
@@ -202,6 +203,14 @@ var onFollowTower = function(data){
     });
 };
 
+var onMinionFollowMinion = function(data){
+    console.log("Minionul "+data["idFollower"]+" urmareste pe "+data["idTarget"]);
+    
+    this.broadcast.to(mapingSocketRoom[this.id].name).emit("minionFollowMinion",{
+        id_follower : data["idFollower"],
+        target_id:data["idTarget"]
+    });
+}
 
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
