@@ -198,16 +198,36 @@ public class NetworkScript : MonoBehaviour
             var follower = spawner.minionsData[follower_id];
             var target = spawner.minionsData[target_id];
 
-            //target.GetComponent<NavagiateToPosition>().SetTargetBase(follower.transform.position);
-            //follower. GetComponent<NavagiateToPosition>().SetTargetBase(target.transform.position);
-            target.GetComponent<Target>().targetTransform = follower.transform;
-            follower.GetComponent<Target>().targetTransform = target.transform;
+            follower.GetComponent<CreepAi>().isMovingOn = true;
+            
+            var newTrans = new GameObject().transform;
+            newTrans.position = makePositiveVector((follower.gameObject.transform.position - target.gameObject.transform.position)/2);
 
+
+            newTrans.position += target.GetComponent<CreepAi>().ComputeOffset(target.GetComponent<CreepAi>().number);
+            target.GetComponent<Target>().targetTransform = newTrans;
+
+            newTrans.position -= target.GetComponent<CreepAi>().ComputeOffset(target.GetComponent<CreepAi>().number);
+            newTrans.position += follower.GetComponent<CreepAi>().ComputeOffset(follower.GetComponent<CreepAi>().number);
+            follower.GetComponent<Target>().targetTransform = newTrans;
+
+
+            
         }
         else
         {
             Debug.Log("Problem with minion id follwings on minion follow minion");
         }
     }
+
+    private Vector3 makePositiveVector(Vector3 vectorToTransform)
+    {
+        if (vectorToTransform.x < 0)
+            vectorToTransform.x *= (-1);
+         if (vectorToTransform.y < 0)
+            vectorToTransform.y*= (-1);
+
+        return vectorToTransform;
+    }   
 }
 

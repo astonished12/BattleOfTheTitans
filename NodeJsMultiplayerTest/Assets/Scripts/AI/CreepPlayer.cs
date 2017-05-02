@@ -41,7 +41,7 @@ public class CreepPlayer : MonoBehaviour {
                 float curDistance = GetDistanceBetweenPositions(enemy.transform.position, position);
                 if (curDistance < minDistance)
                 {
-                    if (GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>().isMovingOn==false)
+                    if (GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>().isMovingOn == false)
                     {
                         GetComponent<CreepAi>().isMovingOn = true;
                         enemy.GetComponent<CreepAi>().isMovingOn = true;

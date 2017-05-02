@@ -6,22 +6,40 @@ public class CreepAi : MonoBehaviour
 {
     public static int numberOrder;
     Vector3 offset;
-    public bool isMovingOn = false;    
-
-    public Vector3 ComputeOffset()
+    public bool isMovingOn = false;
+    public int number;
+    void Start()
     {
-        if (CreepAi.numberOrder == 1)
+        number = CreepAi.numberOrder;
+    }
+
+    public Vector3 ComputeOffset(int number)
+    {
+
+        if (number == 1)
         {
-            offset = new Vector3(-1f, 0f, 0f);
+            offset = new Vector3(-2f, 0f, 2f);
         }
-        if (CreepAi.numberOrder == 2)
+        if (number == 2)
         {
-            offset = new Vector3(-1f, 0f, -2f);
+            offset = new Vector3(2f, 0f, 2f);
         }
 
-        if (CreepAi.numberOrder == 3)
+        if (number == 3)
         {
-            offset = new Vector3(-1f, 0f, 2f);
+            offset = new Vector3(-2f, 0f, 0f);
+        }
+        if (number == 4)
+        {
+            offset = new Vector3(2f, 0f, 0f);
+        }
+        if(number == 5)
+        {
+            offset = new Vector3(-2f, 0f, -2f);
+        }
+        if (number == 6)
+        {
+            offset = new Vector3(2f, 0f, -2f);
         }
         return offset;
     }

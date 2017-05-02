@@ -9,8 +9,8 @@ public class NavagiateToPosition : MonoBehaviour
     Target target;
     Animator animator;
 
-    int targetIndex;
-    private List<Node> path;
+    public int targetIndex;
+    public List<Node> path;
     private Vector3 targetPositon;
     public float speed = 1f;
 

@@ -28,14 +28,18 @@ public class Follower : MonoBehaviour {
             else if (transform.position.x < target.targetTransform.position.x)
                 offSet = Vector3.right* stopFollowDistance * 0.75f;
 
-            if (!GetComponent<CreepAi>())
+           if (!GetComponent<CreepAi>())
             {
                 navigator.SetTargetPosition(target.targetTransform.position - offSet);
             }
-            else if(GetComponent<CreepAi>().isMovingOn)
+            else if (GetComponent<CreepAi>())
+            {
+             navigator.SetTargetBase(target.targetTransform.position - GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number));
+           }
+            /*(else if(GetComponent<CreepAi>().isMovingOn)
             {
                 navigator.SetTargetBase(target.targetTransform.position - GetComponent<CreepAi>().ComputeOffset());
-            }
+            }*/
            //TO DO POSITIONATE MINIONS AT STOP
         }       
     }

@@ -206,7 +206,7 @@ var onFollowTower = function(data){
 var onMinionFollowMinion = function(data){
     console.log("Minionul "+data["idFollower"]+" urmareste pe "+data["idTarget"]);
     
-    this.broadcast.to(mapingSocketRoom[this.id].name).emit("minionFollowMinion",{
+    io.to(mapingSocketRoom[this.id].name).emit("minionFollowMinion",{
         id_follower : data["idFollower"],
         target_id:data["idTarget"]
     });
