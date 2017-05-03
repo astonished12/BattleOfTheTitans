@@ -37,6 +37,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("followTower", OnFollowTower);
         SocketIO.On("attackPlayer", OnAttack);
         SocketIO.On("spawnMinions",OnSpawnMinions);
+        SocketIO.On("keyPressed", OnKeyPressed);
         SocketIO.On("minionFollowMinion", OnMinionFollowMinion);
     }
 
@@ -228,6 +229,26 @@ public class NetworkScript : MonoBehaviour
             vectorToTransform.y*= (-1);
 
         return vectorToTransform;
-    }   
+    }
+
+    private void OnKeyPressed(SocketIOEvent Obj)
+    {
+        string user_Id = ElementFromJsonToString(Obj.data["user_id"].ToString())[1];
+        string key = ElementFromJsonToString(Obj.data["key"].ToString())[1];
+
+        Debug.Log("Jucatorul " + user_Id + " foloeste skilul " + key);
+        if (spawner.OtherPlayersGameObjects.ContainsKey(user_Id))
+        {
+            GameObject playerWhoPressedKey = spawner.OtherPlayersGameObjects[user_Id];
+            SpecialAttack[] specialAttacks = playerWhoPressedKey.GetComponents<SpecialAttack>();
+            foreach(SpecialAttack skill in specialAttacks)
+            {
+                if(skill.key.ToString() == key)
+                {
+                   skill.inAction = true;
+                }
+            }
+        }
+    }
 }
 

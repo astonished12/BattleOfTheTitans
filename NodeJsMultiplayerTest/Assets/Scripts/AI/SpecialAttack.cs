@@ -18,53 +18,42 @@ public class SpecialAttack : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(key) && key.ToString() == "Q")
-        {
-            inAction = true;
+        if (key.ToString() == "Q" && inAction) {
             Debug.Log("Special attack ON " + key.ToString());
-            //GameObject g = Instantiate(objectToSpawn, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity) as GameObject;
-
-            var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit = new RaycastHit();
-            if (Physics.Raycast(ray, out hit))
-            {
-                
-                var position = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
-                position = Camera.main.ScreenToWorldPoint(position);
-                GameObject go = Instantiate(objectToSpawn, position, Quaternion.identity) as GameObject;
-                Destroy(go, 4);
-
-            }
+            GameObject g = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
+            Destroy(g, 4);
+            inAction = false;
 
         }
 
-        if (Input.GetKeyDown(key) && key.ToString() == "W")
+        if (key.ToString() == "W" && inAction)
         {
-            inAction = true;
             Debug.Log("Special attack ON " + key.ToString());
-            GameObject g = Instantiate(objectToSpawn, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity) as GameObject;
+            GameObject g = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
+            Destroy(g, 2);
+            inAction = false;
+
+        }
+
+        if (key.ToString() == "E" && inAction)
+        {
+            Debug.Log("Special attack ON " + key.ToString());
+            GameObject g = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
             Destroy(g, 5);
+            inAction = false;
+
         }
 
-        if (Input.GetKeyDown(key) && key.ToString() == "E")
+        if (key.ToString() == "R" && inAction)
         {
-            inAction = true;
             Debug.Log("Special attack ON " + key.ToString());
-            GameObject g = Instantiate(objectToSpawn, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity) as GameObject;
-            Destroy(g, 5);
-        }
-
-        if (Input.GetKeyDown(key) && key.ToString() == "R")
-        {
-            inAction = true;
-            Debug.Log("Special attack ON " + key.ToString());
-            GameObject go = Instantiate(objectToSpawn, GameObject.FindGameObjectWithTag("Player").transform.position, Quaternion.identity) as GameObject;
+            GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
             Destroy(go, 4);
-            
+            inAction = false;
 
-           
-
-           
         }
+
+
     }
+
 }

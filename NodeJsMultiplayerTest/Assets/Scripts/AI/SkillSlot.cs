@@ -5,6 +5,6 @@ using UnityEngine;
 public class SkillSlot 
 {
     public SpecialAttack skill;
-    public Rect position;
+    public Rect positionRect;
     public KeyCode key;
  }

@@ -15,7 +15,7 @@ console.log("Server started.");
 
 var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
-var     io = require('socket.io')(serv,{});
+var io = require('socket.io')(serv,{});
 
 
 var playerNo = 0;
@@ -59,6 +59,7 @@ io.sockets.on('connection', function(socket){
     socket.on("follow",onFollowClient);
     socket.on("followTower",onFollowTower);
     socket.on("minionFollowMinion",onMinionFollowMinion);
+    socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
 });
 
@@ -221,11 +222,19 @@ var onClientAttack = function(data){
     });
 }
 
-setInterval(function(){
+
+var OnKeyPressed = function(data){
+    console.log("Jucatorul " +this.id + " a apasat pe tasta "+data["key"]);
+     io.to(mapingSocketRoom[this.id].name).emit("keyPressed",{
+        user_id:this.id,
+        key:data["key"]
+    });
+};
+/*setInterval(function(){
    for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
    
-},40);
+},40);*/
 
 
 

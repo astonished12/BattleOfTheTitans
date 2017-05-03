@@ -43,7 +43,7 @@ public class ActionBar : MonoBehaviour {
     {
         for (int i = 0; i < numberOfSkills; i++)
         {
-            skillSlots[i].position.Set(skillX + i * (skillWidth + skillDistance), skillY, skillWidth, skillHeight);
+            skillSlots[i].positionRect.Set(skillX + i * (skillWidth + skillDistance), skillY, skillWidth, skillHeight);
         }
     }
     void OnGUI()
@@ -61,7 +61,7 @@ public class ActionBar : MonoBehaviour {
     {
         for(int i=0;i< numberOfSkills;i++)
         {
-            GUI.DrawTexture(getScreenRect(skillSlots[i].position), skillSlots[i].skill.pictureSkill);
+            GUI.DrawTexture(getScreenRect(skillSlots[i].positionRect), skillSlots[i].skill.pictureSkill);
         }
     }
 

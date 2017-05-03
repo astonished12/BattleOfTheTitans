@@ -44,7 +44,6 @@ public class CreepAi : MonoBehaviour
         return offset;
     }
 
-   
 }
  
 
