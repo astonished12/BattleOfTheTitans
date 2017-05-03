@@ -13,6 +13,8 @@ public class Alive : MonoBehaviour {
     public Image healthBar;
 
     public bool isAlive { get { return curHealth > 0; } }
+
+    
     void Awake()
     {
         animator = GetComponent<Animator>();

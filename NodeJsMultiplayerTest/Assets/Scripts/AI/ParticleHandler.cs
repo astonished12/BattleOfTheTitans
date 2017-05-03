@@ -3,11 +3,37 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ParticleHandler : MonoBehaviour {
-
-    void OnParticleCollision(GameObject test)
+    public ParticleSystem part;
+    public List<ParticleCollisionEvent> collisionEvents;
+    GameObject target;
+    int numCollisionEvents = 0;
+    bool onceActived = false;
+    void Start()
     {
-        if(test!=gameObject)
-             Debug.Log("Got hit " + gameObject + " de la " + test.name);
+        part = GetComponent<ParticleSystem>();
+        collisionEvents = new List<ParticleCollisionEvent>();
     }
+    
+    void Update()
+    {
+        Debug.Log(gameObject.GetComponent<SkillInfo>().isActive);
+        if (numCollisionEvents > 0 && target.GetComponent<Alive>().isAlive && gameObject.GetComponent<SkillInfo>().isActive == true && !onceActived)
+        {
+            target.GetComponent<Alive>().OnHit(target, gameObject.GetComponent<SkillInfo>().damage);
+            gameObject.GetComponent<SkillInfo>().isActive = false;
+            Debug.Log("@DA");
+            numCollisionEvents = 0;
+            onceActived = true;
+        }
+    }
+
+    void OnParticleCollision(GameObject collider)
+    {
+
+        target = collider;    
+        numCollisionEvents = part.GetCollisionEvents(collider, collisionEvents);       
+
+    }
+    
 
 }

@@ -6,7 +6,7 @@ public class SpecialAttack : MonoBehaviour {
 
 
     public KeyCode key;
-    public float damage;
+    public int damage;
     public bool inAction;
     public Texture2D pictureSkill;
     public GameObject objectToSpawn;
@@ -20,17 +20,18 @@ public class SpecialAttack : MonoBehaviour {
     {
         if (key.ToString() == "Q" && inAction) {
             Debug.Log("Special attack ON " + key.ToString());
-            GameObject g = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
-            Destroy(g, 4);
+            GameObject go = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
+            go.GetComponent<SkillInfo>().damage = damage;
+            Destroy(go, 4);
             inAction = false;
-
         }
 
         if (key.ToString() == "W" && inAction)
         {
             Debug.Log("Special attack ON " + key.ToString());
-            GameObject g = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
-            Destroy(g, 2);
+            GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
+            go.GetComponent<SkillInfo>().damage = damage;
+            Destroy(go, 2);
             inAction = false;
 
         }
@@ -38,8 +39,9 @@ public class SpecialAttack : MonoBehaviour {
         if (key.ToString() == "E" && inAction)
         {
             Debug.Log("Special attack ON " + key.ToString());
-            GameObject g = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
-            Destroy(g, 5);
+            GameObject go = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
+            go.GetComponent<SkillInfo>().damage = damage;
+            Destroy(go, 5);
             inAction = false;
 
         }
@@ -48,6 +50,7 @@ public class SpecialAttack : MonoBehaviour {
         {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
+            go.GetComponent<SkillInfo>().damage = damage;
             Destroy(go, 4);
             inAction = false;
 
