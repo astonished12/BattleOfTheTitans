@@ -249,8 +249,9 @@ public class NetworkScript : MonoBehaviour
                 }
                 if(skill.key.ToString() == key && skill.key == KeyCode.Q)
                 {
-                    
-                    skill.targetPositions = GetVectorPositionFromJson(Obj.data);
+                    Vector3 test = GetVectorPositionFromJson(Obj.data);
+                    Debug.Log(test);
+                    skill.targetPositions = test;
                  }
             }
         }

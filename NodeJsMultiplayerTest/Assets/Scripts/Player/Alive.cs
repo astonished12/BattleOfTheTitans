@@ -38,6 +38,22 @@ public class Alive : MonoBehaviour {
         }
     }
 
+    public void OnHealUp(int damage)
+    {
+        if (isAlive && !GetComponent<FollowTower>())
+        {
+            if (curHealth + damage < maxHealth)
+            {
+                curHealth += damage;
+                UpdateHealthBar();
+            }
+            else
+            {
+                curHealth = maxHealth;
+                UpdateHealthBar();
+            }
+        }
+    }
     void Respawn()
     {
         Debug.Log("A murit ownerul camerei ?!" + GetComponent<NetworkEntity>().ownerFlag);

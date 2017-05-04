@@ -24,10 +24,10 @@ public class SpecialAttack : MonoBehaviour {
     {
         if (key.ToString() == "Q" && inAction) {
             Debug.Log("Special attack ON " + key.ToString());
-          
-            GameObject go = Instantiate(objectToSpawn, targetPositions, Quaternion.identity) as GameObject;
+            Debug.Log("Instantiez Q la " + targetPositions);
+            GameObject go = Instantiate(objectToSpawn, targetPositions+new Vector3(0f,0.5f,0f), Quaternion.identity) as GameObject;
             go.GetComponent<SkillInfo>().damage = damage;
-            Destroy(go, 4);
+            Destroy(go, 2);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
             {
                 ActionBar.skillSlots[0].coolDownActive = true;
@@ -41,7 +41,8 @@ public class SpecialAttack : MonoBehaviour {
         {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
-            go.GetComponent<SkillInfo>().damage = damage;
+            //go.GetComponent<SkillInfo>().damage = damage;
+            GetComponent<Alive>().OnHealUp(damage);
             Destroy(go, 2);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
             {

@@ -224,7 +224,7 @@ var onClientAttack = function(data){
 
 
 var OnKeyPressed = function(data){
-    console.log("Jucatorul " +this.id + " a apasat pe tasta "+data["key"]);
+    console.log("Jucatorul " +this.id + " a apasat pe tasta "+data["key"]+" la pozitia "+JSON.stringify(data));
      io.to(mapingSocketRoom[this.id].name).emit("keyPressed",{
         user_id:this.id,
         key:data["key"],
