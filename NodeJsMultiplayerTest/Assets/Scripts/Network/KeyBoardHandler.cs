@@ -9,6 +9,7 @@ public class KeyBoardHandler : MonoBehaviour {
     private KeyCode[] keys;
     Ray myRay;
     RaycastHit hit = new RaycastHit();
+    float timePressedQ;
     private void Awake()
     {
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
@@ -24,7 +25,11 @@ public class KeyBoardHandler : MonoBehaviour {
         //To get the current mouse position
         //Convert the mousePosition according to World position
         myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Input.GetKeyDown(keys[0]) && ActionBar.skillSlots[0].coolDownActive == false && Input.GetButtonDown("Fire1"))
+        if (Input.GetKeyDown(keys[0]))
+        {
+            timePressedQ = Time.time;
+        }
+        if (Time.time-timePressedQ<0.25 && ActionBar.skillSlots[0].coolDownActive == false && Input.GetButtonDown("Fire1"))
         {
             if (Physics.Raycast(myRay, out hit))
             {                

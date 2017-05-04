@@ -25,7 +25,19 @@ public class SpecialAttack : MonoBehaviour {
         if (key.ToString() == "Q" && inAction) {
             Debug.Log("Special attack ON " + key.ToString());
             Debug.Log("Instantiez Q la " + targetPositions);
-            GameObject go = Instantiate(objectToSpawn, targetPositions+new Vector3(0f,0.5f,0f), Quaternion.identity) as GameObject;
+           
+            if (GetDistanceBetweenPositions(transform.position, targetPositions) > distance)
+            {
+                Vector2 start = new Vector2(transform.position.x, transform.position.z);
+                Vector2 end = new Vector2(targetPositions.x, targetPositions.z);
+                targetPositions = MakeQSpawnPointTarget(distance, transform.position, GetNormalizeStartToEnd(start, end));
+            }
+
+            if (targetPositions.y > 0.3)
+            {
+                targetPositions.y = 0.2f;
+            }
+            GameObject go = Instantiate(objectToSpawn, targetPositions+new Vector3(0f,0.2f,0f), Quaternion.identity) as GameObject;
             go.GetComponent<SkillInfo>().damage = damage;
             Destroy(go, 2);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
@@ -86,4 +98,30 @@ public class SpecialAttack : MonoBehaviour {
 
     }
 
+    private float GetDistanceBetweenPositions(Vector3 start, Vector3 end)
+    {
+        return Mathf.Sqrt(Mathf.Pow((end.x - start.x), 2) + Mathf.Pow(end.y - start.y, 2));
+    }
+
+    Vector2 GetNormalizeStartToEnd(Vector2 start,Vector2 end)
+    {
+        Vector2 vectorToNormalized = end - start;
+        float lengthOfNormalized = GetLengthVector(vectorToNormalized);
+
+        return new Vector2(vectorToNormalized.x / lengthOfNormalized, vectorToNormalized.y / lengthOfNormalized);
+    }
+
+    Vector3 MakeQSpawnPointTarget(float distance,Vector3 currentPosition,Vector2 norma)
+    {
+        Vector3 spawn = new Vector3();
+        spawn.x = currentPosition.x + distance * norma.x;
+        spawn.y = currentPosition.y;
+        spawn.z = currentPosition.z + distance * norma.y;
+
+        return spawn;
+    }
+    float GetLengthVector(Vector2 vec)
+    {
+        return Mathf.Sqrt(vec.x * vec.x + vec.y * vec.y);
+    }
 }
