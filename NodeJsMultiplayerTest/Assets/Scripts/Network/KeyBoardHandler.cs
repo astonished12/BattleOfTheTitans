@@ -19,19 +19,19 @@ public class KeyBoardHandler : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(keys[0]))
+        if (Input.GetKeyDown(keys[0]) && ActionBar.skillSlots[0].coolDownActive == false)
         {
             SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[0].ToString())));
         }
-        if (Input.GetKeyDown(keys[1]))
+        if (Input.GetKeyDown(keys[1]) && ActionBar.skillSlots[1].coolDownActive == false)
         {
             SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[1].ToString())));
         }
-        if (Input.GetKeyDown(keys[2]))
+        if (Input.GetKeyDown(keys[2]) && ActionBar.skillSlots[2].coolDownActive == false)
         {
             SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[2].ToString())));
         }
-        if (Input.GetKeyDown(keys[3]))
+        if (Input.GetKeyDown(keys[3]) && ActionBar.skillSlots[3].coolDownActive == false)
         {
             SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[3].ToString())));
         }

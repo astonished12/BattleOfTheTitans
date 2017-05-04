@@ -16,7 +16,7 @@ public class ParticleHandler : MonoBehaviour {
     
     void Update()
     {
-        Debug.Log(gameObject.GetComponent<SkillInfo>().isActive);
+
         if (numCollisionEvents > 0 && target.GetComponent<Alive>().isAlive && gameObject.GetComponent<SkillInfo>().isActive == true && !onceActived)
         {
             target.GetComponent<Alive>().OnHit(target, gameObject.GetComponent<SkillInfo>().damage);

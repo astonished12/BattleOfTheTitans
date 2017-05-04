@@ -245,7 +245,7 @@ public class NetworkScript : MonoBehaviour
             {
                 if(skill.key.ToString() == key)
                 {
-                   skill.inAction = true;
+                   skill.inAction = true;                   
                 }
             }
         }
