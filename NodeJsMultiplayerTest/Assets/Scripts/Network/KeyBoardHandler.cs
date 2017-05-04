@@ -7,6 +7,8 @@ public class KeyBoardHandler : MonoBehaviour {
 
     public static SocketIOComponent SocketIO;
     private KeyCode[] keys;
+    Ray myRay;
+    RaycastHit hit = new RaycastHit();
     private void Awake()
     {
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
@@ -19,9 +21,16 @@ public class KeyBoardHandler : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(keys[0]) && ActionBar.skillSlots[0].coolDownActive == false)
+        //To get the current mouse position
+        //Convert the mousePosition according to World position
+        myRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (Input.GetKeyDown(keys[0]) && ActionBar.skillSlots[0].coolDownActive == false && Input.GetButtonDown("Fire1"))
         {
-            SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[0].ToString())));
+            if (Physics.Raycast(myRay, out hit))
+            {                
+                SocketIO.Emit("keyPressed", new JSONObject(QKeyToJson(keys[0].ToString(),hit.point)));
+            }
+                
         }
         if (Input.GetKeyDown(keys[1]) && ActionBar.skillSlots[1].coolDownActive == false)
         {
@@ -42,4 +51,10 @@ public class KeyBoardHandler : MonoBehaviour {
     {
         return string.Format(@"{{""key"":""{0}""}}", id);
     }
+
+    private string QKeyToJson(string id, Vector3 vector)
+    {
+        return string.Format(@"{{""key"":""{0}"",""x"":""{1}"",""y"":""{2}"",""z"":""{3}""}}", id, vector.x, vector.y, vector.z);
+    }
+
 }

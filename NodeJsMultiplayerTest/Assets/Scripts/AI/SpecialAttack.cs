@@ -10,6 +10,10 @@ public class SpecialAttack : MonoBehaviour {
     public bool inAction;
     public Texture2D pictureSkill;
     public GameObject objectToSpawn;
+    float distance = 10f;
+    public Vector3 targetPositions;
+    
+
     // Use this for initialization
     void Start () { 
 	    	
@@ -20,7 +24,8 @@ public class SpecialAttack : MonoBehaviour {
     {
         if (key.ToString() == "Q" && inAction) {
             Debug.Log("Special attack ON " + key.ToString());
-            GameObject go = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
+          
+            GameObject go = Instantiate(objectToSpawn, targetPositions, Quaternion.identity) as GameObject;
             go.GetComponent<SkillInfo>().damage = damage;
             Destroy(go, 4);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
@@ -29,6 +34,7 @@ public class SpecialAttack : MonoBehaviour {
                 ActionBar.skillSlots[0].coolDonwTime = go.GetComponent<SkillInfo>().cast;
             }
             inAction = false;
+            //}
         }
 
         if (key.ToString() == "W" && inAction )

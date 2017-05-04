@@ -247,6 +247,11 @@ public class NetworkScript : MonoBehaviour
                 {
                    skill.inAction = true;                   
                 }
+                if(skill.key.ToString() == key && skill.key == KeyCode.Q)
+                {
+                    
+                    skill.targetPositions = GetVectorPositionFromJson(Obj.data);
+                 }
             }
         }
     }

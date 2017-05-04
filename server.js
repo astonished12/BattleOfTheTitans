@@ -227,7 +227,10 @@ var OnKeyPressed = function(data){
     console.log("Jucatorul " +this.id + " a apasat pe tasta "+data["key"]);
      io.to(mapingSocketRoom[this.id].name).emit("keyPressed",{
         user_id:this.id,
-        key:data["key"]
+        key:data["key"],
+        x : data["x"],
+        y : data["y"],
+        z : data["z"],
     });
 };
 /*setInterval(function(){
