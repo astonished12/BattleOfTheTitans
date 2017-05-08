@@ -45,6 +45,7 @@ io.sockets.on('connection', function(socket){
 	socket.on("move",onMoveClient);
     socket.on("follow",onFollowClient);
     socket.on("followTower",onFollowTower);
+    socket.on("followMinion",onFollowMinion);
     socket.on("minionFollowMinion",onMinionFollowMinion);
     socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
@@ -191,6 +192,15 @@ var onFollowTower = function(data){
     });
 };
 
+var onFollowMinion = function(data){
+    console.log("Clientul "+this.id+" urmareste pe minionul"+data["idTarget"]);
+    
+    this.broadcast.to(mapingSocketRoom[this.id].name).emit("followMinion",{
+        socket_id:this.id,
+        target_id:data["idTarget"]
+    });
+};
+
 var onMinionFollowMinion = function(data){
     console.log("Minionul "+data["idFollower"]+" urmareste pe "+data["idTarget"]);
     
@@ -201,7 +211,7 @@ var onMinionFollowMinion = function(data){
 }
 
 var onClientAttack = function(data){
-    console.log("Clientul "+this.id+" ataca pe "+data["idTarget"]);
+    console.log("Clientul "+this.id+" ataca pe minionul "+data["idTarget"]);
     
     io.to(mapingSocketRoom[this.id].name).emit("attackPlayer",{
         socket_id:this.id,

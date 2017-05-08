@@ -35,6 +35,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("playerMove", OnMove);
         SocketIO.On("followPlayer", OnFollow);
         SocketIO.On("followTower", OnFollowTower);
+        SocketIO.On("followMinion", OnFollowMinion);
         SocketIO.On("attackPlayer", OnAttack);
         SocketIO.On("spawnMinions",OnSpawnMinions);
         SocketIO.On("keyPressed", OnKeyPressed);
@@ -132,13 +133,24 @@ public class NetworkScript : MonoBehaviour
         string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
-        //client player
+        //tower
         var target = towersData[target_id];
 
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
-        followerOfPlaeryRequested.SetTargetTransform(target.transform);
+        followerOfPlaeryRequested.SetTargetTransform(target.transform);        
+    }
 
-        
+    private void OnFollowMinion(SocketIOEvent Obj)
+    {
+        string socket_id = ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
+        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+        //remote
+        var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
+        //minion
+        var target = spawner.minionsData[target_id];
+
+        var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
+        followerOfPlaeryRequested.SetTargetTransform(target.transform);
     }
     public void OnAttack(SocketIOEvent obj)
     {

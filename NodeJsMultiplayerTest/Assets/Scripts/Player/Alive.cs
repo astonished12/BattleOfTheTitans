@@ -25,7 +25,7 @@ public class Alive : MonoBehaviour {
     {
         curHealth -= damage;
         UpdateHealthBar();
-        if (!isAlive && !GetComponent<FollowTower>())
+        if (!isAlive && !GetComponent<FollowTower>() && !GetComponent<CreepAi>())
         {
             animator.SetTrigger("dead");
             owner.GetComponent<Target>().targetTransform = null;
@@ -35,6 +35,10 @@ public class Alive : MonoBehaviour {
         else if(!isAlive && GetComponent<FollowTower>())
         {
             Invoke("DestroyTower", 1.0f);
+        }
+        else if(!isAlive && GetComponent<CreepAi>())
+        {
+            Invoke("DestroyMinion", 1.0f);
         }
     }
 
@@ -77,6 +81,10 @@ public class Alive : MonoBehaviour {
         animator.SetTrigger("Respawn");
     }
     private void DestroyTower()
+    {
+        Destroy(gameObject);
+    }
+    private void DestroyMinion()
     {
         Destroy(gameObject);
     }

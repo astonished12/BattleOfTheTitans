@@ -49,4 +49,10 @@ public class NetworkCommunication : MonoBehaviour {
         //Debug.Log("Seding that minion id "+idFollower+" urmareste pe minion id " + idMinion);
         NetworkScript.SocketIO.Emit("minionFollowMinion", new JSONObject(MinionsDataToJson(idFollower, idMinion)));
     }
+
+    public void SendMinionNumberToFollow(string idMinion)
+    {
+        NetworkScript.SocketIO.Emit("followMinion", new JSONObject(TargetIdToJson(idMinion)));
+
+    }
 }

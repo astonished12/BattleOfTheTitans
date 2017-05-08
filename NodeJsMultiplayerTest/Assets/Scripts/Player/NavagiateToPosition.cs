@@ -80,9 +80,8 @@ public class NavagiateToPosition : MonoBehaviour
     {
         if (targetSuccesfull)
             GetComponent<Animator>().SetBool("atDestination", true);
-        if(targetSuccesfull && GetComponent<CreepAi>())
+        if(targetSuccesfull && GetComponent<CreepAi>() && GetComponent<CreepAi>().posibleTarget)
         {
-            Debug.Log("Roteste minionii");
             transform.rotation = Quaternion.LookRotation(GetComponent<CreepAi>().posibleTarget.transform.position - transform.position);
         }
     }
