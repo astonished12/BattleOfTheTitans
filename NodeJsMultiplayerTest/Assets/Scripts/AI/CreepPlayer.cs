@@ -7,7 +7,7 @@ public class CreepPlayer : MonoBehaviour {
     public Target final;
     public float lastAttackScan;
     public float scanRate;
-    private float minDistance = 10;
+    private float minDistance = 5;
 
     void Start()
     {
@@ -47,6 +47,7 @@ public class CreepPlayer : MonoBehaviour {
                         enemy.GetComponent<CreepAi>().isMovingOn = true;
                         //TO DO SEND TO SERVER AND FOLLOW THE REMOTE FROM THE OTHER CLIENT
                         GetComponent<NetworkCommunication>().SendMinionDataToFollow(GetComponent<NetworkEntity>().Id, enemy.GetComponent<NetworkEntity>().Id);
+                        break;
                     }
                 }            
         }

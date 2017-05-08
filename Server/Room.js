@@ -11,12 +11,13 @@ var  Room = function (id,name, maxPlayers) {
         this.towersId = [];
         this.minionsId = [];
         this.lastTimeSpawn = -999;
+        this.spawnCheck = false;
         //self = this;
     };
 
 Room.prototype.SpawnMinions = function(io){
     var timer = new Date();
-    if(timer.getTime() - this.lastTimeSpawn > Math.pow(2,4)*1000 && this.lastTimeSpawn > 0)
+    if(timer.getTime() - this.lastTimeSpawn > Math.pow(2,4)*1000 && this.lastTimeSpawn > 0 && this.spawnCheck===false)
     {
         this.lastTimeSpawn = timer.getTime();
         console.log("O SA SPAWNEZ MINIONI IN CAMERA "+this.name);
@@ -24,7 +25,7 @@ Room.prototype.SpawnMinions = function(io){
         io.to(this.name).emit("spawnMinions",{
                 minionsId : this.minionsId
         });
-          
+        this.spawnCheck = true;  
     }
 }
 

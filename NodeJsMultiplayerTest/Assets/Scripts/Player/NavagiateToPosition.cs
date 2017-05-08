@@ -40,10 +40,10 @@ public class NavagiateToPosition : MonoBehaviour
         path = pathfinder.AStar(transform.position, targetPositon);
         SetDestination(path);
         target.SetTargetTransform(null);
-        //animator.SetBool("attack", false);
 
     }
 
+   
     public void SetDestination(List<Node> _path)
     {
         targetSuccesfull = false;
@@ -80,6 +80,11 @@ public class NavagiateToPosition : MonoBehaviour
     {
         if (targetSuccesfull)
             GetComponent<Animator>().SetBool("atDestination", true);
+        if(targetSuccesfull && GetComponent<CreepAi>())
+        {
+            Debug.Log("Roteste minionii");
+            transform.rotation = Quaternion.LookRotation(GetComponent<CreepAi>().posibleTarget.transform.position - transform.position);
+        }
     }
     
     

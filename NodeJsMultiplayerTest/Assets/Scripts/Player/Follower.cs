@@ -19,34 +19,44 @@ public class Follower : MonoBehaviour {
     }
  
     private void Update()
-    {        
+    {
+        if (isReadyToFollow())
+        {
+            AddOffset();
+            navigator.SetTargetBase(target.targetTransform.position + offSet + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number));
+        }
         if (isReadyToScan() && !target.IsInRange(stopFollowDistance)) 
         {
-            Debug.Log("Poate sa se miste");
-            if (transform.position.x > target.targetTransform.position.x)
-                offSet = Vector3.left*stopFollowDistance*0.75f;
-            else if (transform.position.x < target.targetTransform.position.x)
-                offSet = Vector3.right* stopFollowDistance * 0.75f;
+            AddOffset();
 
            if (!GetComponent<CreepAi>())
             {
                 navigator.SetTargetPosition(target.targetTransform.position - offSet);
             }
-            else if (GetComponent<CreepAi>())
+            else if (GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false)
             {
-             navigator.SetTargetBase(target.targetTransform.position - GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number));
-           }
-            /*(else if(GetComponent<CreepAi>().isMovingOn)
-            {
-                navigator.SetTargetBase(target.targetTransform.position - GetComponent<CreepAi>().ComputeOffset());
-            }*/
-           //TO DO POSITIONATE MINIONS AT STOP
+             navigator.SetTargetBase(target.targetTransform.position + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number));
+            }
+           
         }       
     }
 
+    void AddOffset()
+    {
+        if (transform.position.x > target.targetTransform.position.x)
+            offSet = Vector3.left * stopFollowDistance * 0.75f;
+        else if (transform.position.x < target.targetTransform.position.x)
+            offSet = Vector3.right * stopFollowDistance * 0.75f;
+
+    }
 
     private bool isReadyToScan()
     {
         return (Time.time - lastScanTime > scanFrequnecy && target.targetTransform);
+    }
+
+    private bool isReadyToFollow()
+    {
+        return (isReadyToScan() && GetComponent<CreepAi>() && GetComponent<CreepAi>().posibleTarget);
     }
 }

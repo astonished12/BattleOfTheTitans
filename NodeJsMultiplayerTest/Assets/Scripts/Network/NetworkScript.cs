@@ -198,22 +198,15 @@ public class NetworkScript : MonoBehaviour
         {
             var follower = spawner.minionsData[follower_id];
             var target = spawner.minionsData[target_id];
-
             follower.GetComponent<CreepAi>().isMovingOn = true;
-            
-            var newTrans = new GameObject().transform;
-            newTrans.position = makePositiveVector((follower.gameObject.transform.position - target.gameObject.transform.position)/2);
 
+            target.GetComponent<CreepAi>().posibleTarget = follower;
+            target.GetComponent<Target>().targetTransform = target.transform;
 
-            newTrans.position += target.GetComponent<CreepAi>().ComputeOffset(target.GetComponent<CreepAi>().number);
-            target.GetComponent<Target>().targetTransform = newTrans;
+            follower.GetComponent<CreepAi>().posibleTarget = target;
+            follower.GetComponent<Target>().targetTransform = follower.transform;
+          
 
-            newTrans.position -= target.GetComponent<CreepAi>().ComputeOffset(target.GetComponent<CreepAi>().number);
-            newTrans.position += follower.GetComponent<CreepAi>().ComputeOffset(follower.GetComponent<CreepAi>().number);
-            follower.GetComponent<Target>().targetTransform = newTrans;
-
-
-            
         }
         else
         {

@@ -5,13 +5,10 @@ using UnityEngine;
 public class CreepAi : MonoBehaviour
 {
     public static int numberOrder;
-    Vector3 offset;
+    public Vector3 offset;
     public bool isMovingOn = false;
     public int number;
-    void Start()
-    {
-        number = CreepAi.numberOrder;
-    }
+    public GameObject posibleTarget;
 
     public Vector3 ComputeOffset(int number)
     {

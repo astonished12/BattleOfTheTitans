@@ -26,20 +26,7 @@ var mapingSocketRoom = {};
 
 
 var idTowers = [];
-/*var makeSendableRooms = function(rooms){
-    var sendRooms = {};
-    for(var roomKey in rooms){
-        for(var key in rooms[roomKey])
-            {
-                if( sendRooms[roomKey] === undefined){
-                    sendRooms[roomKey] = {};
-                }
-                    if(key != "io"){
-                        sendRooms[roomKey][key] = rooms[roomKey][key];
-                    }
-            }
-    }
-}*/
+
 io.sockets.on('connection', function(socket){
     console.log('Client connected is '+socket.id);
     

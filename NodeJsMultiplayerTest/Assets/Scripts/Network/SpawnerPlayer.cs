@@ -55,36 +55,37 @@ public class SpawnerPlayer : MonoBehaviour {
 
             if (checkOwner)
             {
-                CreepAi.numberOrder++;
                 GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
                 maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
                 maxinon1.GetComponent<NetworkEntity>().Id = idTowers[k];
+                maxinon1.GetComponent<CreepAi>().number = k+1;
                 minionsData.Add(idTowers[k], maxinon1);
-                k++;
+                ++k;
 
-                CreepAi.numberOrder++;
                 GameObject maxinon2 = Instantiate(maxinonRemote, spawnPointB.transform.position, Quaternion.identity);
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
                 maxinon2.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
+                maxinon2.GetComponent<CreepAi>().number = k + 1;
+
                 minionsData.Add(idTowers[k], maxinon2);
 
                 yield return new WaitForSeconds(1.0f);                
             }
             if (!checkOwner)
             {
-                CreepAi.numberOrder++;
                 GameObject maxinon1 = Instantiate(maxinonRemote, spawnPointA.transform.position, Quaternion.identity);
                 maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
                 maxinon1.GetComponent<NetworkEntity>().Id = idTowers[k];
                 maxinon1.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
+                maxinon1.GetComponent<CreepAi>().number = k + 1;
                 minionsData.Add(idTowers[k], maxinon1);
-                k++;
+                ++k;
 
-                CreepAi.numberOrder++;
                 GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
+                maxinon2.GetComponent<CreepAi>().number = k + 1;
                 minionsData.Add(idTowers[k], maxinon2);               
 
                 yield return new WaitForSeconds(1.0f);
