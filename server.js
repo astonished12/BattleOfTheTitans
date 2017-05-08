@@ -47,6 +47,7 @@ io.sockets.on('connection', function(socket){
     socket.on("followTower",onFollowTower);
     socket.on("followMinion",onFollowMinion);
     socket.on("minionFollowMinion",onMinionFollowMinion);
+    socket.on("minionAttackMinion",onMinionAttackMinion);
     socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
 });
@@ -209,6 +210,16 @@ var onMinionFollowMinion = function(data){
         target_id:data["idTarget"]
     });
 }
+
+var onMinionAttackMinion = function(data){
+    console.log("Minionul "+data["idFollower"]+" ataca pe minion "+data["idTarget"]);
+    
+    io.to(mapingSocketRoom[this.id].name).emit("minionAttackMinion",{
+        id_attacker : data["idAttacker"],
+        target_id:data["idTarget"]
+    });
+}
+
 
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca pe minionul "+data["idTarget"]);

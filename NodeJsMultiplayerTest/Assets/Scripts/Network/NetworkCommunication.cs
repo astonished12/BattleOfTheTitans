@@ -26,12 +26,15 @@ public class NetworkCommunication : MonoBehaviour {
     {
         return string.Format(@"{{""idTarget"":""{0}""}}", id);
     }
-    private string MinionsDataToJson(string idFollower,string id)
+    private string MinionsDataToJsonFollow(string idFollower,string id)
     {
         return string.Format(@"{{""idFollower"":""{0}"",""idTarget"":""{1}""}}", idFollower, id);
     }
 
-
+    private string MinionsDataToJsonAttack(string idAttacker, string id)
+    {
+        return string.Format(@"{{""idAttacker"":""{0}"",""idTarget"":""{1}""}}", idAttacker, id);
+    }
     public void SendAttackerId(string id)
     {
         NetworkScript.SocketIO.Emit("attack", new JSONObject(TargetIdToJson(id))); 
@@ -47,12 +50,16 @@ public class NetworkCommunication : MonoBehaviour {
     public void SendMinionDataToFollow(string idFollower,string idMinion)
     {
         //Debug.Log("Seding that minion id "+idFollower+" urmareste pe minion id " + idMinion);
-        NetworkScript.SocketIO.Emit("minionFollowMinion", new JSONObject(MinionsDataToJson(idFollower, idMinion)));
+        NetworkScript.SocketIO.Emit("minionFollowMinion", new JSONObject(MinionsDataToJsonFollow(idFollower, idMinion)));
     }
 
     public void SendMinionNumberToFollow(string idMinion)
     {
         NetworkScript.SocketIO.Emit("followMinion", new JSONObject(TargetIdToJson(idMinion)));
+    }
 
+    public void SendMinionDataToAttack(string idAttacker,string idTargetMinion)
+    {
+        NetworkScript.SocketIO.Emit("minionAttackMinion", new JSONObject(MinionsDataToJsonAttack(idAttacker, idTargetMinion)));
     }
 }
