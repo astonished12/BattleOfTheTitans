@@ -9,9 +9,10 @@ public class Attack : MonoBehaviour
     public float attackDistance;
     public float lastAttackTime;
     public float attackRate;
-    private float minionAttackRate = 1f;
     NetworkEntity networkEntity;
     NetworkCommunication networkCommunication;
+    private float minDistance = 5;
+
     void Start()
     {
         target = GetComponent<Target>();
@@ -21,13 +22,6 @@ public class Attack : MonoBehaviour
     void Update()
     {
 
-        if (isReadyToAttackMinion())
-        {
-            lastAttackTime = Time.time;
-            var attackMinionId = GetComponent<CreepAi>().GetComponent<NetworkEntity>().Id;
-            var networkEntityIdOfTarget = GetComponent<CreepAi>().posibleTarget.GetComponent<NetworkEntity>().Id;
-            networkCommunication.SendMinionDataToAttack(attackMinionId,networkEntityIdOfTarget);
-        }
 
         if (!isReadyToAttack())
             return;
@@ -47,8 +41,6 @@ public class Attack : MonoBehaviour
 
         }
 
-
-
     }
 
     private bool isReadyToAttack()
@@ -56,8 +48,5 @@ public class Attack : MonoBehaviour
         return (Time.time - lastAttackTime > attackRate && target.targetTransform);
     }
 
-    private bool isReadyToAttackMinion()
-    {
-        return (Time.time - lastAttackTime > minionAttackRate && GetComponent<CreepAi>() && GetComponent<CreepAi>().posibleTarget && GetComponent<CreepPlayer>());
-    }
+    
 }

@@ -212,7 +212,7 @@ var onMinionFollowMinion = function(data){
 }
 
 var onMinionAttackMinion = function(data){
-    console.log("Minionul "+data["idFollower"]+" ataca pe minion "+data["idTarget"]);
+    console.log("Minionul "+data["idAttacker"]+" ataca pe minion "+data["idTarget"]);
     
     io.to(mapingSocketRoom[this.id].name).emit("minionAttackMinion",{
         id_attacker : data["idAttacker"],

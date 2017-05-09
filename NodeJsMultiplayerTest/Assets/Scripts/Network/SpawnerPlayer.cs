@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class SpawnerPlayer : MonoBehaviour {
@@ -13,6 +14,27 @@ public class SpawnerPlayer : MonoBehaviour {
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> minionsData = new Dictionary<string, GameObject>();
 
+    void Start()
+    {
+        InvokeRepeating("UpdateMinions", 20, 20);
+        InvokeRepeating("ResetAttackFlagMinions", 20,2);
+    }   
+
+    void UpdateMinions()
+    {
+        var itemsToRemove = minionsData.Where(f => f.Value == null).ToArray();
+        foreach (var item in itemsToRemove)
+            minionsData.Remove(item.Key);      
+    }
+
+    void ResetAttackFlagMinions()
+    {
+        foreach (string key in minionsData.Keys)
+        {
+            if(minionsData[key])
+                minionsData[key].GetComponent<CreepAi>().isAttacking = false;
+        }
+    }
     public void SpawnPlayer(string id,int numberCharacter, Vector3 positions,bool ownerOfRoom)
     {
         if (!OtherPlayersGameObjects.ContainsKey(id))

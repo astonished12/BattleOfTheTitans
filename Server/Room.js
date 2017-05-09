@@ -17,7 +17,7 @@ var  Room = function (id,name, maxPlayers) {
 
 Room.prototype.SpawnMinions = function(io){
     var timer = new Date();
-    if(timer.getTime() - this.lastTimeSpawn > Math.pow(2,4)*1000 && this.lastTimeSpawn > 0 && this.spawnCheck===false)
+    if(timer.getTime() - this.lastTimeSpawn > 20*1000 && this.lastTimeSpawn > 0 && this.spawnCheck===false)
     {
         this.lastTimeSpawn = timer.getTime();
         console.log("O SA SPAWNEZ MINIONI IN CAMERA "+this.name);

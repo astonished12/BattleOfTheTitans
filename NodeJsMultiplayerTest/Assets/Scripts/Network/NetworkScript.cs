@@ -233,7 +233,8 @@ public class NetworkScript : MonoBehaviour
 
         var atacker_minion = spawner.minionsData[attacker_id_minion];
         var target_minion = spawner.minionsData[target_id_minion];
-
+        atacker_minion.GetComponent<CreepAi>().isAttacking = true;
+        
         spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
 
 
