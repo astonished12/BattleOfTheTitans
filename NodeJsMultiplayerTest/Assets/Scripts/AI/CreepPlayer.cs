@@ -41,10 +41,11 @@ public class CreepPlayer : MonoBehaviour {
                 float curDistance = GetDistanceBetweenPositions(enemy.transform.position, position);
                 if (curDistance < minDistance)
                 {
-                    if (GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>().isMovingOn == false)
+                    if ((enemy.GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>().isMovingOn == false) || ((GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>()==null)))
                     {
                         GetComponent<CreepAi>().isMovingOn = true;
-                        enemy.GetComponent<CreepAi>().isMovingOn = true;
+                         if(enemy.GetComponent<CreepAi>())
+                            enemy.GetComponent<CreepAi>().isMovingOn = true;
                         //TO DO SEND TO SERVER AND FOLLOW THE REMOTE FROM THE OTHER CLIENT
                         GetComponent<NetworkCommunication>().SendMinionDataToFollow(GetComponent<NetworkEntity>().Id, enemy.GetComponent<NetworkEntity>().Id);
                         break;

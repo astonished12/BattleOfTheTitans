@@ -207,7 +207,7 @@ public class NetworkScript : MonoBehaviour
         string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
        
-        if(spawner.minionsData.ContainsKey(follower_id) && spawner.minionsData.ContainsKey(follower_id))
+        if(spawner.minionsData.ContainsKey(follower_id) && spawner.minionsData.ContainsKey(target_id))
         {
             var follower = spawner.minionsData[follower_id];
             var target = spawner.minionsData[target_id];
@@ -219,10 +219,17 @@ public class NetworkScript : MonoBehaviour
             follower.GetComponent<CreepAi>().posibleTarget = target;
             follower.GetComponent<Target>().targetTransform = follower.transform;          
 
-        }
-        else
+        }        
+        else if(spawner.minionsData.ContainsKey(follower_id) && spawner.OtherPlayersGameObjects.ContainsKey(target_id))
         {
-            Debug.Log("Problem with minion id follwings on minion follow minion");
+
+            Debug.Log("Minionul "+follower_id+" urmareste jucatorul "+target_id);
+            var follower = spawner.minionsData[follower_id];
+            var target = spawner.OtherPlayersGameObjects[target_id];
+            follower.GetComponent<CreepAi>().isMovingOn = true;
+
+            follower.GetComponent<CreepAi>().posibleTarget = target;
+            follower.GetComponent<Target>().targetTransform = follower.transform;
         }
     }
 
@@ -231,11 +238,25 @@ public class NetworkScript : MonoBehaviour
         string attacker_id_minion = ElementFromJsonToString(Obj.data["id_attacker"].ToString())[1];
         string target_id_minion = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
-        var atacker_minion = spawner.minionsData[attacker_id_minion];
-        var target_minion = spawner.minionsData[target_id_minion];
-        atacker_minion.GetComponent<CreepAi>().isAttacking = true;
-        
-        spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
+        if (spawner.minionsData.ContainsKey(attacker_id_minion) && spawner.minionsData.ContainsKey(target_id_minion))
+        {
+            var atacker_minion = spawner.minionsData[attacker_id_minion];
+            var target_minion = spawner.minionsData[target_id_minion];
+            atacker_minion.GetComponent<CreepAi>().isAttacking = true;
+
+            spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
+        }
+        else if(spawner.minionsData.ContainsKey(attacker_id_minion) && spawner.OtherPlayersGameObjects.ContainsKey(target_id_minion))
+        {
+            Debug.Log("Minionul " + attacker_id_minion + " urmareste jucatorul " + target_id_minion);
+
+            var atacker_minion = spawner.minionsData[attacker_id_minion];
+            var target_minion = spawner.OtherPlayersGameObjects[target_id_minion];
+            atacker_minion.GetComponent<CreepAi>().isAttacking = true;
+           if(target_minion.GetComponent<Alive>().isAlive)
+                spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
+
+        }
 
 
     }
