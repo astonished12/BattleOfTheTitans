@@ -22,17 +22,17 @@ public class Bullet : MonoBehaviour
             transform.position = Vector3.MoveTowards(transform.position, targetTransform.position, vel * Time.deltaTime);
             vel += acel * Time.deltaTime;
             acel = force * Time.deltaTime;
-            if (Vector3.Distance(transform.position, targetTransform.position) < 0.5f)
+            if (targetTransform != null && Vector3.Distance(transform.position, targetTransform.position) < 0.5f && ownerBullet!=null)
             {
-                if (!ownerBullet.GetComponent<CreepAi>())
+                 if (!ownerBullet.GetComponent<CreepAi>() && gameObject)
                 {
                     targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damagePlayer);
                 }
-                else if (ownerBullet.GetComponent<CreepAi>())
+                else if (ownerBullet.GetComponent<CreepAi>() && gameObject)
                 {
                     targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damageMinion);
                 }
-                Destroy(gameObject);
+                DestroyImmediate(gameObject);
             }
         }
     }

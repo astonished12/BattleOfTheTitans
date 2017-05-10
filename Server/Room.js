@@ -24,7 +24,7 @@ Room.prototype.SpawnMinions = function(io){
         io.to(this.name).emit("spawnMinions",{
                 minionsId : this.minionsId
         });
-        this.spawnCheck = true;  
+        //this.spawnCheck = true;  
     }
 }
 

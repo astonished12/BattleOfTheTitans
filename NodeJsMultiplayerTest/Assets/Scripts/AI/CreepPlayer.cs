@@ -53,10 +53,7 @@ public class CreepPlayer : MonoBehaviour {
                     }
                 }            
         }
-        /*if (hasEnemy == false)//&& GetDistanceBetweenPositions(transform.position, GetComponent<CreepAi>().final.position)>2f)
-        {
-            GetComponent<NetworkCommunication>().SendMinionHasNoEnemyAround(GetComponent<NetworkEntity>().Id);
-        }*/
+     
 
     }
 

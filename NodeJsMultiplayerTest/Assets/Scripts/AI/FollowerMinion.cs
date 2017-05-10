@@ -7,7 +7,7 @@ public class FollowerMinion : MonoBehaviour {
 	public Target target;
     public NavagiateToPosition navigator;
     public float scanFrequnecy = 0.1f;
-    public float stopFollowDistance;
+    public float stopFollowDistance=3f;
     float lastScanTime = 0;
     private Vector3 offSet;
     private void Start()

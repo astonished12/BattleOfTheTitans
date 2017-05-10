@@ -33,8 +33,12 @@ public class AttackAI : MonoBehaviour {
 
     private void ContinueMoving()
     {
-         if(GetComponent<CreepAi>() && GetComponent<CreepAi>().posibleTarget == null)
+         if(GetComponent<CreepAi>() && (GetComponent<CreepAi>().posibleTarget == null) || (GetDistanceBetweenPositions(transform.position,GetComponent<CreepAi>().posibleTarget.transform.position)> minDistance))
+        {
+            GetComponent<CreepAi>().posibleTarget = null;
             GetComponent<NetworkCommunication>().SendMinionHasNoEnemyAround(GetComponent<NetworkEntity>().Id);
+
+        }
     }
     private bool isReadyToAttackMinion()
     {
@@ -54,15 +58,18 @@ public class AttackAI : MonoBehaviour {
 
         foreach (GameObject enemy in enemies)
         {
-            float curDistance = GetDistanceBetweenPositions(enemy.transform.position, position);
-            if (curDistance < minDistance && GetComponent<CreepAi>().posibleTarget)
+            if (GetComponent<CreepAi>().posibleTarget)
             {
-                var attackMinionId = GetComponent<NetworkEntity>().Id;
-                var networkEntityIdOfTarget = enemy.GetComponent<NetworkEntity>().Id;
-                networkCommunication.SendMinionDataToAttack(attackMinionId, networkEntityIdOfTarget);
-                break;                
+                float curDistance = GetDistanceBetweenPositions(enemy.transform.position, GetComponent<CreepAi>().posibleTarget.transform.position);
+                if (curDistance < minDistance)
+                {
+                    var attackMinionId = GetComponent<NetworkEntity>().Id;
+                    var networkEntityIdOfTarget = enemy.GetComponent<NetworkEntity>().Id;
+                    networkCommunication.SendMinionDataToAttack(attackMinionId, networkEntityIdOfTarget);
+                    break;
+                }
             }
-        }      
+        } 
 
     }
     private float GetDistanceBetweenPositions(Vector3 start, Vector3 end)

@@ -12,7 +12,6 @@ public class NavagiateToPosition : MonoBehaviour
     public int targetIndex;
     public List<Node> path;
     public Vector3 currentTargetPosition;
-    public Vector3 finalTargetPosition;
     public float speed = 1f;
 
     public bool targetSuccesfull = true;
@@ -37,7 +36,6 @@ public class NavagiateToPosition : MonoBehaviour
     public void SetTargetMinion(Vector3 _targetPosition)
     {
         currentTargetPosition = _targetPosition;
-        finalTargetPosition = GetComponent<CreepAi>().final.transform.position;
         var pathfinder = GetComponent<PathFinder>();
         path = pathfinder.AStar(transform.position, currentTargetPosition);
         SetDestination(path);
@@ -95,8 +93,10 @@ public class NavagiateToPosition : MonoBehaviour
     }
     public void SetFinalTarget()
     {
-        if(targetSuccesfull)
-            GetComponent<Target>().targetTransform = GetComponent<CreepAi>().final;       
+        if (targetSuccesfull)
+        {
+            GetComponent<Target>().targetTransform = GetComponent<CreepAi>().final;
+        }  
     }
   
     

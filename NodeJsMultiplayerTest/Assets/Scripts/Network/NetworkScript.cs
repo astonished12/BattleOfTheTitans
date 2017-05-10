@@ -241,12 +241,15 @@ public class NetworkScript : MonoBehaviour
     {
         string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
-        Debug.Log("Minionul "+target_id + " nu are inamici in jur");
+        //Debug.Log("Minionul "+target_id + " nu are inamici in jur");
         if (spawner.minionsData.ContainsKey(target_id))
         {
             var target = spawner.minionsData[target_id];
-            if(target)
+            if (target)
+            {
+                target.GetComponent<CreepAi>().isMovingOn = false;
                 target.GetComponent<NavagiateToPosition>().SetFinalTarget();
+            }
         }
     }
 
