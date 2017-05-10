@@ -7,7 +7,8 @@ public class CreepPlayer : MonoBehaviour {
     public Target final;
     public float lastAttackScan;
     public float scanRate;
-    private float minDistance = 5;
+    private float minDistance = 3;
+    public bool hasEnemy = false;
 
     void Start()
     {
@@ -19,7 +20,6 @@ public class CreepPlayer : MonoBehaviour {
         {
             FindClosestEnemy();
             lastAttackScan = Time.time;
-
         }
     }
 
@@ -33,15 +33,16 @@ public class CreepPlayer : MonoBehaviour {
     {
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("EnemyMinions");
+        hasEnemy = false;
 
         Vector3 position = transform.position;
-
         foreach (GameObject enemy in enemies)
         {            
                 float curDistance = GetDistanceBetweenPositions(enemy.transform.position, position);
                 if (curDistance < minDistance)
                 {
-                    if ((enemy.GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>().isMovingOn == false) || ((GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>()==null)))
+                hasEnemy = true;
+                if ((enemy.GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>().isMovingOn == false) || ((GetComponent<CreepAi>() && GetComponent<CreepAi>().isMovingOn == false && enemy.GetComponent<CreepAi>()==null)))
                     {
                         GetComponent<CreepAi>().isMovingOn = true;
                          if(enemy.GetComponent<CreepAi>())
@@ -52,6 +53,11 @@ public class CreepPlayer : MonoBehaviour {
                     }
                 }            
         }
+        /*if (hasEnemy == false)//&& GetDistanceBetweenPositions(transform.position, GetComponent<CreepAi>().final.position)>2f)
+        {
+            GetComponent<NetworkCommunication>().SendMinionHasNoEnemyAround(GetComponent<NetworkEntity>().Id);
+        }*/
+
     }
 
     private float GetDistanceBetweenPositions(Vector3 start, Vector3 end)

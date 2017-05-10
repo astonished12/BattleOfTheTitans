@@ -11,7 +11,7 @@ public class Attack : MonoBehaviour
     public float attackRate;
     NetworkEntity networkEntity;
     NetworkCommunication networkCommunication;
-    private float minDistance = 5;
+
 
     void Start()
     {

@@ -71,7 +71,7 @@ public class SpawnerPlayer : MonoBehaviour {
         Debug.Log("SPAWN MINIONS");
         GameObject spawnPointA = GameObject.Find("SpawnPointMinionsA");
         GameObject spawnPointB = GameObject.Find("SpawnPointMinionsB");
-
+       
         for(int k=0;k<idTowers.Count;k++)
         {
 
@@ -101,6 +101,7 @@ public class SpawnerPlayer : MonoBehaviour {
                 maxinon1.GetComponent<NetworkEntity>().Id = idTowers[k];
                 maxinon1.GetComponent<FollowMinions>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
                 maxinon1.GetComponent<CreepAi>().number = k + 1;
+
                 minionsData.Add(idTowers[k], maxinon1);
                 ++k;
 
@@ -108,6 +109,7 @@ public class SpawnerPlayer : MonoBehaviour {
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idTowers[k];
                 maxinon2.GetComponent<CreepAi>().number = k + 1;
+
                 minionsData.Add(idTowers[k], maxinon2);               
 
                 yield return new WaitForSeconds(1.0f);

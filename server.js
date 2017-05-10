@@ -47,6 +47,7 @@ io.sockets.on('connection', function(socket){
     socket.on("followTower",onFollowTower);
     socket.on("followMinion",onFollowMinion);
     socket.on("minionFollowMinion",onMinionFollowMinion);
+    socket.on("minionNoTarget",onMinionHasNoTarget);
     socket.on("minionAttackMinion",onMinionAttackMinion);
     socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
@@ -57,7 +58,7 @@ var onNewRoom = function(data){
     roomNo++;
     
     var room = new Room(this.id,roomName,2); 
-    var player = new ControllerPlayer(this.id,"Player1",-47,0,7,"true");
+    var player = new ControllerPlayer(this.id,"Player1",-45,0,4.5,"true");
     room.PLAYERS[this.id] = player;
     
     room.towersId.push(shortid.generate());
@@ -210,7 +211,13 @@ var onMinionFollowMinion = function(data){
         target_id:data["idTarget"]
     });
 }
-
+var onMinionHasNoTarget = function(data){
+    console.log("Minionul "+data["idTarget"]+ " nu are inamici in jur") ;
+    
+    io.to(mapingSocketRoom[this.id].name).emit("minionHasNoTarget",{
+        target_id:data["idTarget"]
+    });
+}
 var onMinionAttackMinion = function(data){
     console.log("Minionul "+data["idAttacker"]+" ataca pe minion "+data["idTarget"]);
     

@@ -49,7 +49,6 @@ public class NetworkCommunication : MonoBehaviour {
 
     public void SendMinionDataToFollow(string idFollower,string idMinion)
     {
-        //Debug.Log("Seding that minion id "+idFollower+" urmareste pe minion id " + idMinion);
         NetworkScript.SocketIO.Emit("minionFollowMinion", new JSONObject(MinionsDataToJsonFollow(idFollower, idMinion)));
     }
 
@@ -61,5 +60,10 @@ public class NetworkCommunication : MonoBehaviour {
     public void SendMinionDataToAttack(string idAttacker,string idTargetMinion)
     {
         NetworkScript.SocketIO.Emit("minionAttackMinion", new JSONObject(MinionsDataToJsonAttack(idAttacker, idTargetMinion)));
+    }
+
+    public void SendMinionHasNoEnemyAround(string idMinion)
+    {
+        NetworkScript.SocketIO.Emit("minionNoTarget", new JSONObject(TargetIdToJson(idMinion)));
     }
 }

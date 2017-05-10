@@ -36,6 +36,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("followPlayer", OnFollow);
         SocketIO.On("followTower", OnFollowTower);
         SocketIO.On("followMinion", OnFollowMinion);
+        SocketIO.On("minionHasNoTarget", OnMinionHasNooTarget);
         SocketIO.On("attackPlayer", OnAttack);
         SocketIO.On("spawnMinions",OnSpawnMinions);
         SocketIO.On("keyPressed", OnKeyPressed);
@@ -211,7 +212,9 @@ public class NetworkScript : MonoBehaviour
         {
             var follower = spawner.minionsData[follower_id];
             var target = spawner.minionsData[target_id];
+
             follower.GetComponent<CreepAi>().isMovingOn = true;
+            target.GetComponent<CreepAi>().isMovingOn = true;
 
             target.GetComponent<CreepAi>().posibleTarget = follower;
             target.GetComponent<Target>().targetTransform = target.transform;
@@ -226,10 +229,24 @@ public class NetworkScript : MonoBehaviour
             Debug.Log("Minionul "+follower_id+" urmareste jucatorul "+target_id);
             var follower = spawner.minionsData[follower_id];
             var target = spawner.OtherPlayersGameObjects[target_id];
+
             follower.GetComponent<CreepAi>().isMovingOn = true;
 
             follower.GetComponent<CreepAi>().posibleTarget = target;
             follower.GetComponent<Target>().targetTransform = follower.transform;
+        }
+    }
+
+    private void OnMinionHasNooTarget(SocketIOEvent Obj)
+    {
+        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+
+        Debug.Log("Minionul "+target_id + " nu are inamici in jur");
+        if (spawner.minionsData.ContainsKey(target_id))
+        {
+            var target = spawner.minionsData[target_id];
+            if(target)
+                target.GetComponent<NavagiateToPosition>().SetFinalTarget();
         }
     }
 
@@ -242,9 +259,11 @@ public class NetworkScript : MonoBehaviour
         {
             var atacker_minion = spawner.minionsData[attacker_id_minion];
             var target_minion = spawner.minionsData[target_id_minion];
-            atacker_minion.GetComponent<CreepAi>().isAttacking = true;
-
-            spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
+           if(target_minion.GetComponent<Alive>().isAlive && atacker_minion.GetComponent<Alive>().isAlive)
+            {
+                atacker_minion.GetComponent<CreepAi>().isAttacking = true;
+                spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
+            }
         }
         else if(spawner.minionsData.ContainsKey(attacker_id_minion) && spawner.OtherPlayersGameObjects.ContainsKey(target_id_minion))
         {
@@ -255,11 +274,8 @@ public class NetworkScript : MonoBehaviour
             atacker_minion.GetComponent<CreepAi>().isAttacking = true;
            if(target_minion.GetComponent<Alive>().isAlive)
                 spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
-
-        }
-
-
-    }
+        }     
+     }
 
     private Vector3 makePositiveVector(Vector3 vectorToTransform)
     {

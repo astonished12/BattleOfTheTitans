@@ -5,7 +5,9 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
 
-    public int damage = 10;
+    public int damagePlayer = 10;
+    public int damageMinion = 2;
+
     public float vel, acel, force;
     public Transform targetTransform;
     public GameObject ownerBullet;
@@ -22,7 +24,14 @@ public class Bullet : MonoBehaviour
             acel = force * Time.deltaTime;
             if (Vector3.Distance(transform.position, targetTransform.position) < 0.5f)
             {
-                targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damage);
+                if (!ownerBullet.GetComponent<CreepAi>())
+                {
+                    targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damagePlayer);
+                }
+                else if (ownerBullet.GetComponent<CreepAi>())
+                {
+                    targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damageMinion);
+                }
                 Destroy(gameObject);
             }
         }

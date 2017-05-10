@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Follower : MonoBehaviour {
+public class FollowerMinion : MonoBehaviour {
 
-    public Target target;
-
+	public Target target;
     public NavagiateToPosition navigator;
     public float scanFrequnecy = 0.1f;
     public float stopFollowDistance;
@@ -19,16 +17,18 @@ public class Follower : MonoBehaviour {
     }
  
     private void Update()
-    {     
-        if (isReadyToScan() && !target.IsInRange(stopFollowDistance)) 
+    {
+        if (isReadyToFollowMinion())
         {
-           AddOffset();
-           if (!GetComponent<CreepAi>())
-            {
-              navigator.SetTargetPosition(target.targetTransform.position - offSet);
-            }          
-           
-        }       
+            AddOffset();
+            navigator.SetTargetMinion(target.targetTransform.position + offSet + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number));
+        }
+
+        if (isReadyToScan() && !target.IsInRange(stopFollowDistance))
+        {
+            AddOffset();            
+            navigator.SetTargetMinion(target.targetTransform.position - offSet);            
+        }    
     }
 
     void AddOffset()
@@ -40,10 +40,15 @@ public class Follower : MonoBehaviour {
 
     }
 
+    private bool isReadyToFollowMinion()
+    {
+        return (Time.time - lastScanTime > scanFrequnecy && target.targetTransform && GetComponent<CreepAi>().posibleTarget);
+    }
+
     private bool isReadyToScan()
     {
         return (Time.time - lastScanTime > scanFrequnecy && target.targetTransform);
     }
 
-  
+   
 }

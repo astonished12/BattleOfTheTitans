@@ -11,7 +11,8 @@ public class NavagiateToPosition : MonoBehaviour
 
     public int targetIndex;
     public List<Node> path;
-    private Vector3 targetPositon;
+    public Vector3 currentTargetPosition;
+    public Vector3 finalTargetPosition;
     public float speed = 1f;
 
     public bool targetSuccesfull = true;
@@ -24,20 +25,21 @@ public class NavagiateToPosition : MonoBehaviour
 
     public void SetTargetPosition(Vector3 _targetPosition)
     {
-        targetPositon = _targetPosition;
+        currentTargetPosition = _targetPosition;
         var pathfinder = GetComponent<PathFinder>();
-        path = pathfinder.AStar(transform.position, targetPositon);        
+        path = pathfinder.AStar(transform.position, currentTargetPosition);        
         SetDestination(path);
         target.SetTargetTransform(null);
         animator.SetBool("attack", false);
 
     }
 
-    public void SetTargetBase(Vector3 _targetPosition)
+    public void SetTargetMinion(Vector3 _targetPosition)
     {
-        targetPositon = _targetPosition;
+        currentTargetPosition = _targetPosition;
+        finalTargetPosition = GetComponent<CreepAi>().final.transform.position;
         var pathfinder = GetComponent<PathFinder>();
-        path = pathfinder.AStar(transform.position, targetPositon);
+        path = pathfinder.AStar(transform.position, currentTargetPosition);
         SetDestination(path);
         target.SetTargetTransform(null);
 
@@ -78,13 +80,24 @@ public class NavagiateToPosition : MonoBehaviour
 
     void Update()
     {
-        if (targetSuccesfull)
-            GetComponent<Animator>().SetBool("atDestination", true);
-        if(targetSuccesfull && GetComponent<CreepAi>() && GetComponent<CreepAi>().posibleTarget)
+        if (targetSuccesfull && !GetComponent<CreepAi>())
         {
-            transform.rotation = Quaternion.LookRotation(GetComponent<CreepAi>().posibleTarget.transform.position - transform.position);
+            GetComponent<Animator>().SetBool("atDestination", true);
+        }
+        if (targetSuccesfull && GetComponent<CreepAi>() && GetComponent<CreepAi>().posibleTarget)
+        {
+            if (gameObject)
+            {
+                GetComponent<Animator>().SetBool("atDestination", true);
+                transform.rotation = Quaternion.LookRotation(GetComponent<CreepAi>().posibleTarget.transform.position - transform.position);
+            }
         }
     }
-    
+    public void SetFinalTarget()
+    {
+        if(targetSuccesfull)
+            GetComponent<Target>().targetTransform = GetComponent<CreepAi>().final;       
+    }
+  
     
 }

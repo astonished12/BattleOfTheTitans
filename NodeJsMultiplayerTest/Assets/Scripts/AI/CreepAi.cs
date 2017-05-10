@@ -8,10 +8,15 @@ public class CreepAi : MonoBehaviour
     public Vector3 offset;
     public bool isMovingOn = false;
     public bool isAttacking = false;
-
+    public Transform final;
     public int number;
     public GameObject posibleTarget;
+    void Start()
+    {
+        final = GetComponent<Target>().targetTransform;
+    }
 
+      
     public Vector3 ComputeOffset(int number)
     {
 
