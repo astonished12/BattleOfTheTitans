@@ -12,7 +12,6 @@ public class NetworkScript : MonoBehaviour
     public SpawnerPlayer spawner;
     private GameObject player;
     public GameObject listOfChracter;
-    public Dictionary<string, GameObject> towersData = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> minionsData = new Dictionary<string, GameObject>();
 
     private bool ownerFlag;
@@ -58,18 +57,9 @@ public class NetworkScript : MonoBehaviour
         player.GetComponent<NetworkEntity>().Id = socket_id;
         player.GetComponent<NetworkEntity>().ownerFlag = ownerFlag;
 
-        //IDENTIFY TOWERS      
-        objects = GameObject.FindGameObjectsWithTag("clickable");       
-        var objectCount = objects.Length;
-        int k = 0;  
-        foreach (var obj in objects)
-        {            
-            obj.GetComponent<FollowTower>().myPlayer = player;
-            string idTower = idTowers[k].ToString().Replace("\"", "");
-            obj.GetComponent<NetworkEntity>().Id = idTower;
-            towersData.Add(idTower, obj);
-            k++;        
-        }    
+       
+
+        spawner.SpawnTowers(idTowers, ownerFlag);
           
         spawner.AddMyPlayer(socket_id, player);
 
@@ -136,7 +126,7 @@ public class NetworkScript : MonoBehaviour
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
         //tower
-        var target = towersData[target_id];
+        var target = spawner.towersData[target_id];
 
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);        
@@ -168,10 +158,10 @@ public class NetworkScript : MonoBehaviour
             targetOfAttacker.transform.rotation = Quaternion.LookRotation(attacker.transform.position - targetOfAttacker.transform.position);
             attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
         }
-        else if(towersData.ContainsKey(target_id))
+        else if(spawner.towersData.ContainsKey(target_id))
         {
             Debug.Log("Attack tureta");          
-            targetOfAttacker = towersData[target_id];
+            targetOfAttacker = spawner.towersData[target_id];
             attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
         }
         else if (spawner.minionsData.ContainsKey(target_id))

@@ -212,7 +212,7 @@ var onMinionFollowMinion = function(data){
     });
 }
 var onMinionHasNoTarget = function(data){
-    console.log("Minionul "+data["idTarget"]+ " nu are inamici in jur") ;
+    //console.log("Minionul "+data["idTarget"]+ " nu are inamici in jur") ;
     
     io.to(mapingSocketRoom[this.id].name).emit("minionHasNoTarget",{
         target_id:data["idTarget"]
@@ -229,7 +229,7 @@ var onMinionAttackMinion = function(data){
 
 
 var onClientAttack = function(data){
-    console.log("Clientul "+this.id+" ataca pe minionul "+data["idTarget"]);
+    console.log("Clientul "+this.id+" ataca tureta "+data["idTarget"]);
     
     io.to(mapingSocketRoom[this.id].name).emit("attackPlayer",{
         socket_id:this.id,

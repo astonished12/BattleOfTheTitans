@@ -25,14 +25,14 @@ public class Alive : MonoBehaviour {
     {
         curHealth -= damage;
         UpdateHealthBar();
-        if (!isAlive && !GetComponent<FollowTower>() && !GetComponent<CreepAi>())
+        if (!isAlive && !GetComponent<FollowTower>() && !GetComponent<CreepAi>() && !GetComponent<NetworkEntity>().isTower)
         {
             animator.SetTrigger("dead");
             owner.GetComponent<Target>().targetTransform = null;
             Invoke("Respawn", respawnTime);
            
         }
-        else if(!isAlive && GetComponent<FollowTower>())
+        else if(!isAlive && GetComponent<NetworkEntity>().isTower)
         {
             Invoke("DestroyTower", 1.0f);
         }
