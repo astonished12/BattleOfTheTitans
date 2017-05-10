@@ -219,7 +219,7 @@ var onMinionHasNoTarget = function(data){
     });
 }
 var onMinionAttackMinion = function(data){
-    console.log("Minionul "+data["idAttacker"]+" ataca pe minion "+data["idTarget"]);
+    console.log("Minionul "+data["idAttacker"]+" ataca pe "+data["idTarget"]);
     
     io.to(mapingSocketRoom[this.id].name).emit("minionAttackMinion",{
         id_attacker : data["idAttacker"],

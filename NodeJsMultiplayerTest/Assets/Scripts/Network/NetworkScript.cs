@@ -170,6 +170,7 @@ public class NetworkScript : MonoBehaviour
             targetOfAttacker = spawner.minionsData[target_id];
             attacker.transform.rotation = Quaternion.LookRotation(targetOfAttacker.transform.position - attacker.transform.position);
         }
+       
 
         attacker.GetComponent<Animator>().SetFloat("multiplier", 2);
         attacker.GetComponent<Animator>().SetTrigger("attack");
@@ -225,6 +226,15 @@ public class NetworkScript : MonoBehaviour
             follower.GetComponent<CreepAi>().posibleTarget = target;
             follower.GetComponent<Target>().targetTransform = follower.transform;
         }
+        else if(spawner.minionsData.ContainsKey(follower_id) && spawner.towersData.ContainsKey(target_id)){
+            var follower = spawner.minionsData[follower_id];
+            var target = spawner.towersData[target_id];
+
+            follower.GetComponent<CreepAi>().isMovingOn = true;
+
+            follower.GetComponent<CreepAi>().posibleTarget = target;
+            follower.GetComponent<Target>().targetTransform = follower.transform;
+        }
     }
 
     private void OnMinionHasNooTarget(SocketIOEvent Obj)
@@ -265,10 +275,18 @@ public class NetworkScript : MonoBehaviour
             var atacker_minion = spawner.minionsData[attacker_id_minion];
             var target_minion = spawner.OtherPlayersGameObjects[target_id_minion];
             atacker_minion.GetComponent<CreepAi>().isAttacking = true;
-           if(target_minion.GetComponent<Alive>().isAlive)
+            if(target_minion.GetComponent<Alive>().isAlive)
                 spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
-        }     
-     }
+        }
+        else if (spawner.minionsData.ContainsKey(attacker_id_minion) && spawner.towersData.ContainsKey(target_id_minion))
+        {
+            var atacker_minion = spawner.minionsData[attacker_id_minion];
+            var tower_target = spawner.towersData[target_id_minion];
+            atacker_minion.GetComponent<CreepAi>().isAttacking = true;
+            if (tower_target.GetComponent<Alive>().isAlive)
+                spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, tower_target.transform);
+        }
+    }
 
     private Vector3 makePositiveVector(Vector3 vectorToTransform)
     {
