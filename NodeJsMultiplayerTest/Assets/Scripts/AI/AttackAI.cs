@@ -5,7 +5,7 @@ using UnityEngine;
 public class AttackAI : MonoBehaviour {
 
     private float aiAttackRate = 2f;
-    private float minDistance = 3;
+    private float minDistance = 2;
     private float lastAttackTime;
     private float lastTimeCheckPath;
     private float pathCheck = 0.2f;
@@ -33,7 +33,7 @@ public class AttackAI : MonoBehaviour {
 
     private void ContinueMoving()
     {
-         if(GetComponent<CreepAi>() && (GetComponent<CreepAi>().posibleTarget == null) || (GetDistanceBetweenPositions(transform.position,GetComponent<CreepAi>().posibleTarget.transform.position)> minDistance))
+         if(GetComponent<CreepAi>() && (GetComponent<CreepAi>().posibleTarget == null) || (GetDistanceBetweenPositions(transform.position,GetComponent<CreepAi>().posibleTarget.transform.position) > minDistance))
         {
             GetComponent<CreepAi>().posibleTarget = null;
             GetComponent<NetworkCommunication>().SendMinionHasNoEnemyAround(GetComponent<NetworkEntity>().Id);
@@ -63,6 +63,7 @@ public class AttackAI : MonoBehaviour {
                 float curDistance = GetDistanceBetweenPositions(enemy.transform.position, GetComponent<CreepAi>().posibleTarget.transform.position);
                 if (curDistance < minDistance)
                 {
+                    Debug.Log("DISTANTA DE ATAC  DINTRE " +gameObject.name+" si "+enemy.name+ " ESTE "+ curDistance);
                     var attackMinionId = GetComponent<NetworkEntity>().Id;
                     var networkEntityIdOfTarget = enemy.GetComponent<NetworkEntity>().Id;
                     networkCommunication.SendMinionDataToAttack(attackMinionId, networkEntityIdOfTarget);

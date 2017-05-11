@@ -13,7 +13,8 @@ public class FollowerMinion : MonoBehaviour
 
     public float speed = 4f;
 
-    public bool mustStop=false;
+    //0 - false 1-true 2-is true and standing
+    public int mustStop=0;
     // Use this for initialization
     void Start()
     {
@@ -30,20 +31,28 @@ public class FollowerMinion : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-      
         // check if we have somewere to walk
-        if (currentWayPoint < this.wayPointList.Length)
-        {
-            if (targetWayPoint == null)
-                targetWayPoint = wayPointList[currentWayPoint];
-            if (mustStop == false)
-                Walk();
-            else
+            if (currentWayPoint < this.wayPointList.Length)
             {
-                //transform.position = Vector3.MoveTowards(transform.position, transform.position + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number), speed * Time.deltaTime);
-                GetComponent<Animator>().SetBool("atDestination", true);            }
-            }
+                if (targetWayPoint == null)
+                    targetWayPoint = wayPointList[currentWayPoint];
+                if (mustStop == 0)
+                {
+                    Walk();
+                }
+                else if (mustStop == 1)
+                {
+                    mustStop = 2;
+                    transform.position = Vector3.MoveTowards(transform.position, transform.position + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number), speed * Time.deltaTime);
+                    GetComponent<Animator>().SetBool("atDestination", true);
+                }        
+                else if (mustStop == 2)
+                {
+                    GetComponent<Animator>().SetBool("atDestination", true);
+                }
+          }
     }
+
 
     void Walk()
     {
@@ -53,7 +62,7 @@ public class FollowerMinion : MonoBehaviour
             if (currentWayPoint < wayPointList.Length)
                 targetWayPoint = wayPointList[currentWayPoint];
             else
-                mustStop = true;
+                mustStop = 1;
         }
         if (targetWayPoint)
         // rotate towards the target

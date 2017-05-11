@@ -7,8 +7,7 @@ public class CreepPlayer : MonoBehaviour {
     public Target final;
     public float lastAttackScan;
     public float scanRate;
-    private float minDistance = 3;
-    public bool hasEnemy = false;
+    private float minDistance = 2;
 
     void Start()
     {
@@ -33,7 +32,6 @@ public class CreepPlayer : MonoBehaviour {
     {
 
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("EnemyMinions");
-        hasEnemy = false;
 
         Vector3 position = transform.position;
         foreach (GameObject enemy in enemies)
@@ -41,17 +39,18 @@ public class CreepPlayer : MonoBehaviour {
                 float curDistance = GetDistanceBetweenPositions(enemy.transform.position, position);
                 if (curDistance < minDistance)
                 {
-                hasEnemy = true;
-                if ((enemy.GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == false && enemy.GetComponent<FollowerMinion>().mustStop == false) || ((GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == false && enemy.GetComponent<CreepAi>()==null)))
-                    {
-                        GetComponent<FollowerMinion>().mustStop = true;
-                         if(enemy.GetComponent<CreepAi>())
-                            enemy.GetComponent<FollowerMinion>().mustStop = true;
-                        //TO DO SEND TO SERVER AND FOLLOW THE REMOTE FROM THE OTHER CLIENT
-                        GetComponent<NetworkCommunication>().SendMinionDataToFollow(GetComponent<NetworkEntity>().Id, enemy.GetComponent<NetworkEntity>().Id);
-                        break;
-                    }
-                }            
+
+                    if ((enemy.GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == 0 && enemy.GetComponent<FollowerMinion>().mustStop == 0) || ((GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == 0 && enemy.GetComponent<CreepAi>()==null)))
+                        {
+                        //Debug.Log("DISTANTA DE URMARIRE  DINTRE " + gameObject.name + " si " + enemy.name + " ESTE " + curDistance);
+                         GetComponent<FollowerMinion>().mustStop = 1;
+                             if(enemy.GetComponent<CreepAi>())
+                                enemy.GetComponent<FollowerMinion>().mustStop = 1;
+                            //TO DO SEND TO SERVER AND FOLLOW THE REMOTE FROM THE OTHER CLIENT
+                            GetComponent<NetworkCommunication>().SendMinionDataToFollow(GetComponent<NetworkEntity>().Id, enemy.GetComponent<NetworkEntity>().Id);
+                            break;
+                        }
+                    }            
         }
      
 
