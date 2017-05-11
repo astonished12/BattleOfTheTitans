@@ -247,8 +247,7 @@ public class NetworkScript : MonoBehaviour
             var target = spawner.minionsData[target_id];
             if (target)
             {
-                target.GetComponent<CreepAi>().isMovingOn = false;
-                target.GetComponent<NavagiateToPosition>().SetFinalTarget();
+                target.GetComponent<FollowerMinion>().mustStop = false;
             }
         }
     }

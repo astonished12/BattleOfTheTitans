@@ -88,7 +88,6 @@ public class SpawnerPlayer : MonoBehaviour {
             GameObject nexusAgameObject = Instantiate(nexusA, positionsA.transform.GetChild(0).transform.position, Quaternion.identity);
             nexusAgameObject.GetComponent<NetworkEntity>().Id = idTower;
             nexusAgameObject.GetComponent<NetworkEntity>().isTower = true;
-
             towersData.Add(idTower, nexusAgameObject);
 
             idTower = idTowers[1].ToString().Replace("\"", "");
@@ -137,7 +136,6 @@ public class SpawnerPlayer : MonoBehaviour {
             GameObject firstTowerAGameObjectRemote = Instantiate(towerARemote, positionsA.transform.GetChild(1).transform.position, Quaternion.identity);
             firstTowerAGameObjectRemote.GetComponent<NetworkEntity>().Id = idTower;
             firstTowerAGameObjectRemote.GetComponent<NetworkEntity>().isTower = true;
-
             firstTowerAGameObjectRemote.GetComponent<FollowTower>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
             towersData.Add(idTower, firstTowerAGameObjectRemote);
 
@@ -145,7 +143,6 @@ public class SpawnerPlayer : MonoBehaviour {
             GameObject secondTowerAGameObjectRemote = Instantiate(towerARemote, positionsA.transform.GetChild(2).transform.position, Quaternion.identity);
             secondTowerAGameObjectRemote.GetComponent<NetworkEntity>().Id = idTower;
             secondTowerAGameObjectRemote.GetComponent<NetworkEntity>().isTower = true;
-
             secondTowerAGameObjectRemote.GetComponent<FollowTower>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
             towersData.Add(idTower, secondTowerAGameObjectRemote);
 
@@ -154,8 +151,8 @@ public class SpawnerPlayer : MonoBehaviour {
             GameObject nexusBgameObject = Instantiate(nexusB, positionsB.transform.GetChild(0).transform.position, Quaternion.identity);
             nexusBgameObject.GetComponent<NetworkEntity>().Id = idTower;
             nexusBgameObject.GetComponent<NetworkEntity>().isTower = true;
-
             towersData.Add(idTower, nexusBgameObject);
+
 
             idTower = idTowers[4].ToString().Replace("\"", "");
             GameObject firstTowerBGameObject = Instantiate(towerB, positionsB.transform.GetChild(1).transform.position, Quaternion.identity);
@@ -167,7 +164,6 @@ public class SpawnerPlayer : MonoBehaviour {
             GameObject secondTowerBGameObject = Instantiate(towerB, positionsB.transform.GetChild(2).transform.position, Quaternion.identity);
             secondTowerBGameObject.GetComponent<NetworkEntity>().Id = idTower;
             secondTowerBGameObject.GetComponent<NetworkEntity>().isTower = true;
-
             towersData.Add(idTower, secondTowerBGameObject);
 
         }

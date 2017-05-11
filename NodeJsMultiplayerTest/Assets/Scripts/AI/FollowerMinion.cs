@@ -15,6 +15,10 @@ public class FollowerMinion : MonoBehaviour
 
     public bool mustStop=false;
     // Use this for initialization
+    void Start()
+    {
+        GetComponent<Animator>().SetBool("atDestination", false);
+    }
     public void SetWayPoints(GameObject minionsWaypoints)
     {
         for(int i = 0; i < 6; i++)
@@ -32,9 +36,13 @@ public class FollowerMinion : MonoBehaviour
         {
             if (targetWayPoint == null)
                 targetWayPoint = wayPointList[currentWayPoint];
-            if(mustStop==false)
+            if (mustStop == false)
                 Walk();
-        }
+            else
+            {
+                //transform.position = Vector3.MoveTowards(transform.position, transform.position + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number), speed * Time.deltaTime);
+                GetComponent<Animator>().SetBool("atDestination", true);            }
+            }
     }
 
     void Walk()
