@@ -2,53 +2,59 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowerMinion : MonoBehaviour {
+public class FollowerMinion : MonoBehaviour
+{
 
-	public Target target;
-    public NavagiateToPosition navigator;
-    public float scanFrequnecy = 0.1f;
-    public float stopFollowDistance=3f;
-    float lastScanTime = 0;
-    private Vector3 offSet;
-    private void Start()
+    // put the points from unity interface
+    public Transform[] wayPointList = new Transform[6];
+
+    public int currentWayPoint = 0;
+    Transform targetWayPoint;
+
+    public float speed = 4f;
+
+    public bool mustStop=false;
+    // Use this for initialization
+    public void SetWayPoints(GameObject minionsWaypoints)
     {
-        navigator = GetComponent<NavagiateToPosition>();
-        target = GetComponent<Target>();       
-    }
- 
-    private void Update()
-    {
-        if (isReadyToFollowMinion())
+        for(int i = 0; i < 6; i++)
         {
-            AddOffset();
-            navigator.SetTargetMinion(target.targetTransform.position + offSet + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number));
+            wayPointList[0] = minionsWaypoints.transform.GetChild(i).transform;
         }
+    }
 
-        if (isReadyToScan() && !target.IsInRange(stopFollowDistance))
+    // Update is called once per frame
+    void Update()
+    {
+      
+        // check if we have somewere to walk
+        if (currentWayPoint < this.wayPointList.Length)
         {
-            AddOffset();            
-            navigator.SetTargetMinion(target.targetTransform.position - offSet);            
-        }    
+            if (targetWayPoint == null)
+                targetWayPoint = wayPointList[currentWayPoint];
+            if(mustStop==false)
+                Walk();
+        }
     }
 
-    void AddOffset()
+    void Walk()
     {
-        if (transform.position.x > target.targetTransform.position.x)
-            offSet = Vector3.left * stopFollowDistance * 0.75f;
-        else if (transform.position.x < target.targetTransform.position.x)
-            offSet = Vector3.right * stopFollowDistance * 0.75f;
+        if (gameObject && targetWayPoint && transform.position == targetWayPoint.position)
+        {
+            currentWayPoint++;
+            if (currentWayPoint < wayPointList.Length)
+                targetWayPoint = wayPointList[currentWayPoint];
+            else
+                mustStop = true;
+        }
+        if (targetWayPoint)
+        // rotate towards the target
+        {
+            transform.forward = Vector3.RotateTowards(transform.forward, targetWayPoint.position - transform.position, speed * Time.deltaTime, 0.0f);
 
+            // move towards the target
+            transform.position = Vector3.MoveTowards(transform.position, targetWayPoint.position, speed * Time.deltaTime);
+        }
+      
     }
-
-    private bool isReadyToFollowMinion()
-    {
-        return (Time.time - lastScanTime > scanFrequnecy && target.targetTransform && GetComponent<CreepAi>().posibleTarget);
-    }
-
-    private bool isReadyToScan()
-    {
-        return (Time.time - lastScanTime > scanFrequnecy && target.targetTransform);
-    }
-
-   
 }

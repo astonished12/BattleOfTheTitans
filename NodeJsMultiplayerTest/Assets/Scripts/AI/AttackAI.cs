@@ -36,6 +36,7 @@ public class AttackAI : MonoBehaviour {
          if(GetComponent<CreepAi>() && (GetComponent<CreepAi>().posibleTarget == null) || (GetDistanceBetweenPositions(transform.position,GetComponent<CreepAi>().posibleTarget.transform.position)> minDistance))
         {
             GetComponent<CreepAi>().posibleTarget = null;
+            GetComponent<FollowerMinion>().mustStop = false;
             GetComponent<NetworkCommunication>().SendMinionHasNoEnemyAround(GetComponent<NetworkEntity>().Id);
 
         }

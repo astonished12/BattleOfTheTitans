@@ -19,7 +19,8 @@ public class SpawnerPlayer : MonoBehaviour {
     public GameObject towerARemote;
     public GameObject towerB;
     public GameObject towerBRemote;
-
+    public GameObject minionsSpawnPointsA;
+    public GameObject minionsSpawnPointsB;
     public Dictionary<string, GameObject> OtherPlayersGameObjects = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> minionsData = new Dictionary<string, GameObject>();
     public Dictionary<string, GameObject> towersData = new Dictionary<string, GameObject>();
@@ -186,6 +187,7 @@ public class SpawnerPlayer : MonoBehaviour {
             if (checkOwner)
             {
                 GameObject maxinon1 = Instantiate(maxinon, spawnPointA.transform.position, Quaternion.identity);
+                maxinon1.GetComponent<FollowerMinion>().SetWayPoints(minionsSpawnPointsA);
                 maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
                 maxinon1.GetComponent<NetworkEntity>().Id = idMinions[k];
                 maxinon1.GetComponent<CreepAi>().number = k+1;
@@ -193,6 +195,7 @@ public class SpawnerPlayer : MonoBehaviour {
                 ++k;
 
                 GameObject maxinon2 = Instantiate(maxinonRemote, spawnPointB.transform.position, Quaternion.identity);
+                maxinon2.GetComponent<FollowerMinion>().SetWayPoints(minionsSpawnPointsB);
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idMinions[k];
                 maxinon2.GetComponent<FollowMinions>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
@@ -205,6 +208,7 @@ public class SpawnerPlayer : MonoBehaviour {
             if (!checkOwner)
             {
                 GameObject maxinon1 = Instantiate(maxinonRemote, spawnPointA.transform.position, Quaternion.identity);
+                maxinon1.GetComponent<FollowerMinion>().SetWayPoints(minionsSpawnPointsA);
                 maxinon1.GetComponent<Target>().targetTransform = spawnPointB.transform;
                 maxinon1.GetComponent<NetworkEntity>().Id = idMinions[k];
                 maxinon1.GetComponent<FollowMinions>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
@@ -214,6 +218,7 @@ public class SpawnerPlayer : MonoBehaviour {
                 ++k;
 
                 GameObject maxinon2 = Instantiate(maxinon, spawnPointB.transform.position, Quaternion.identity);
+                maxinon2.GetComponent<FollowerMinion>().SetWayPoints(minionsSpawnPointsB);
                 maxinon2.GetComponent<Target>().targetTransform = spawnPointA.transform;
                 maxinon2.GetComponent<NetworkEntity>().Id = idMinions[k];
                 maxinon2.GetComponent<CreepAi>().number = k + 1;

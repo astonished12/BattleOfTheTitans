@@ -208,12 +208,12 @@ public class NetworkScript : MonoBehaviour
             target.GetComponent<CreepAi>().isMovingOn = true;
 
             target.GetComponent<CreepAi>().posibleTarget = follower;
-            target.GetComponent<Target>().targetTransform = target.transform;
+            target.GetComponent<FollowerMinion>().mustStop = true;
 
             follower.GetComponent<CreepAi>().posibleTarget = target;
-            follower.GetComponent<Target>().targetTransform = follower.transform;          
+            follower.GetComponent<FollowerMinion>().mustStop = true;
 
-        }        
+        }
         else if(spawner.minionsData.ContainsKey(follower_id) && spawner.OtherPlayersGameObjects.ContainsKey(target_id))
         {
 
@@ -224,7 +224,7 @@ public class NetworkScript : MonoBehaviour
             follower.GetComponent<CreepAi>().isMovingOn = true;
 
             follower.GetComponent<CreepAi>().posibleTarget = target;
-            follower.GetComponent<Target>().targetTransform = follower.transform;
+            follower.GetComponent<FollowerMinion>().mustStop = true;
         }
         else if(spawner.minionsData.ContainsKey(follower_id) && spawner.towersData.ContainsKey(target_id)){
             var follower = spawner.minionsData[follower_id];
@@ -233,7 +233,7 @@ public class NetworkScript : MonoBehaviour
             follower.GetComponent<CreepAi>().isMovingOn = true;
 
             follower.GetComponent<CreepAi>().posibleTarget = target;
-            follower.GetComponent<Target>().targetTransform = follower.transform;
+            follower.GetComponent<FollowerMinion>().mustStop = true;
         }
     }
 
