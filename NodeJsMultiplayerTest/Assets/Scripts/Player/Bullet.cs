@@ -34,7 +34,7 @@ public class Bullet : MonoBehaviour
                 {
                     targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damageMinion);
                 }
-                else if (ownerBullet.GetComponent<NetworkEntity>().isTower)
+                else if (ownerBullet.GetComponent<NetworkEntity>().isTower && gameObject && ownerBullet)
                 {
                     targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damageTower);
                 }

@@ -301,7 +301,7 @@ public class NetworkScript : MonoBehaviour
             {
                 attaker.GetComponent<TowerAtack>().lastTimeAttack = Time.time;
             }
-            if(target)
+            if(target && target.GetComponent<Alive>().isAlive)
               spawner.SpawnBullet(attaker,attaker.transform.position+new Vector3(0f,2f,0f) ,target.transform);
         }
 

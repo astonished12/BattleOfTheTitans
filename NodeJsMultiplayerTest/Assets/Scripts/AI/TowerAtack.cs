@@ -16,7 +16,7 @@ public class TowerAtack : MonoBehaviour {
     } 
     private bool isReadyToShot()
     {
-        return Time.time - lastTimeAttack > 3f;
+        return Time.time - lastTimeAttack > 2f;
     }       
     void TargetEnemy()
     {

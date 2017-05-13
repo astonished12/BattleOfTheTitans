@@ -28,7 +28,9 @@ public class Alive : MonoBehaviour {
         if (!isAlive && !GetComponent<FollowTower>() && !GetComponent<CreepAi>() && !GetComponent<NetworkEntity>().isTower)
         {
             animator.SetTrigger("dead");
-            owner.GetComponent<Target>().targetTransform = null;
+            //CHECK IS ANOTHER PLAYER WHO KILL 
+            if (owner && !owner.GetComponent<NetworkEntity>().isTower)
+              owner.GetComponent<Target>().targetTransform = null;
             Invoke("Respawn", respawnTime);
            
         }
