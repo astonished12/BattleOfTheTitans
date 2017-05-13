@@ -13,13 +13,22 @@ public class Alive : MonoBehaviour {
     public Image healthBar;
 
     public bool isAlive { get { return curHealth > 0; } }
+    private float lastTimeUpdateHealth;
+    private float periodToUpdate = 5f;
 
-    
     void Awake()
     {
         animator = GetComponent<Animator>();
         curHealth = maxHealth;
         UpdateHealthBar();
+    }
+
+    void Update()
+    {
+        if (Time.time - lastTimeUpdateHealth > periodToUpdate)
+        {
+            OnHealUp(3);
+        }
     }
     public void OnHit(GameObject owner,int damage)
     {
@@ -58,6 +67,8 @@ public class Alive : MonoBehaviour {
                 curHealth = maxHealth;
                 UpdateHealthBar();
             }
+            lastTimeUpdateHealth = Time.time;
+
         }
     }
     void Respawn()
@@ -79,6 +90,12 @@ public class Alive : MonoBehaviour {
         curHealth = maxHealth;
                
         healthBar.rectTransform.localScale = new Vector3(1, 1, 1);
+
+        if (GetComponent<Mana>())
+        {
+
+            GetComponent<Mana>().Respawn();
+        }
 
         animator.SetTrigger("Respawn");
     }

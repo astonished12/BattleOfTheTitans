@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TowerAtack : MonoBehaviour {
 
-    private float minDistance = 3f;
+
     public GameObject trackingObject;
     float trackingRange = 10f;
     float fieldOfView = 360;

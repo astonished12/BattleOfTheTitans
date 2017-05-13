@@ -5,6 +5,7 @@ using UnityEngine;
 public class SkillInfo : MonoBehaviour {
 
     public int damage;
+    public int cost;
     public float cast=5;
     public bool isActive=true;
     public Vector3 targetPositions;

@@ -39,6 +39,7 @@ public class SpecialAttack : MonoBehaviour {
             }
             GameObject go = Instantiate(objectToSpawn, targetPositions+new Vector3(0f,0.2f,0f), Quaternion.identity) as GameObject;
             go.GetComponent<SkillInfo>().damage = damage;
+            GetComponent<Mana>().DecreaseMana(go.GetComponent<SkillInfo>().cost);
             Destroy(go, 2);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
             {
@@ -46,13 +47,14 @@ public class SpecialAttack : MonoBehaviour {
                 ActionBar.skillSlots[0].coolDonwTime = go.GetComponent<SkillInfo>().cast;
             }
             inAction = false;
-            //}
+            
         }
 
         if (key.ToString() == "W" && inAction )
         {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
+            GetComponent<Mana>().DecreaseMana(go.GetComponent<SkillInfo>().cost);
             //go.GetComponent<SkillInfo>().damage = damage;
             GetComponent<Alive>().OnHealUp(damage);
             Destroy(go, 2);
@@ -70,6 +72,7 @@ public class SpecialAttack : MonoBehaviour {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
             go.GetComponent<SkillInfo>().damage = damage;
+            GetComponent<Mana>().DecreaseMana(go.GetComponent<SkillInfo>().cost);
             Destroy(go, 5);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
             {
@@ -85,6 +88,7 @@ public class SpecialAttack : MonoBehaviour {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
             go.GetComponent<SkillInfo>().damage = damage;
+            GetComponent<Mana>().DecreaseMana(go.GetComponent<SkillInfo>().cost);
             Destroy(go, 4);
             if (gameObject == GameObject.FindGameObjectWithTag("Player"))
             {
