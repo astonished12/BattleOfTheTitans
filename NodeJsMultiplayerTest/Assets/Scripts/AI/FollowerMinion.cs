@@ -38,17 +38,21 @@ public class FollowerMinion : MonoBehaviour
                     targetWayPoint = wayPointList[currentWayPoint];
                 if (mustStop == 0)
                 {
-                    Walk();
+                GetComponent<Animator>().SetBool("atDestination", false);
+                Walk();
                 }
                 else if (mustStop == 1)
                 {
                     mustStop = 2;
-                    transform.position = Vector3.MoveTowards(transform.position, transform.position + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number), speed * Time.deltaTime);
-                    GetComponent<Animator>().SetBool("atDestination", true);
-                }        
+                   GetComponent<Animator>().SetBool("atDestination", true);
+                GetComponent<Animator>().SetTrigger("attack");
+                //transform.position = Vector3.MoveTowards(transform.position, transform.position + GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number), speed * Time.deltaTime);
+                transform.Translate((Vector3.forward+ GetComponent<CreepAi>().ComputeOffset(GetComponent<CreepAi>().number)) * Time.deltaTime);
+            }        
                 else if (mustStop == 2)
                 {
-                    GetComponent<Animator>().SetBool("atDestination", true);
+                GetComponent<Animator>().SetTrigger("attack");
+                GetComponent<Animator>().SetBool("atDestination", true);
                 }
           }
     }

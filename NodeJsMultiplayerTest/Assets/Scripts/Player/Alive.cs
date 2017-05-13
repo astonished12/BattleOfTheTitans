@@ -86,7 +86,8 @@ public class Alive : MonoBehaviour {
     }
     private void DestroyMinion()
     {
-        Destroy(gameObject);
+        GetComponent<Animator>().SetTrigger("dead");
+        Destroy(gameObject,2f);
     }
     void UpdateHealthBar()
     {

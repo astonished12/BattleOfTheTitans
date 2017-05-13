@@ -204,9 +204,6 @@ public class NetworkScript : MonoBehaviour
             var follower = spawner.minionsData[follower_id];
             var target = spawner.minionsData[target_id];
 
-            follower.GetComponent<CreepAi>().isMovingOn = true;
-            target.GetComponent<CreepAi>().isMovingOn = true;
-
             target.GetComponent<CreepAi>().posibleTarget = follower;
             target.GetComponent<FollowerMinion>().mustStop = 1;
 
@@ -221,7 +218,6 @@ public class NetworkScript : MonoBehaviour
             var follower = spawner.minionsData[follower_id];
             var target = spawner.OtherPlayersGameObjects[target_id];
 
-            follower.GetComponent<CreepAi>().isMovingOn = true;
 
             follower.GetComponent<CreepAi>().posibleTarget = target;
             follower.GetComponent<FollowerMinion>().mustStop = 1;
@@ -230,7 +226,7 @@ public class NetworkScript : MonoBehaviour
             var follower = spawner.minionsData[follower_id];
             var target = spawner.towersData[target_id];
 
-            follower.GetComponent<CreepAi>().isMovingOn = true;
+
 
             follower.GetComponent<CreepAi>().posibleTarget = target;
             follower.GetComponent<FollowerMinion>().mustStop = 1;
@@ -264,7 +260,6 @@ public class NetworkScript : MonoBehaviour
             var target_minion = spawner.minionsData[target_id_minion];
            if(target_minion.GetComponent<Alive>().isAlive && atacker_minion.GetComponent<Alive>().isAlive)
             {
-                atacker_minion.GetComponent<CreepAi>().isAttacking = true;
                 spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
             }
         }
@@ -274,7 +269,6 @@ public class NetworkScript : MonoBehaviour
 
             var atacker_minion = spawner.minionsData[attacker_id_minion];
             var target_minion = spawner.OtherPlayersGameObjects[target_id_minion];
-            atacker_minion.GetComponent<CreepAi>().isAttacking = true;
             if(target_minion.GetComponent<Alive>().isAlive)
                 spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, target_minion.transform);
         }
@@ -282,7 +276,6 @@ public class NetworkScript : MonoBehaviour
         {
             var atacker_minion = spawner.minionsData[attacker_id_minion];
             var tower_target = spawner.towersData[target_id_minion];
-            atacker_minion.GetComponent<CreepAi>().isAttacking = true;
             if (tower_target.GetComponent<Alive>().isAlive)
                 spawner.SpawnBullet(atacker_minion, atacker_minion.transform.position, tower_target.transform);
         }

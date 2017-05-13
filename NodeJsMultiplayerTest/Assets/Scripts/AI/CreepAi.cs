@@ -6,8 +6,7 @@ public class CreepAi : MonoBehaviour
 {
     public static int numberOrder;
     public Vector3 offset;
-    public bool isMovingOn = false;
-    public bool isAttacking = false;
+   
     public Transform final;
     public int number;
     public GameObject posibleTarget;

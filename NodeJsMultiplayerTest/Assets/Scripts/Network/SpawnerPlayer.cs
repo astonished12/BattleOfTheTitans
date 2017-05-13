@@ -28,7 +28,6 @@ public class SpawnerPlayer : MonoBehaviour {
     void Start()
     {
         InvokeRepeating("UpdateMinions", 20, 20);
-        InvokeRepeating("ResetAttackFlagMinions", 20,2);
     }   
 
     void UpdateMinions()
@@ -38,14 +37,7 @@ public class SpawnerPlayer : MonoBehaviour {
             minionsData.Remove(item.Key);      
     }
 
-    void ResetAttackFlagMinions()
-    {
-        foreach (string key in minionsData.Keys)
-        {
-            if(minionsData[key])
-                minionsData[key].GetComponent<CreepAi>().isAttacking = false;
-        }
-    }
+ 
     public void SpawnPlayer(string id,int numberCharacter, Vector3 positions,bool ownerOfRoom)
     {
         if (!OtherPlayersGameObjects.ContainsKey(id))
