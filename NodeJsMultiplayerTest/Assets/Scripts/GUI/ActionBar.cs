@@ -92,4 +92,5 @@ public class ActionBar : MonoBehaviour {
     {
         return new Rect(Screen.width * position.x, Screen.height * position.y, Screen.width * position.width, Screen.height * position.height);
     }
+    
 }
