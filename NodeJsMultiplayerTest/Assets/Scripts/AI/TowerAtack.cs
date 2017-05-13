@@ -2,41 +2,52 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerAtack : MonoBehaviour { 
+public class TowerAtack : MonoBehaviour {
 
-    private Transform bulletSpawnPoint;
-    private GameObject target;
     private float minDistance = 3f;
+    public GameObject trackingObject;
+    float trackingRange = 10f;
+    float fieldOfView = 360;
+    public float lastTimeAttack;
     void Update()
     {
-        TargetEnemy();
-    }        
+        if(isReadyToShot())
+             TargetEnemy();
+    } 
+    private bool isReadyToShot()
+    {
+        return Time.time - lastTimeAttack > 3f;
+    }       
     void TargetEnemy()
     {
-
-    }
-    private void FindClosestEnemy()
-    {
-
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("EnemyMinions");
-        Vector3 position = transform.position;
-        foreach (GameObject enemy in enemies)
-        {            
-            float curDistance = GetDistanceBetweenPositions(enemy.transform.position, GetComponent<CreepAi>().posibleTarget.transform.position);
-            if (curDistance < minDistance)
-            {
-                var attackMinionId = GetComponent<NetworkEntity>().Id;
-                var networkEntityIdOfTarget = enemy.GetComponent<NetworkEntity>().Id;
-                //networkCommunication.SendMinionDataToAttack(attackMinionId, networkEntityIdOfTarget);
-                break;
-            }            
+        trackingObject = null;
+        float hirange = float.MaxValue;
+        Collider[] cols = Physics.OverlapSphere(transform.position, trackingRange);
+        foreach (Collider col in cols)
+        {
+            GameObject target = col.gameObject;
+            if (target != gameObject && target.CompareTag("EnemyMinions"))
+                    {
+                Vector3 dir = target.transform.position - transform.position;
+                float range = dir.magnitude;
+                float angle = Vector3.Angle(dir, transform.forward);
+                if (range <= hirange && angle <= fieldOfView)
+                {
+                    hirange = range;
+                    trackingObject = target;
+                }
+            }
+        }
+        if (trackingObject)
+        {
+            GetComponent<NetworkCommunication>().SendMinionsOrPlayerIdToServerForTowerAttacking(GetComponent<NetworkEntity>().Id, trackingObject.GetComponent<NetworkEntity>().Id);
         }
 
-    }
 
-    private float GetDistanceBetweenPositions(Vector3 start, Vector3 end)
-    {
-        return Mathf.Sqrt(Mathf.Pow((end.x - start.x), 2) + Mathf.Pow(end.y - start.y, 2));
     }
+   
+
+
 }
+
 

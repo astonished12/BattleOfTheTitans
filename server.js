@@ -49,6 +49,7 @@ io.sockets.on('connection', function(socket){
     socket.on("minionFollowMinion",onMinionFollowMinion);
     socket.on("minionNoTarget",onMinionHasNoTarget);
     socket.on("minionAttackMinion",onMinionAttackMinion);
+    socket.on("towerTarget",onTowerTarget);
     socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
 });
@@ -233,6 +234,14 @@ var onClientAttack = function(data){
     
     io.to(mapingSocketRoom[this.id].name).emit("attackPlayer",{
         socket_id:this.id,
+        target_id:data["idTarget"]
+    });
+}
+
+var onTowerTarget = function(data){
+    console.log("Tureta "+data["idAttacker"]+" ataca pe "+data["idTarget"]);
+    io.to(mapingSocketRoom[this.id].name).emit("towerAttack",{
+        id_attacker:data["idAttacker"],
         target_id:data["idTarget"]
     });
 }

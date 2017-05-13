@@ -31,7 +31,7 @@ public class NetworkCommunication : MonoBehaviour {
         return string.Format(@"{{""idFollower"":""{0}"",""idTarget"":""{1}""}}", idFollower, id);
     }
 
-    private string MinionsDataToJsonAttack(string idAttacker, string id)
+    private string AttackAIToJson(string idAttacker, string id)
     {
         return string.Format(@"{{""idAttacker"":""{0}"",""idTarget"":""{1}""}}", idAttacker, id);
     }
@@ -59,11 +59,16 @@ public class NetworkCommunication : MonoBehaviour {
 
     public void SendMinionDataToAttack(string idAttacker,string idTargetMinion)
     {
-        NetworkScript.SocketIO.Emit("minionAttackMinion", new JSONObject(MinionsDataToJsonAttack(idAttacker, idTargetMinion)));
+        NetworkScript.SocketIO.Emit("minionAttackMinion", new JSONObject(AttackAIToJson(idAttacker, idTargetMinion)));
     }
 
     public void SendMinionHasNoEnemyAround(string idMinion)
     {
         NetworkScript.SocketIO.Emit("minionNoTarget", new JSONObject(TargetIdToJson(idMinion)));
+    }
+
+    public void SendMinionsOrPlayerIdToServerForTowerAttacking(string idTower,string idTarget)
+    {
+        NetworkScript.SocketIO.Emit("towerTarget", new JSONObject(AttackAIToJson(idTower,idTarget)));
     }
 }

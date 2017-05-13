@@ -9,6 +9,7 @@ public class SpawnerPlayer : MonoBehaviour {
     public GameObject listOfCharactersRemote;
     public GameObject listOfCharacter;
     public GameObject bulletPro;
+    public GameObject towerPrefabAttack;
     public GameObject maxinon;
     public GameObject maxinonRemote;
     public GameObject nexusA;
@@ -64,11 +65,22 @@ public class SpawnerPlayer : MonoBehaviour {
     public void SpawnBullet(GameObject owner, Vector3 positions,Transform target)
     {
         //TO DO ADD DAMAGE FROM PLAYER CLASS ATTRIBUTES
-        GameObject newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);       
-        newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
-        newGameObjectPlayer.GetComponent<Bullet>().ownerBullet = owner;
+        GameObject newGameObjectPlayer = null;
+        if (owner.GetComponent<NetworkEntity>().isTower)
+        {
+            newGameObjectPlayer = Instantiate(towerPrefabAttack, positions, Quaternion.identity);
+        }
+        else
+        {
+            newGameObjectPlayer = Instantiate(bulletPro, positions, Quaternion.identity);
+        }
+            
+            newGameObjectPlayer.GetComponent<Bullet>().targetTransform = target;
+            newGameObjectPlayer.GetComponent<Bullet>().ownerBullet = owner;
+        
     }
 
+  
     internal void SpawnTowers(JSONObject idTowers,bool checkOwner)
     {
         Debug.Log("Spawn TOWERS");

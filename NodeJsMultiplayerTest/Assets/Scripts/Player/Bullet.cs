@@ -7,6 +7,8 @@ public class Bullet : MonoBehaviour
 
     public int damagePlayer = 10;
     public int damageMinion = 2;
+    public int damageTower = 20;
+
 
     public float vel, acel, force;
     public Transform targetTransform;
@@ -24,7 +26,7 @@ public class Bullet : MonoBehaviour
             acel = force * Time.deltaTime;
             if (targetTransform != null && Vector3.Distance(transform.position, targetTransform.position) < 0.5f && ownerBullet!=null)
             {
-                 if (!ownerBullet.GetComponent<CreepAi>() && gameObject)
+                if (!ownerBullet.GetComponent<CreepAi>() && gameObject)
                 {
                     targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damagePlayer);
                 }
@@ -32,6 +34,11 @@ public class Bullet : MonoBehaviour
                 {
                     targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damageMinion);
                 }
+                else if (ownerBullet.GetComponent<NetworkEntity>().isTower)
+                {
+                    targetTransform.GetComponent<Alive>().OnHit(ownerBullet, damageTower);
+                }
+
                 DestroyImmediate(gameObject);
             }
         }

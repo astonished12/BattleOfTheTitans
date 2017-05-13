@@ -41,6 +41,7 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("keyPressed", OnKeyPressed);
         SocketIO.On("minionFollowMinion", OnMinionFollowMinion);
         SocketIO.On("minionAttackMinion", OnMinionAttackMinion);
+        SocketIO.On("towerAttack", OnTowerAttack);
     }
 
     
@@ -281,6 +282,30 @@ public class NetworkScript : MonoBehaviour
         }
     }
 
+    private void OnTowerAttack(SocketIOEvent Obj)
+    {
+        string attacker_id = ElementFromJsonToString(Obj.data["id_attacker"].ToString())[1];
+        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+
+        Debug.Log("Tureta " + attacker_id + "attacka pe " + target_id);
+        if (spawner.towersData.ContainsKey(attacker_id) && (spawner.minionsData.ContainsKey(target_id) || spawner.OtherPlayersGameObjects.ContainsKey(target_id)))
+        {
+            GameObject attaker = spawner.towersData[attacker_id];
+            GameObject target = null;
+            if(spawner.minionsData.ContainsKey(target_id))
+                 target = spawner.minionsData[target_id];
+            else
+                 target = spawner.OtherPlayersGameObjects[target_id];
+
+            if (attaker.GetComponent<TowerAtack>())
+            {
+                attaker.GetComponent<TowerAtack>().lastTimeAttack = Time.time;
+            }
+            if(target)
+              spawner.SpawnBullet(attaker,attaker.transform.position+new Vector3(0f,2f,0f) ,target.transform);
+        }
+
+    }
     private Vector3 makePositiveVector(Vector3 vectorToTransform)
     {
         if (vectorToTransform.x < 0)
