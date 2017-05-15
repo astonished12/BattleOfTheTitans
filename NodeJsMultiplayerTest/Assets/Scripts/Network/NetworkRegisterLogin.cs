@@ -12,6 +12,8 @@ public class NetworkRegisterLogin : MonoBehaviour
 	SocketIOComponent SocketIO;
     public static Dictionary<string,Room> RoomList = new Dictionary<string,Room>();
     public static int noCharacter;
+
+    JSONParser myJsonParser = new JSONParser();
     private void Awake()
     {
         DontDestroyOnLoad(this.gameObject);
@@ -39,7 +41,7 @@ public class NetworkRegisterLogin : MonoBehaviour
     public void OnEnter(SocketIOEvent Obj)
     {
         var rooms = Obj.data.GetField("allRoomsAtCurrentTime");
-        var socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
+        var socket_id = myJsonParser.ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
       
         for (int i = 0; i < rooms.list.Count; i++)
         {
@@ -54,7 +56,7 @@ public class NetworkRegisterLogin : MonoBehaviour
     } 
     public void OnNewRoom(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         Room aux = new Room(int.Parse(obj.data["currentPlayers"].ToString().Replace("\"", "")), int.Parse(obj.data["maxPlayers"].ToString().Replace("\"", "")), obj.data["name"].ToString().Replace("\"", ""), socket_id);
         RoomList.Add(socket_id, aux);
         Debug.Log("new room here ");
@@ -62,7 +64,7 @@ public class NetworkRegisterLogin : MonoBehaviour
 
     public void OnCloseRoom(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         RoomList.Remove(socket_id);
         Debug.Log("Room closed ");
     }
@@ -75,16 +77,11 @@ public class NetworkRegisterLogin : MonoBehaviour
 
     private void OnRoomFull(SocketIOEvent obj)
     {
-        string room_id = ElementFromJsonToString(obj.data["room_id"].ToString())[1];
+        string room_id = myJsonParser.ElementFromJsonToString(obj.data["room_id"].ToString())[1];
         Debug.Log(room_id);
         RoomList[room_id].currentNumberOfPlayers++;
     }
 
 
-    string[] ElementFromJsonToString(string target)
-    {
-        string[] newString = Regex.Split(target, "\"");
-        return newString;
-    }
     
 }

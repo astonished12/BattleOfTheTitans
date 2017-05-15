@@ -55,7 +55,7 @@ public class Alive : MonoBehaviour {
 
     public void OnHealUp(int damage)
     {
-        if (isAlive && !GetComponent<FollowTower>())
+        if (isAlive && !GetComponent<FollowTower>() && !GetComponent<CreepAi>())
         {
             if (curHealth + damage < maxHealth)
             {

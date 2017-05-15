@@ -28,6 +28,7 @@ public class Chat : MonoBehaviour
     private string senderId;
     public static SocketIOComponent SocketIO;
 
+    JSONParser myJsonParser = new JSONParser();
     void Awake()
     {
         netCommunication = GetComponent<NetworkCommunication>();
@@ -140,16 +141,12 @@ public class Chat : MonoBehaviour
         currentScrollPos.y = float.PositiveInfinity;
     }
 
-    string[] ElementFromJsonToString(string target)
-    {
-        string[] newString = Regex.Split(target, "\"");
-        return newString;
-    }
+  
 
     private void OnMessageOnGameChat(SocketIOEvent Obj)
     {
-        string socket_id = ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
-        string message = ElementFromJsonToString(Obj.data["message"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
+        string message = myJsonParser.ElementFromJsonToString(Obj.data["message"].ToString())[1];
         inputField = message;
         senderId = socket_id;
         if (newMessage)

@@ -10,6 +10,8 @@ public class KeyBoardHandler : MonoBehaviour {
     Ray myRay;
     RaycastHit hit = new RaycastHit();
     float timePressedQ;
+
+    JSONParser myJsonParser = new JSONParser();
     private void Awake()
     {
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
@@ -33,33 +35,25 @@ public class KeyBoardHandler : MonoBehaviour {
         {
             if (Physics.Raycast(myRay, out hit))
             {                
-                SocketIO.Emit("keyPressed", new JSONObject(QKeyToJson(keys[0].ToString(),hit.point)));
+                SocketIO.Emit("keyPressed", new JSONObject(myJsonParser.QKeyToJson(keys[0].ToString(),hit.point)));
             }
                 
         }
         if (Input.GetKeyDown(keys[1]) && ActionBar.skillSlots[1].coolDownActive == false)
         {
-            SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[1].ToString())));
+            SocketIO.Emit("keyPressed", new JSONObject(myJsonParser.KeyIdToJson(keys[1].ToString())));
         }
         if (Input.GetKeyDown(keys[2]) && ActionBar.skillSlots[2].coolDownActive == false)
         {
-            SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[2].ToString())));
+            SocketIO.Emit("keyPressed", new JSONObject(myJsonParser.KeyIdToJson(keys[2].ToString())));
         }
         if (Input.GetKeyDown(keys[3]) && ActionBar.skillSlots[3].coolDownActive == false)
         {
-            SocketIO.Emit("keyPressed", new JSONObject(KeyIdToJson(keys[3].ToString())));
+            SocketIO.Emit("keyPressed", new JSONObject(myJsonParser.KeyIdToJson(keys[3].ToString())));
         }
 
     }
 
-    private string KeyIdToJson(string id)
-    {
-        return string.Format(@"{{""key"":""{0}""}}", id);
-    }
-
-    private string QKeyToJson(string id, Vector3 vector)
-    {
-        return string.Format(@"{{""key"":""{0}"",""x"":""{1}"",""y"":""{2}"",""z"":""{3}""}}", id, vector.x, vector.y, vector.z);
-    }
+   
 
 }

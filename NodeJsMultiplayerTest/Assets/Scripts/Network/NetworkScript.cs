@@ -19,7 +19,7 @@ public class NetworkScript : MonoBehaviour
     private GameObject targetOfAttacker;
     private GameObject attacker;
     //public GameObject mainChracter;
-
+    JSONParser myJsonParser = new JSONParser();
     private void Awake()
     {
         player = listOfChracter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;   
@@ -48,13 +48,13 @@ public class NetworkScript : MonoBehaviour
 
     void OnIdentify(SocketIOEvent Obj)
     {
-        player.transform.position = GetVectorPositionFromJson(Obj.data);
-        ownerFlag = Convert.ToBoolean(ElementFromJsonToString(Obj.data.GetField("owner").ToString())[1]);
+        player.transform.position = myJsonParser.GetVectorPositionFromJson(Obj.data);
+        ownerFlag = Convert.ToBoolean(myJsonParser.ElementFromJsonToString(Obj.data.GetField("owner").ToString())[1]);
         //Debug.Log(" Hostul are owner " + Obj.data["owner"] +ownerFlag);
         var players = Obj.data.GetField("allPlayersAtCurrentTime");
         var idTowers = Obj.data.GetField("towersId");
         Debug.Log(idTowers);
-        var socket_id = ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
+        var socket_id = myJsonParser.ElementFromJsonToString(Obj.data.GetField("socket_id").ToString())[1];
         player.GetComponent<NetworkEntity>().Id = socket_id;
         player.GetComponent<NetworkEntity>().ownerFlag = ownerFlag;
 
@@ -70,38 +70,26 @@ public class NetworkScript : MonoBehaviour
             if (playerKey != socket_id)
              {
                 JSONObject playerData = (JSONObject)players.list[i];
-                int noRemoteCharacters = int.Parse(ElementFromJsonToString(playerData.GetField("characterNumber").ToString())[1]);
-                bool ownerFlagAux = Convert.ToBoolean(ElementFromJsonToString(playerData.GetField("isOwner").ToString())[1]);
+                int noRemoteCharacters = int.Parse(myJsonParser.ElementFromJsonToString(playerData.GetField("characterNumber").ToString())[1]);
+                bool ownerFlagAux = Convert.ToBoolean(myJsonParser.ElementFromJsonToString(playerData.GetField("isOwner").ToString())[1]);
                 //Debug.Log(" la remote avem owner " + playerData["isOwner"]+ " "+ ownerFlagAux);
-                spawner.SpawnPlayer(playerKey, noRemoteCharacters,GetVectorPositionFromJson(playerData), ownerFlagAux);
+                spawner.SpawnPlayer(playerKey, noRemoteCharacters, myJsonParser.GetVectorPositionFromJson(playerData), ownerFlagAux);
             }
         }
         
     }
-
-    string[] ElementFromJsonToString(string target)
-    {
-        string[] newString = Regex.Split(target, "\"");
-        return newString;
-    }
- 
-    Vector3 GetVectorPositionFromJson(JSONObject Json)
-    {
-        return new Vector3(float.Parse(Json["x"].ToString().Replace("\"","")), float.Parse(Json["y"].ToString().Replace("\"","")), float.Parse(Json["z"].ToString().Replace("\"", "")));
-    }
-
-   
+      
 
     private void OnPlayerLeft(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];
         spawner.PlayerLeft(socket_id);       
     }
 
     private void OnMove(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];      
-        Vector3 targetPostion = GetVectorPositionFromJson(obj.data);
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data["socket_id"].ToString())[1];      
+        Vector3 targetPostion = myJsonParser.GetVectorPositionFromJson(obj.data);
         var otherPlayer = spawner.OtherPlayersGameObjects[socket_id];
         var walker = otherPlayer.GetComponent<NavagiateToPosition>();
         walker.SetTargetPosition(targetPostion);
@@ -109,8 +97,8 @@ public class NetworkScript : MonoBehaviour
 
     private void OnFollow(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-        string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(obj.data["target_id"].ToString())[1];
 
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
@@ -122,8 +110,8 @@ public class NetworkScript : MonoBehaviour
     }
     private void OnFollowTower(SocketIOEvent obj)
     {
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
-        string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(obj.data["target_id"].ToString())[1];
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
         //tower
@@ -135,8 +123,8 @@ public class NetworkScript : MonoBehaviour
 
     private void OnFollowMinion(SocketIOEvent Obj)
     {
-        string socket_id = ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
-        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
         //remote
         var playerWhoDoRequest = spawner.OtherPlayersGameObjects[socket_id];
         //minion
@@ -147,8 +135,8 @@ public class NetworkScript : MonoBehaviour
     }
     public void OnAttack(SocketIOEvent obj)
     {
-        string target_id = ElementFromJsonToString(obj.data["target_id"].ToString())[1];
-        string socket_id = ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(obj.data["target_id"].ToString())[1];
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data["socket_id"].ToString())[1];
         attacker = spawner.OtherPlayersGameObjects[socket_id];
         Debug.Log(socket_id + " " + target_id);
         
@@ -196,8 +184,8 @@ public class NetworkScript : MonoBehaviour
 
     private void OnMinionFollowMinion(SocketIOEvent Obj)
     {
-        string follower_id = ElementFromJsonToString(Obj.data["id_follower"].ToString())[1];
-        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+        string follower_id = myJsonParser.ElementFromJsonToString(Obj.data["id_follower"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
        
         if(spawner.minionsData.ContainsKey(follower_id) && spawner.minionsData.ContainsKey(target_id))
@@ -236,7 +224,7 @@ public class NetworkScript : MonoBehaviour
 
     private void OnMinionHasNooTarget(SocketIOEvent Obj)
     {
-        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
         //Debug.Log("Minionul "+target_id + " nu are inamici in jur");
         if (spawner.minionsData.ContainsKey(target_id))
@@ -252,8 +240,8 @@ public class NetworkScript : MonoBehaviour
 
     private void OnMinionAttackMinion(SocketIOEvent Obj)
     {
-        string attacker_id_minion = ElementFromJsonToString(Obj.data["id_attacker"].ToString())[1];
-        string target_id_minion = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+        string attacker_id_minion = myJsonParser.ElementFromJsonToString(Obj.data["id_attacker"].ToString())[1];
+        string target_id_minion = myJsonParser.ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
         if (spawner.minionsData.ContainsKey(attacker_id_minion) && spawner.minionsData.ContainsKey(target_id_minion))
         {
@@ -284,8 +272,8 @@ public class NetworkScript : MonoBehaviour
 
     private void OnTowerAttack(SocketIOEvent Obj)
     {
-        string attacker_id = ElementFromJsonToString(Obj.data["id_attacker"].ToString())[1];
-        string target_id = ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
+        string attacker_id = myJsonParser.ElementFromJsonToString(Obj.data["id_attacker"].ToString())[1];
+        string target_id = myJsonParser.ElementFromJsonToString(Obj.data["target_id"].ToString())[1];
 
         Debug.Log("Tureta " + attacker_id + "attacka pe " + target_id);
         if (spawner.towersData.ContainsKey(attacker_id) && (spawner.minionsData.ContainsKey(target_id) || spawner.OtherPlayersGameObjects.ContainsKey(target_id)))
@@ -318,8 +306,8 @@ public class NetworkScript : MonoBehaviour
 
     private void OnKeyPressed(SocketIOEvent Obj)
     {
-        string user_Id = ElementFromJsonToString(Obj.data["user_id"].ToString())[1];
-        string key = ElementFromJsonToString(Obj.data["key"].ToString())[1];
+        string user_Id = myJsonParser.ElementFromJsonToString(Obj.data["user_id"].ToString())[1];
+        string key = myJsonParser.ElementFromJsonToString(Obj.data["key"].ToString())[1];
 
         Debug.Log("Jucatorul " + user_Id + " foloeste skilul " + key);
         if (spawner.OtherPlayersGameObjects.ContainsKey(user_Id))
@@ -334,7 +322,7 @@ public class NetworkScript : MonoBehaviour
                 }
                 if(skill.key.ToString() == key && skill.key == KeyCode.Q)
                 {
-                    Vector3 test = GetVectorPositionFromJson(Obj.data);
+                    Vector3 test = myJsonParser.GetVectorPositionFromJson(Obj.data);
                     Debug.Log(test);
                     skill.targetPositions = test;
                  }
