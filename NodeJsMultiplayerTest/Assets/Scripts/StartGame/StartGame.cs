@@ -12,9 +12,16 @@ public class StartGame : MonoBehaviour {
     {
         connectionMaker.SendLoginData();
     }
+
+    //CHANGE TO MENU IF DATA IS OK
     public void ChangeLevel () {
-        SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
     }
 	
-	
+    //BACK BUTTON
+    public void ChangeLevelToRegister()
+    {
+        SceneManager.LoadScene(1);
+    }
+
 }

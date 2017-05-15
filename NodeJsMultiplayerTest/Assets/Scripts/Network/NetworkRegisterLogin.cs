@@ -12,24 +12,35 @@ public class NetworkRegisterLogin : MonoBehaviour
 	SocketIOComponent SocketIO;
     public static Dictionary<string,Room> RoomList = new Dictionary<string,Room>();
     public static int noCharacter;
-
+    private static bool created = false;
     JSONParser myJsonParser = new JSONParser();
     private void Awake()
     {
-        DontDestroyOnLoad(this.gameObject);
-
         SocketIO = GetComponent<SocketIOComponent>();
-        SocketIO.On("allRooms", OnEnter);
-        SocketIO.On("newRoom", OnNewRoom);
-        SocketIO.On("closeRoom", OnCloseRoom);
-        SocketIO.On("joinSuccesFull", OnJoinSucces);
-        SocketIO.On("roomFull", OnRoomFull);
-        SocketIO.On("canPlay", OnCanPlay);
+        if (created == false)
+        {
+            DontDestroyOnLoad(this.gameObject);
+            SocketIO.Connect();
+            created = true;
+            SocketIO.On("allRooms", OnEnter);
+            SocketIO.On("newRoom", OnNewRoom);
+            SocketIO.On("closeRoom", OnCloseRoom);
+            SocketIO.On("joinSuccesFull", OnJoinSucces);
+            SocketIO.On("roomFull", OnRoomFull);
+            SocketIO.On("canPlay", OnCanPlay);
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+
+       
+        
     }
 
     private void OnCanPlay(SocketIOEvent obj)
     {
-        SceneManager.LoadScene(3);
+        SceneManager.LoadScene(4);
         SocketIO.Emit("play");
     }
 
@@ -72,7 +83,7 @@ public class NetworkRegisterLogin : MonoBehaviour
     private void OnJoinSucces(SocketIOEvent obj)
     {
         Debug.Log("JOIN CU SUCCES");
-        SceneManager.LoadScene(2);       
+        SceneManager.LoadScene(3);       
     }
 
     private void OnRoomFull(SocketIOEvent obj)
