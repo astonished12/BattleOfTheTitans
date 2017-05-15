@@ -52,6 +52,7 @@ io.sockets.on('connection', function(socket){
     socket.on("towerTarget",onTowerTarget);
     socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
+    socket.on("newMessageGameChat",onNewMessageChat);
 });
 
 var onNewRoom = function(data){
@@ -257,6 +258,14 @@ var OnKeyPressed = function(data){
         z : data["z"],
     });
 };
+
+var onNewMessageChat = function(data){
+    console.log("Jucatorul "+this.id+" a scris "+data["message"]);
+     io.to(mapingSocketRoom[this.id].name).emit("newMessage",{
+         socket_id : this.id,
+         message:data["message"]
+     })
+}
 setInterval(function(){
    for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    

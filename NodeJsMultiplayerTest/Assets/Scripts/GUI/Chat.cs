@@ -1,5 +1,7 @@
-﻿using System.Collections;
+﻿using SocketIO;
+using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using UnityEngine;
 
 
@@ -8,6 +10,7 @@ class ChatEntry
     public string name = "";
     public string message = "";
     public string timeTag = "";
+    public bool isMine;
 }
 
 public class Chat : MonoBehaviour
@@ -15,17 +18,28 @@ public class Chat : MonoBehaviour
    
     ArrayList entries;
     Vector2 currentScrollPos = new Vector2();
-    private Rect chatRect = new Rect(Screen.width*0.05f, Screen.height * 0.3f, Screen.width * 0.3f, Screen.height * 0.3f);
+    private Rect chatRect = new Rect(Screen.width*0.01f, Screen.height * 0.45f, Screen.width * 0.3f, Screen.height * 0.3f);
 
     string inputField = "";
     bool chatInFocus = false;
     string inputFieldFocus = "CIFT";
+    private NetworkCommunication netCommunication;
+    private bool newMessage;
+    private string senderId;
+    public static SocketIOComponent SocketIO;
 
     void Awake()
     {
+        netCommunication = GetComponent<NetworkCommunication>();
         InitializeChat();
     }
 
+    void Start()
+    {
+        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+        SocketIO.On("newMessage", OnMessageOnGameChat);
+
+    }
     void InitializeChat()
     {
         entries = new ArrayList();    
@@ -51,6 +65,11 @@ public class Chat : MonoBehaviour
         {
             GUILayout.BeginHorizontal();
             GUI.skin.label.wordWrap = true;
+            if(ent.isMine)
+                GUI.contentColor = Color.white;
+            else
+                GUI.contentColor = Color.green;
+
             GUILayout.Label(ent.timeTag + " " + ent.name + ": " + ent.message);
             GUILayout.EndHorizontal();
             GUILayout.Space(3);
@@ -59,7 +78,7 @@ public class Chat : MonoBehaviour
         if (chatInFocus)
         {
             GUI.SetNextControlName(inputFieldFocus);
-            inputField = GUILayout.TextField(inputField, GUILayout.MaxWidth(400), GUILayout.MinWidth(400));
+            inputField = GUILayout.TextField(inputField, GUILayout.MaxWidth(Screen.width * 0.3f), GUILayout.MinWidth(Screen.height * 0.3f));
             GUI.FocusControl(inputFieldFocus);
         }
         GUILayout.EndVertical();
@@ -80,6 +99,7 @@ public class Chat : MonoBehaviour
     void unfocusChat()
     {
         inputField = "";
+        senderId = "";
         chatInFocus = false;
     }
 
@@ -89,6 +109,7 @@ public class Chat : MonoBehaviour
             GUI.FocusControl(inputFieldFocus);
             chatInFocus = true;
             currentScrollPos.y = float.PositiveInfinity;
+            inputField = "";
         }
     }
 
@@ -101,22 +122,46 @@ public class Chat : MonoBehaviour
                 Debug.Log("unfocusing chat (empty entry)");
                 return;
             }
-            //networkView.RPC("AddChatEntry", RPCMode.All, "Cookie monster", inputField);
-            AddChatEntry("Cookie monster", inputField); //for offline testing
+            newMessage = true;
+            netCommunication.SendMessageChat(inputField);
             unfocusChat();
-            //Debug.Log("unfocusing chat and entry sent");
         }
     }
     
    
-    void AddChatEntry(string name, string msg)
+    void AddChatEntry(string name, string msg,bool isMine)
     {
         ChatEntry newEntry = new ChatEntry();
         newEntry.name = name;
         newEntry.message = msg;
+        newEntry.isMine = isMine;
         newEntry.timeTag = "[" + System.DateTime.Now.Hour.ToString() + ":" + System.DateTime.Now.Minute.ToString() + "]";
         entries.Add(newEntry);
         currentScrollPos.y = float.PositiveInfinity;
+    }
+
+    string[] ElementFromJsonToString(string target)
+    {
+        string[] newString = Regex.Split(target, "\"");
+        return newString;
+    }
+
+    private void OnMessageOnGameChat(SocketIOEvent Obj)
+    {
+        string socket_id = ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
+        string message = ElementFromJsonToString(Obj.data["message"].ToString())[1];
+        inputField = message;
+        senderId = socket_id;
+        if (newMessage)
+        {
+            AddChatEntry(senderId, inputField, true);
+        }
+        else
+        {
+            AddChatEntry(senderId, inputField, false);
+        }
+        newMessage = false;
+
     }
 }
 
