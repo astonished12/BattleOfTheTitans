@@ -4,6 +4,7 @@ using System;
 using System.Text.RegularExpressions;
 using UnityEngine.UI;
 using Main.Assets.Scripts;
+using SocketIO;
 
 public class Register : MonoBehaviour {
 
@@ -16,9 +17,19 @@ public class Register : MonoBehaviour {
     private string Password;
     private string form;
     private bool EmailValid = false;
+    public static SocketIOComponent SocketIO;
+    private JSONParser myJsonParser = new JSONParser();
 
+    private void Awake()
+    {
+        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+        SocketIO.On("registerSuccesfull", OnRegisterSuccesFull);
+    }
 
-
+    private void OnRegisterSuccesFull(SocketIOEvent Obj)
+    {
+        Debug.Log("Register Succesfull");
+    }
     public void ChangeLevelToLogin()
     {
         SceneManager.LoadScene(0);
@@ -26,12 +37,14 @@ public class Register : MonoBehaviour {
 
     public void SendDataToServer()
     {
-
+        SocketIO.Emit("register", new JSONObject(myJsonParser.RegisterDataToJson(Username, Password, Email)));
     }
     public void RegisterUser()
     {
         if (ValidationInputs())
-            Debug.Log("GOOD REGISTER");
+        {
+            SendDataToServer();
+        }
         
     }
 

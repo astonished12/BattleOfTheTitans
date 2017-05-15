@@ -15,6 +15,8 @@ console.log("Server started.");
 
 var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
+var DatabaseManager = require("./Server/DatabaseManager.js");
+var dbM = new DatabaseManager();
 var io = require('socket.io')(serv,{});
 
 
@@ -53,8 +55,14 @@ io.sockets.on('connection', function(socket){
     socket.on("keyPressed",OnKeyPressed);
     socket.on("attack",onClientAttack);
     socket.on("newMessageGameChat",onNewMessageChat);
+    socket.on("register",onRegister);
 });
 
+var onRegister = function(data){
+    console.log("Utilizatorul este "+data["username"]+" are parola "+data["password"]+" so emailul "+data["email"]);
+    //to DO inser in database check duplicates etc
+    this.emit("registerSuccesfull");
+}
 var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
     roomNo++;

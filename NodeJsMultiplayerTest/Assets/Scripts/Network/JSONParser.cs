@@ -49,4 +49,9 @@ public class JSONParser {
         return new Vector3(float.Parse(Json["x"].ToString().Replace("\"", "")), float.Parse(Json["y"].ToString().Replace("\"", "")), float.Parse(Json["z"].ToString().Replace("\"", "")));
     }
 
+    public string RegisterDataToJson(string username,string password,string email)
+    {
+        return string.Format(@"{{""username"":""{0}"",""password"":""{1}"",""email"":""{2}""}}", username, password, email);
+
+    }
 }
