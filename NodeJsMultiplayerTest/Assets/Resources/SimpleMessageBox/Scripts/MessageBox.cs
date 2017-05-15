@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 namespace Main.Assets.Scripts
@@ -55,7 +57,10 @@ namespace Main.Assets.Scripts
                     if (hit.transform.name == "CloseOption")
                     {
                         Debug.Log("This is close button");
-                        Dissapear();
+                        if (!NetworkRegisterLogin.registedSuccesfull)
+                            Dissapear();
+                        else
+                            DissaperAndRedirect();
                     }
                     else
                     {
@@ -124,6 +129,25 @@ namespace Main.Assets.Scripts
 			GetComponent<Animator>().Play((Consts.MessageBox.Animations.MessageBoxDissappear));
 			Destroy(this.gameObject,1f);
 		}
-	}
+
+        public void DissaperAndRedirect()
+        {
+            Debug.Log("message dissapear");
+            GetComponent<Animator>().Play((Consts.MessageBox.Animations.MessageBoxDissappear));
+            Destroy(this.gameObject, 1f);
+            StartCoroutine("GoToLogin");
+        }
+
+        IEnumerator WaitForLoginMenu()
+        {
+            Debug.Log("GO TO LOGIN");
+            yield return  new WaitForSeconds(1.2f);
+            GoToLogin();
+        }
+        void GoToLogin()
+        {
+            SceneManager.LoadScene(0);
+        }
+    }
 }
 

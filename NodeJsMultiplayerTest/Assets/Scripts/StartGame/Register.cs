@@ -28,7 +28,11 @@ public class Register : MonoBehaviour {
 
     private void OnRegisterSuccesFull(SocketIOEvent Obj)
     {
-        Debug.Log("Register Succesfull");
+        NetworkRegisterLogin.registedSuccesfull = true;
+        var messageBox = Helpers.BringMessageBox();
+        messageBox.transform.position = passwordField.transform.position;
+        messageBox.SetMessage("Register Succesfull.Close to redirect");
+
     }
     public void ChangeLevelToLogin()
     {

@@ -14,6 +14,8 @@ public class NetworkRegisterLogin : MonoBehaviour
     public static int noCharacter;
     private static bool created = false;
     JSONParser myJsonParser = new JSONParser();
+
+    public static bool registedSuccesfull = false;
     private void Awake()
     {
         SocketIO = GetComponent<SocketIOComponent>();
