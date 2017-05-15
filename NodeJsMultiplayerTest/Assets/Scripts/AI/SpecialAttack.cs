@@ -22,7 +22,7 @@ public class SpecialAttack : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        if (key.ToString() == "Q" && inAction) {
+        if (key.ToString() == "Q" && inAction && GetComponent<Mana>().curMana>objectToSpawn.GetComponent<SkillInfo>().cost) {
             Debug.Log("Special attack ON " + key.ToString());
             Debug.Log("Instantiez Q la " + targetPositions);
            
@@ -50,7 +50,7 @@ public class SpecialAttack : MonoBehaviour {
             
         }
 
-        if (key.ToString() == "W" && inAction )
+        if (key.ToString() == "W" && inAction  && GetComponent<Mana>().curMana > objectToSpawn.GetComponent<SkillInfo>().cost)
         {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
@@ -67,7 +67,7 @@ public class SpecialAttack : MonoBehaviour {
 
         }
 
-        if (key.ToString() == "E" && inAction)
+        if (key.ToString() == "E" && inAction  && GetComponent<Mana>().curMana > objectToSpawn.GetComponent<SkillInfo>().cost)
         {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn,transform.position, Quaternion.identity) as GameObject;
@@ -83,7 +83,7 @@ public class SpecialAttack : MonoBehaviour {
 
         }
 
-        if (key.ToString() == "R" && inAction)
+        if (key.ToString() == "R" && inAction && GetComponent<Mana>().curMana > objectToSpawn.GetComponent<SkillInfo>().cost)
         {
             Debug.Log("Special attack ON " + key.ToString());
             GameObject go = Instantiate(objectToSpawn, transform.position, Quaternion.identity) as GameObject;
