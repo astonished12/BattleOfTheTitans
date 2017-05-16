@@ -24,7 +24,8 @@ public class NetworkScript : MonoBehaviour
     private void Awake()
     {
         player = listOfChracter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
-        player.transform.GetChild(2).transform.GetChild(3).transform.GetChild(0).GetComponent<Text>().text = NetworkRegisterLogin.UserName;    
+        //player.transform.GetChild(2).transform.GetChild(3).transform.GetChild(0).GetComponent<Text>().text = NetworkRegisterLogin.UserName;
+        player.transform.FindChild("HealthbarPlayer").transform.FindChild("Name").transform.GetChild(0).GetComponent<Text>().text = NetworkRegisterLogin.UserName;
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
     }
     // Use this for initialization
@@ -74,8 +75,9 @@ public class NetworkScript : MonoBehaviour
                 JSONObject playerData = (JSONObject)players.list[i];
                 int noRemoteCharacters = int.Parse(myJsonParser.ElementFromJsonToString(playerData.GetField("characterNumber").ToString())[1]);
                 bool ownerFlagAux = Convert.ToBoolean(myJsonParser.ElementFromJsonToString(playerData.GetField("isOwner").ToString())[1]);
+                string playerName = myJsonParser.ElementFromJsonToString(playerData.GetField("name").ToString())[1];
                 //Debug.Log(" la remote avem owner " + playerData["isOwner"]+ " "+ ownerFlagAux);
-                spawner.SpawnPlayer(playerKey, noRemoteCharacters, myJsonParser.GetVectorPositionFromJson(playerData), ownerFlagAux);
+                spawner.SpawnPlayer(playerKey, noRemoteCharacters, playerName, myJsonParser.GetVectorPositionFromJson(playerData), ownerFlagAux);
             }
         }
         

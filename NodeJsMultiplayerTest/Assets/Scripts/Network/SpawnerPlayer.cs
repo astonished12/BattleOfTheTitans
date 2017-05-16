@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class SpawnerPlayer : MonoBehaviour {
 
@@ -39,7 +40,7 @@ public class SpawnerPlayer : MonoBehaviour {
     }
 
  
-    public void SpawnPlayer(string id,int numberCharacter, Vector3 positions,bool ownerOfRoom)
+    public void SpawnPlayer(string id,int numberCharacter, string _name, Vector3 positions,bool ownerOfRoom)
     {
         if (!OtherPlayersGameObjects.ContainsKey(id))
         {
@@ -47,6 +48,8 @@ public class SpawnerPlayer : MonoBehaviour {
             //ADDED REFERENCE INSTANTIATED PLAYER INDEX OF CHARACTER LIST FROM SELECTION MENU
             newGameObjectPlayer.GetComponent<FollowToClick>().myPlayer = listOfCharacter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
             newGameObjectPlayer.GetComponent<NetworkEntity>().Id = id;
+            newGameObjectPlayer.transform.FindChild("HealthbarRemotePlayer").transform.FindChild("Name").transform.GetChild(0).GetComponent<Text>().text = _name;
+
             Debug.Log("Metoda spawn player are flagul " + ownerOfRoom);
             newGameObjectPlayer.GetComponent<NetworkEntity>().ownerFlag = ownerOfRoom;
             OtherPlayersGameObjects.Add(id, newGameObjectPlayer);

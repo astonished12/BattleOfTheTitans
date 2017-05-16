@@ -146,16 +146,17 @@ public class Chat : MonoBehaviour
     private void OnMessageOnGameChat(SocketIOEvent Obj)
     {
         string socket_id = myJsonParser.ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
+        string name_sender = myJsonParser.ElementFromJsonToString(Obj.data["name"].ToString())[1];
         string message = myJsonParser.ElementFromJsonToString(Obj.data["message"].ToString())[1];
         inputField = message;
         senderId = socket_id;
         if (newMessage)
         {
-            AddChatEntry(senderId, inputField, true);
+            AddChatEntry(name_sender, inputField, true);
         }
         else
         {
-            AddChatEntry(senderId, inputField, false);
+            AddChatEntry(name_sender, inputField, false);
         }
         newMessage = false;
 
