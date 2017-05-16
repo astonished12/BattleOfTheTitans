@@ -26,6 +26,9 @@ public class Menu : MonoBehaviour {
     public GameObject roomListParent;
     private List<GameObject> roomItemList = new List<GameObject>();
     public Button closeRoom;
+
+    private Rect chatRect = new Rect(Screen.width * 0.01f, Screen.height * 0.45f, Screen.width * 0.3f, Screen.height * 0.3f);
+
     //private Button playButton;
     // Use this for initialization
     void Start () {
@@ -110,4 +113,7 @@ public class Menu : MonoBehaviour {
             roomListItemGo.transform.SetParent(roomListParent.transform);
         }
     }
+
+
+
 }
