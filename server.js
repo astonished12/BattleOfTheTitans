@@ -58,6 +58,7 @@ io.sockets.on('connection', function(socket){
     socket.on("newMessageGameChat",onNewMessageChat);
     socket.on("register",onRegister);
     socket.on("login",onLogin);
+    socket.on("searchFriend",onSearchFriend);
 });
 
 var onRegister = function(data){
@@ -74,25 +75,58 @@ var onRegister = function(data){
     });
 
 }
+var checkAlreadyLog = function(name){
+    for(var socketId in globalPlayersLogged){
+        if(globalPlayersLogged[socketId] === name)
+            return true;
+    }
+    return false;
+}
 
+var getUserOnlineSocket = function(name,mySocketId){
+     for(var socketId in globalPlayersLogged){
+        if(globalPlayersLogged[socketId] === name && socketId!==mySocketId)
+            return socketId;
+    }
+    return -1;
+}
 var onLogin = function(data){
     var socket = this;
-    dbM.CheckLogin(data["username"],data["password"], function(err) {
-        if(err)
-            console.log(err);
+    if(!checkAlreadyLog(data["username"]))
+    {
+        dbM.CheckLogin(data["username"],data["password"], function(err) {
+            if(err)
+                console.log(err);
 
-        if(err==="fail")
-            socket.emit("wrongData");
-        else if(err==="succes")
-        {
-            socket.emit("loginSuccesfull",{
-                username : data["username"]
-            });
-            
-            globalPlayersLogged[socket.id] = data["username"];
-            console.log(globalPlayersLogged);
-        }
-    });
+            if(err==="fail")
+                socket.emit("wrongData");
+            else if(err==="succes")
+            {
+                socket.emit("loginSuccesfull",{
+                    username : data["username"]
+                });
+
+                globalPlayersLogged[socket.id] = data["username"];
+            }
+        });
+    }
+    else
+    {
+        socket.emit("alreadyLoged");
+    }
+}
+
+var onSearchFriend = function(data){
+    var socketId = getUserOnlineSocket(data["friendName"],this.id);
+    if(socketId!==-1){
+        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");
+        io.to(socketId).emit("newFriend");
+    }
+    else
+    {
+        console.log("Jucatorul "+data["friendName"]+ " nu este online ");
+        this.emit("playerNotOnline");
+    }
 }
 var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
@@ -202,6 +236,11 @@ var onSocketDisconnect = function(){
         if(ROOMS[this.id]) 
             delete ROOMS[this.id];
         console.log("Clinet id "+this.id+" disconnected.");
+    }
+
+    if(globalPlayersLogged[this.id]){
+        delete globalPlayersLogged[this.id];
+        //to do call dbmanager to unlog the player
     }
 }
 

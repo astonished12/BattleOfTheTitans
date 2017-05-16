@@ -19,6 +19,8 @@ namespace Main.Assets.Scripts
 		private SpriteRenderer _blurBackground;
 		private GameObject _yesBtn, _noBtn,_closeBtn;
 
+        public bool isRegisterMessage = false;
+        public bool isLoginMessage = false;
 		private void Awake()
 		{
 			var tx = GetComponentsInChildren<Transform>();
@@ -57,15 +59,15 @@ namespace Main.Assets.Scripts
                     if (hit.transform.name == "CloseOption")
                     {
                         Debug.Log("This is close button");
-                        if (!NetworkRegisterLogin.registedSuccesfull && !NetworkRegisterLogin.loginSucccesfull)
+                        if (!isRegisterMessage && !isLoginMessage)
                         {
                             Dissapear();
                         }
-                        else if (NetworkRegisterLogin.registedSuccesfull)
+                        else if (isRegisterMessage)
                         {
                             DissaperAndRedirectAfterRegisterToLoginMenu();
                         }
-                        else if (NetworkRegisterLogin.loginSucccesfull)
+                        else if (isLoginMessage)
                         {
                             DissaperAndRedirectAfterLoginToGameMenu();
                         }

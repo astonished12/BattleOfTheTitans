@@ -29,10 +29,10 @@ public class Register : MonoBehaviour {
 
     private void OnRegisterSuccesFull(SocketIOEvent Obj)
     {
-        NetworkRegisterLogin.registedSuccesfull = true;
-        NetworkRegisterLogin.loginSucccesfull = false;
+       
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = passwordField.transform.position;
+        messageBox.isRegisterMessage = true;
         messageBox.SetMessage("Register Succesfull.Close to redirect");
     }
     private void OnUserNameExist(SocketIOEvent Obj)

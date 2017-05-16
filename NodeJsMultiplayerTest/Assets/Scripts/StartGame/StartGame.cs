@@ -21,16 +21,17 @@ public class StartGame : MonoBehaviour {
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
         SocketIO.On("wrongData", OnDataDoesntExist);
         SocketIO.On("loginSuccesfull", OnLoginSuccesfull);
+        SocketIO.On("alreadyLoged", OnAlreadyLogged);
     }
 
     private void OnLoginSuccesfull(SocketIOEvent obj)
     {
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = passwordField.transform.position;
+        messageBox.isLoginMessage = true;
         messageBox.SetMessage("Login succesfull.");
         NetworkRegisterLogin.UserName = myJsonParser.ElementFromJsonToString(obj.data.GetField("username").ToString())[1];
-        NetworkRegisterLogin.loginSucccesfull = true;
-        NetworkRegisterLogin.registedSuccesfull = false;
+       
     }
 
     private void OnDataDoesntExist(SocketIOEvent obj)
@@ -40,6 +41,12 @@ public class StartGame : MonoBehaviour {
         messageBox.SetMessage("Username or password wrong. Try again or new account.");
     }
 
+    private void OnAlreadyLogged(SocketIOEvent Obj)
+    {
+        var messageBox = Helpers.BringMessageBox();
+        messageBox.transform.position = passwordField.transform.position;
+        messageBox.SetMessage("Already Logged");
+    }
     void Update() {
         if (Input.GetKeyDown(KeyCode.Tab))
         {

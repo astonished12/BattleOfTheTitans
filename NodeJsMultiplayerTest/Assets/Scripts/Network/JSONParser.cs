@@ -58,4 +58,10 @@ public class JSONParser {
     {
         return string.Format(@"{{""username"":""{0}"",""password"":""{1}""}}", username, password);
     }
+
+    public string FriendNameToJson(string username)
+    {
+        return string.Format(@"{{""friendName"":""{0}""}}", username);
+
+    }
 }
