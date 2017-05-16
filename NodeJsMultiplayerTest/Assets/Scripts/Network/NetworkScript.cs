@@ -4,6 +4,7 @@ using UnityEngine;
 using SocketIO;
 using System.Text.RegularExpressions;
 using System;
+using UnityEngine.UI;
 
 public class NetworkScript : MonoBehaviour
 {
@@ -22,7 +23,8 @@ public class NetworkScript : MonoBehaviour
     JSONParser myJsonParser = new JSONParser();
     private void Awake()
     {
-        player = listOfChracter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;   
+        player = listOfChracter.transform.GetChild(NetworkRegisterLogin.noCharacter).gameObject;
+        player.transform.GetChild(2).transform.GetChild(3).transform.GetChild(0).GetComponent<Text>().text = NetworkRegisterLogin.UserName;    
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
     }
     // Use this for initialization

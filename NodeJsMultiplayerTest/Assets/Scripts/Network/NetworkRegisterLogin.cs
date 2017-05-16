@@ -17,6 +17,7 @@ public class NetworkRegisterLogin : MonoBehaviour
 
     public static bool registedSuccesfull = false;
     public static bool loginSucccesfull = false;
+    public static string UserName;
     private void Awake()
     {
         SocketIO = GetComponent<SocketIOComponent>();

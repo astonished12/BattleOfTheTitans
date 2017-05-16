@@ -28,6 +28,7 @@ public class StartGame : MonoBehaviour {
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = passwordField.transform.position;
         messageBox.SetMessage("Login succesfull.");
+        NetworkRegisterLogin.UserName = myJsonParser.ElementFromJsonToString(obj.data.GetField("username").ToString())[1];
         NetworkRegisterLogin.loginSucccesfull = true;
         NetworkRegisterLogin.registedSuccesfull = false;
     }

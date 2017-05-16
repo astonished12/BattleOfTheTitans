@@ -26,7 +26,7 @@ var roomNo = 0;
 var ROOMS = {};
 
 var mapingSocketRoom = {};
-
+var globalPlayers = {};
 
 var idTowers = [];
 
@@ -84,7 +84,9 @@ var onLogin = function(data){
         if(err==="fail")
              socket.emit("wrongData");
         else if(err==="succes")
-            socket.emit("loginSuccesfull");
+            socket.emit("loginSuccesfull",{
+                username : data["username"]
+            });
     });
 }
 var onNewRoom = function(data){
