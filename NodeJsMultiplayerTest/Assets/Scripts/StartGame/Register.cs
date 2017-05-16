@@ -16,7 +16,7 @@ public class Register : MonoBehaviour {
     private string Email;
     private string Password;
     private string form;
-    private bool EmailValid = false;
+
     public static SocketIOComponent SocketIO;
     private JSONParser myJsonParser = new JSONParser();
 
@@ -24,15 +24,22 @@ public class Register : MonoBehaviour {
     {
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
         SocketIO.On("registerSuccesfull", OnRegisterSuccesFull);
+        SocketIO.On("usernameExist", OnUserNameExist);
     }
 
     private void OnRegisterSuccesFull(SocketIOEvent Obj)
     {
         NetworkRegisterLogin.registedSuccesfull = true;
+        NetworkRegisterLogin.loginSucccesfull = false;
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = passwordField.transform.position;
         messageBox.SetMessage("Register Succesfull.Close to redirect");
-
+    }
+    private void OnUserNameExist(SocketIOEvent Obj)
+    {
+        var messageBox = Helpers.BringMessageBox();
+        messageBox.transform.position = passwordField.transform.position;
+        messageBox.SetMessage("Register Failed. Username exist in database");
     }
     public void ChangeLevelToLogin()
     {

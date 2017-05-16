@@ -16,6 +16,7 @@ public class NetworkRegisterLogin : MonoBehaviour
     JSONParser myJsonParser = new JSONParser();
 
     public static bool registedSuccesfull = false;
+    public static bool loginSucccesfull = false;
     private void Awake()
     {
         SocketIO = GetComponent<SocketIOComponent>();
@@ -34,9 +35,7 @@ public class NetworkRegisterLogin : MonoBehaviour
         else
         {
             Destroy(this.gameObject);
-        }
-
-       
+        }      
         
     }
 
@@ -46,10 +45,7 @@ public class NetworkRegisterLogin : MonoBehaviour
         SocketIO.Emit("play");
     }
 
-    public void SendLoginData()
-    {
-       //SocketIO.Emit("login");
-    }
+   
 
     public void OnEnter(SocketIOEvent Obj)
     {

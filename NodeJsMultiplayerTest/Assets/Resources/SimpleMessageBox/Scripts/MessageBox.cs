@@ -57,10 +57,18 @@ namespace Main.Assets.Scripts
                     if (hit.transform.name == "CloseOption")
                     {
                         Debug.Log("This is close button");
-                        if (!NetworkRegisterLogin.registedSuccesfull)
+                        if (!NetworkRegisterLogin.registedSuccesfull && !NetworkRegisterLogin.loginSucccesfull)
+                        {
                             Dissapear();
-                        else
-                            DissaperAndRedirect();
+                        }
+                        else if (NetworkRegisterLogin.registedSuccesfull)
+                        {
+                            DissaperAndRedirectAfterRegisterToLoginMenu();
+                        }
+                        else if (NetworkRegisterLogin.loginSucccesfull)
+                        {
+                            DissaperAndRedirectAfterLoginToGameMenu();
+                        }
                     }
                     else
                     {
@@ -130,23 +138,39 @@ namespace Main.Assets.Scripts
 			Destroy(this.gameObject,1f);
 		}
 
-        public void DissaperAndRedirect()
+        public void DissaperAndRedirectAfterRegisterToLoginMenu()
         {
             Debug.Log("message dissapear");
             GetComponent<Animator>().Play((Consts.MessageBox.Animations.MessageBoxDissappear));
+            StartCoroutine("WaitForLoginMenu");
             Destroy(this.gameObject, 1f);
-            StartCoroutine("GoToLogin");
         }
 
         IEnumerator WaitForLoginMenu()
         {
-            Debug.Log("GO TO LOGIN");
-            yield return  new WaitForSeconds(1.2f);
+            yield return  new WaitForSeconds(0.8f);
             GoToLogin();
         }
         void GoToLogin()
         {
             SceneManager.LoadScene(0);
+        }
+            
+        void DissaperAndRedirectAfterLoginToGameMenu()
+        {
+            Debug.Log("message dissapear");
+            GetComponent<Animator>().Play((Consts.MessageBox.Animations.MessageBoxDissappear));
+            StartCoroutine("WaitForGameMenu");
+            Destroy(this.gameObject, 1f);
+        }
+        IEnumerator WaitForGameMenu()
+        {           
+            yield return new WaitForSeconds(0.8f);
+            GoToGameMenu();
+        }
+        void GoToGameMenu()
+        {
+            SceneManager.LoadScene(2);
         }
     }
 }

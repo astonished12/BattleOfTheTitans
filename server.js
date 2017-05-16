@@ -57,6 +57,7 @@ io.sockets.on('connection', function(socket){
     socket.on("attack",onClientAttack);
     socket.on("newMessageGameChat",onNewMessageChat);
     socket.on("register",onRegister);
+    socket.on("login",onLogin);
 });
 
 var onRegister = function(data){
@@ -65,10 +66,26 @@ var onRegister = function(data){
     var socket = this;
     dbM.InserIntoUsers(data["username"],data["password"],data["email"], function(err) {
         if(err)
-            throw err;
-        socket.emit("registerSuccesfull");
+            console.log(err);
+        if(err==="duplicate")
+             socket.emit("usernameExist");
+        else
+            socket.emit("registerSuccesfull");
     });
         
+}
+
+var onLogin = function(data){
+    var socket = this;
+    dbM.CheckLogin(data["username"],data["password"], function(err) {
+        if(err)
+            console.log(err);
+        
+        if(err==="fail")
+             socket.emit("wrongData");
+        else if(err==="succes")
+            socket.emit("loginSuccesfull");
+    });
 }
 var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
