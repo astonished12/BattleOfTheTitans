@@ -27,7 +27,7 @@ var ROOMS = {};
 
 var mapingSocketRoom = {};
 var globalPlayersLogged = {};
-
+var mapNameInGameIdDatabase = {};
 var idTowers = [];
 
 io.sockets.on('connection', function(socket){
@@ -94,7 +94,7 @@ var onLogin = function(data){
     var socket = this;
     if(!checkAlreadyLog(data["username"]))
     {
-        dbM.CheckLogin(data["username"],data["password"], function(err) {
+        dbM.CheckLogin(data["username"],data["password"], function(err,id) {
             if(err)
                 console.log(err);
 
@@ -107,6 +107,8 @@ var onLogin = function(data){
                 });
 
                 globalPlayersLogged[socket.id] = data["username"];
+                console.log("Dupa logare idu meu este "+id);
+                mapNameInGameIdDatabase[data["username"]] = id;
             }
         });
     }
@@ -120,7 +122,11 @@ var onSearchFriend = function(data){
     var socketId = getUserOnlineSocket(data["friendName"],this.id);
     if(socketId!==-1){
         console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");
-        io.to(socketId).emit("newFriend");
+        io.to(socketId).emit("newFriend",{
+            name: globalPlayersLogged[this.id]
+        });
+        
+        dbM.InsertFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
     }
     else
     {
@@ -128,7 +134,7 @@ var onSearchFriend = function(data){
         this.emit("playerNotOnline");
     }
 }
-var onNewRoom = function(data){
+var onNewRoom = function(data){1
     var roomName = "Room "+roomNo;
     roomNo++;
 
@@ -239,6 +245,7 @@ var onSocketDisconnect = function(){
     }
 
     if(globalPlayersLogged[this.id]){
+        delete mapNameInGameIdDatabase[globalPlayersLogged[this.id]];
         delete globalPlayersLogged[this.id];
         //to do call dbmanager to unlog the player
     }

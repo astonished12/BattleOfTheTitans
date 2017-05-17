@@ -50,14 +50,63 @@ var DatabaseManager = function(){
             }
             else
             {
-                console.log("Good login");
-                cb("succes");
+                console.log("Good login "+rows[0]["idUser"]);
+                
+                cb("succes",rows[0]["idUser"]);
             }
         });
     }
+
+    this.InsertFriend = function(myId, nameFriend, cb){
+        var _idUser, _idFriend;
+        console.log(" Idu meu este "+myId);
+        this.GetIdFromUserByName(nameFriend, function(param){
+            if(param!=-1){
+                _idFriend = param;
+                console.log(myId +" "+_idFriend);
+            }
+        });
+        
+        
+      
+        
+        /*var newFriendship = { idUser: _idUser, idFriend: _idFriend};
+        this.connection.query('INSERT INTO friends SET ?', newFriendship, function(err,res){
+            if(err) throw err;
+            succes = true;
+            //console.log('Last insert ID:', res.insertId);
+            cb();
+        }); */         
+    } 
     
-    
-    
+    this.GetIdFromUserByName = function(nameUser, callback){
+         var complete = false;
+         this.connection.query('SELECT * from user where username=?',nameUser, function(err, rows, fields) {
+            if (err)
+            {
+                callback(err);
+                throw err;
+            }
+            if(rows.length!=0)
+            {
+                idUser = rows[0]["idUser"];
+                complete = true;
+                console.log(idUser);
+                callback(idUser);
+            }
+            else
+            {
+                idUser = -1;
+                callback(-1);
+            }           
+        });
+        
+        
+    }
+
 }
+
+
+
 
 module.exports = DatabaseManager;
