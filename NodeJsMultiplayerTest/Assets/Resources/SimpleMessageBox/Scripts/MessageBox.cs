@@ -21,6 +21,7 @@ namespace Main.Assets.Scripts
 
         public bool isRegisterMessage = false;
         public bool isLoginMessage = false;
+
 		private void Awake()
 		{
 			var tx = GetComponentsInChildren<Transform>();

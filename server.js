@@ -59,6 +59,7 @@ io.sockets.on('connection', function(socket){
     socket.on("register",onRegister);
     socket.on("login",onLogin);
     socket.on("searchFriend",onSearchFriend);
+    socket.on("removeFriend",onRemoveFriend);
 });
 
 var onRegister = function(data){
@@ -84,7 +85,7 @@ var checkAlreadyLog = function(name){
 }
 
 var getUserOnlineSocket = function(name,mySocketId){
-     for(var socketId in globalPlayersLogged){
+    for(var socketId in globalPlayersLogged){
         if(globalPlayersLogged[socketId] === name && socketId!==mySocketId)
             return socketId;
     }
@@ -122,10 +123,15 @@ var onSearchFriend = function(data){
     var socketId = getUserOnlineSocket(data["friendName"],this.id);
     if(socketId!==-1){
         console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");
+        this.emit("newFriend",{
+            name: globalPlayersLogged[socketId]
+        });
+
         io.to(socketId).emit("newFriend",{
             name: globalPlayersLogged[this.id]
         });
-        
+
+
         dbM.InsertFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
     }
     else
@@ -134,35 +140,57 @@ var onSearchFriend = function(data){
         this.emit("playerNotOnline");
     }
 }
-var onNewRoom = function(data){1
-    var roomName = "Room "+roomNo;
-    roomNo++;
 
-    var room = new Room(this.id,roomName,2); 
-    var player = new ControllerPlayer(this.id,globalPlayersLogged[this.id],-88,0,4.5,"true");
-    room.PLAYERS[this.id] = player;
+var onRemoveFriend = function(data){
+    var socketId = getUserOnlineSocket(data["friendName"],this.id);
 
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
+    if(socketId!==-1){
+        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");
+        this.emit("removeFriend",{
+            name: globalPlayersLogged[socketId]
+        });
 
-    ROOMS[this.id] = room;
+        io.to(socketId).emit("removeFriend",{
+            name: globalPlayersLogged[this.id]
+        });
 
-    mapingSocketRoom[this.id] =  ROOMS[this.id];
-
-    this.join(ROOMS[this.id].name);   
-
-    this.broadcast.emit("newRoom",{
-        socket_id : ROOMS[this.id].id,
-        maxPlayers : ROOMS[this.id].maxPlayers,
-        currentPlayers : ROOMS[this.id].currentPlayers,
-        name : ROOMS[this.id].name
-    });
-
+        dbM.RemoveFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
+    }
+    else
+    {
+        console.log("Jucatorul "+data["friendName"]+ " nu este online ");
+        this.emit("playerNotOnline");
+    }
 }
+var onNewRoom = function(data){1
+                               var roomName = "Room "+roomNo;
+                               roomNo++;
+
+                               var room = new Room(this.id,roomName,2); 
+                               var player = new ControllerPlayer(this.id,globalPlayersLogged[this.id],-88,0,4.5,"true");
+                               room.PLAYERS[this.id] = player;
+
+                               room.towersId.push(shortid.generate());
+                               room.towersId.push(shortid.generate());
+                               room.towersId.push(shortid.generate());
+                               room.towersId.push(shortid.generate());
+                               room.towersId.push(shortid.generate());
+                               room.towersId.push(shortid.generate());
+
+                               ROOMS[this.id] = room;
+
+                               mapingSocketRoom[this.id] =  ROOMS[this.id];
+
+                               this.join(ROOMS[this.id].name);   
+
+                               this.broadcast.emit("newRoom",{
+                                   socket_id : ROOMS[this.id].id,
+                                   maxPlayers : ROOMS[this.id].maxPlayers,
+                                   currentPlayers : ROOMS[this.id].currentPlayers,
+                                   name : ROOMS[this.id].name
+                               });
+
+                              }
 
 var closeRoom = function(){
     delete ROOMS[this.id];

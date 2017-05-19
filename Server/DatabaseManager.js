@@ -51,7 +51,7 @@ var DatabaseManager = function(){
             else
             {
                 console.log("Good login "+rows[0]["idUser"]);
-                
+
                 cb("succes",rows[0]["idUser"]);
             }
         });
@@ -64,24 +64,53 @@ var DatabaseManager = function(){
             if(param!=-1){
                 _idFriend = param;
                 console.log(myId +" "+_idFriend);
+
+                var newRow = { idUser: myId, idFriend : _idFriend };
+                var newRow1 = { idUser: _idFriend, idFriend : myId };
+
+                self.connection.query('INSERT INTO friends SET ?', newRow, function(err,res){
+                    if(err) throw err;
+                    succes = true;
+                    console.log('Last insert ID:', res.insertId);
+                });
+
+                self.connection.query('INSERT INTO friends SET ?', newRow1, function(err,res){
+                    if(err) throw err;
+                    succes = true;
+                    console.log('Last insert ID:', res.insertId);
+                });     
             }
-        });
-        
-        
-      
-        
-        /*var newFriendship = { idUser: _idUser, idFriend: _idFriend};
-        this.connection.query('INSERT INTO friends SET ?', newFriendship, function(err,res){
-            if(err) throw err;
-            succes = true;
-            //console.log('Last insert ID:', res.insertId);
-            cb();
-        }); */         
+        });        
+
     } 
     
+    this.RemoveFriend = function(myId, nameFriend, cb){
+        var _idUser, _idFriend;
+        console.log(" Idu meu este "+myId);
+        this.GetIdFromUserByName(nameFriend, function(param){
+            if(param!=-1){
+                _idFriend = param;
+                console.log(myId +" "+_idFriend);
+
+                var newRow = { idUser: myId, idFriend : _idFriend };
+                var newRow1 = { idUser: _idFriend, idFriend : myId };
+
+                self.connection.query('DELETE from friends where idUser=? and idFriend=?', [myId,_idFriend], function(err,res){
+                    if(err) throw err;
+                    succes = true;
+                });
+
+                self.connection.query('DELETE from friends where idUser=? and idFriend=?', [_idFriend,myId], function(err,res){
+                    if(err) throw err;
+                    succes = true;                    
+                });     
+            }
+        });        
+
+    } 
     this.GetIdFromUserByName = function(nameUser, callback){
-         var complete = false;
-         this.connection.query('SELECT * from user where username=?',nameUser, function(err, rows, fields) {
+        var complete = false;
+        this.connection.query('SELECT * from user where username=?',nameUser, function(err, rows, fields) {
             if (err)
             {
                 callback(err);
@@ -100,8 +129,8 @@ var DatabaseManager = function(){
                 callback(-1);
             }           
         });
-        
-        
+
+
     }
 
 }
