@@ -58,6 +58,7 @@ io.sockets.on('connection', function(socket){
     socket.on("newMessageGameChat",onNewMessageChat);
     socket.on("register",onRegister);
     socket.on("login",onLogin);
+    socket.on("getMyFriends",onRequireFriends);
     socket.on("searchFriend",onSearchFriend);
     socket.on("removeFriend",onRemoveFriend);
 });
@@ -108,8 +109,11 @@ var onLogin = function(data){
                 });
 
                 globalPlayersLogged[socket.id] = data["username"];
+                //to do update databse for log
+                //send array of connected frinds
                 console.log("Dupa logare idu meu este "+id);
                 mapNameInGameIdDatabase[data["username"]] = id;
+                dbM.MakeLoginOnOff(data["username"],true);
             }
         });
     }
@@ -117,6 +121,24 @@ var onLogin = function(data){
     {
         socket.emit("alreadyLoged");
     }
+}
+
+var onRequireFriends = function(data){
+    var id = mapNameInGameIdDatabase[data["message"]];
+    var socket = this;
+    dbM.GetListOfFriendById(id, function(status,listOfFriends){
+        if(status=="noFriends"){
+            console.log("No friends for "+id);
+        }
+        if(status=="Friends"){                      
+            console.log("Lista prietenilor este :"+ listOfFriends);
+        }
+
+        socket.emit("listFriends",{            
+            friends : listOfFriends
+        });
+
+    });
 }
 
 var onSearchFriend = function(data){
@@ -162,35 +184,35 @@ var onRemoveFriend = function(data){
         this.emit("playerNotOnline");
     }
 }
-var onNewRoom = function(data){1
-                               var roomName = "Room "+roomNo;
-                               roomNo++;
+var onNewRoom = function(data){
+    var roomName = "Room "+roomNo;
+    roomNo++;
 
-                               var room = new Room(this.id,roomName,2); 
-                               var player = new ControllerPlayer(this.id,globalPlayersLogged[this.id],-88,0,4.5,"true");
-                               room.PLAYERS[this.id] = player;
+    var room = new Room(this.id,roomName,2); 
+    var player = new ControllerPlayer(this.id,globalPlayersLogged[this.id],-88,0,4.5,"true");
+    room.PLAYERS[this.id] = player;
 
-                               room.towersId.push(shortid.generate());
-                               room.towersId.push(shortid.generate());
-                               room.towersId.push(shortid.generate());
-                               room.towersId.push(shortid.generate());
-                               room.towersId.push(shortid.generate());
-                               room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
+    room.towersId.push(shortid.generate());
 
-                               ROOMS[this.id] = room;
+    ROOMS[this.id] = room;
 
-                               mapingSocketRoom[this.id] =  ROOMS[this.id];
+    mapingSocketRoom[this.id] =  ROOMS[this.id];
 
-                               this.join(ROOMS[this.id].name);   
+    this.join(ROOMS[this.id].name);   
 
-                               this.broadcast.emit("newRoom",{
-                                   socket_id : ROOMS[this.id].id,
-                                   maxPlayers : ROOMS[this.id].maxPlayers,
-                                   currentPlayers : ROOMS[this.id].currentPlayers,
-                                   name : ROOMS[this.id].name
-                               });
+    this.broadcast.emit("newRoom",{
+        socket_id : ROOMS[this.id].id,
+        maxPlayers : ROOMS[this.id].maxPlayers,
+        currentPlayers : ROOMS[this.id].currentPlayers,
+        name : ROOMS[this.id].name
+    });
 
-                              }
+}
 
 var closeRoom = function(){
     delete ROOMS[this.id];
@@ -273,9 +295,10 @@ var onSocketDisconnect = function(){
     }
 
     if(globalPlayersLogged[this.id]){
+        dbM.MakeLoginOnOff(globalPlayersLogged[this.id],false);
         delete mapNameInGameIdDatabase[globalPlayersLogged[this.id]];
         delete globalPlayersLogged[this.id];
-        //to do call dbmanager to unlog the player
+        //to do call dbmanager to unlog the player        
     }
 }
 

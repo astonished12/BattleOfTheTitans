@@ -14,18 +14,28 @@ public class FriendsUIScript : MonoBehaviour {
     public GameObject searchTxtField;
     public GameObject searchTxtFieldForRemove;
     public GameObject welecomTextMessage;
-    public GameObject friendPrefab;
+    public GameObject friendPrefabOnline;
+    public GameObject friendPrefabOffline;
 
     private SocketIOComponent SocketIO;
     private Dictionary<string, GameObject> friendList = new Dictionary<string, GameObject>();
+    JSONParser myJsonParser = new JSONParser();
 
     void Start()
     {
         welecomTextMessage.GetComponent<Text>().text = "Welcome " + NetworkRegisterLogin.UserName;
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
+        SocketIO.Emit("getMyFriends", new JSONObject(myJsonParser.MessageToJson(NetworkRegisterLogin.UserName)));
         SocketIO.On("playerNotOnline", OnPlayerIsntOnline);
         SocketIO.On("newFriend", OnNewRequestFriendShip);
         SocketIO.On("removeFriend", OnRemoveFriend);
+        SocketIO.On("listFriends", OnReceiveListFriends);
+    }
+
+    private void OnReceiveListFriends(SocketIOEvent obj)
+    {
+        var friends = obj.data.GetField("friends");
+        Debug.Log(friends);
     }
 
     private void OnNewRequestFriendShip(SocketIOEvent obj)
@@ -34,9 +44,8 @@ public class FriendsUIScript : MonoBehaviour {
         messageBox.transform.position = Camera.main.transform.position + new Vector3(0f, 0f, 35f);
         messageBox.SetMessage("New reqeust");
 
-        JSONParser myJsonParser = new JSONParser();
         var friendName = myJsonParser.ElementFromJsonToString(obj.data.GetField("name").ToString())[1];
-        GameObject newFriend = Instantiate(friendPrefab);
+        GameObject newFriend = Instantiate(friendPrefabOnline);
         newFriend.transform.FindChild("Text").GetComponent<Text>().text = friendName;
         newFriend.transform.SetParent(contentParent.transform,false);
         friendList.Add(friendName,newFriend);
