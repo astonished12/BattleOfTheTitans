@@ -107,13 +107,17 @@ var onLogin = function(data){
                 socket.emit("loginSuccesfull",{
                     username : data["username"]
                 });
-
+                
+                
                 globalPlayersLogged[socket.id] = data["username"];
                 //to do update databse for log
                 //send array of connected frinds
                 console.log("Dupa logare idu meu este "+id);
                 mapNameInGameIdDatabase[data["username"]] = id;
                 dbM.MakeLoginOnOff(data["username"],true);
+                
+                io.sockets.emit('updateListFriends');
+                
             }
         });
     }
@@ -298,7 +302,7 @@ var onSocketDisconnect = function(){
         dbM.MakeLoginOnOff(globalPlayersLogged[this.id],false);
         delete mapNameInGameIdDatabase[globalPlayersLogged[this.id]];
         delete globalPlayersLogged[this.id];
-        //to do call dbmanager to unlog the player        
+        io.sockets.emit('updateListFriends');
     }
 }
 
