@@ -107,17 +107,17 @@ var onLogin = function(data){
                 socket.emit("loginSuccesfull",{
                     username : data["username"]
                 });
-                
-                
+
+
                 globalPlayersLogged[socket.id] = data["username"];
                 //to do update databse for log
                 //send array of connected frinds
                 console.log("Dupa logare idu meu este "+id);
                 mapNameInGameIdDatabase[data["username"]] = id;
                 dbM.MakeLoginOnOff(data["username"],true);
-                
+
                 io.sockets.emit('updateListFriends');
-                
+
             }
         });
     }
@@ -148,7 +148,9 @@ var onRequireFriends = function(data){
 var onSearchFriend = function(data){
     var socketId = getUserOnlineSocket(data["friendName"],this.id);
     if(socketId!==-1){
-        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");
+        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");      
+
+        dbM.InsertFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
         this.emit("newFriend",{
             name: globalPlayersLogged[socketId]
         });
@@ -156,9 +158,6 @@ var onSearchFriend = function(data){
         io.to(socketId).emit("newFriend",{
             name: globalPlayersLogged[this.id]
         });
-
-
-        dbM.InsertFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
     }
     else
     {
@@ -171,21 +170,21 @@ var onRemoveFriend = function(data){
     var socketId = getUserOnlineSocket(data["friendName"],this.id);
 
     if(socketId!==-1){
-        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");
+        console.log("Jucatorul "+data["friendName"]+" cu "+socketId+" este online");        
+        dbM.RemoveFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
         this.emit("removeFriend",{
             name: globalPlayersLogged[socketId]
         });
 
         io.to(socketId).emit("removeFriend",{
             name: globalPlayersLogged[this.id]
-        });
-
-        dbM.RemoveFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
+        });        
     }
     else
     {
         console.log("Jucatorul "+data["friendName"]+ " nu este online ");
-        this.emit("playerNotOnline");
+        dbM.RemoveFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
+        io.sockets.emit('updateListFriends');
     }
 }
 var onNewRoom = function(data){

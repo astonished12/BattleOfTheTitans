@@ -78,8 +78,8 @@ public class FriendsUIScript : MonoBehaviour {
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = Camera.main.transform.position + new Vector3(0f, 0f, 35f);
         messageBox.SetMessage("New reqeust");
-        var friendName = myJsonParser.ElementFromJsonToString(obj.data.GetField("name").ToString())[1];     
-     }
+        SocketIO.Emit("getMyFriends", new JSONObject(myJsonParser.MessageToJson(NetworkRegisterLogin.UserName)));
+    }
 
     private void OnRemoveFriend(SocketIOEvent obj)
     {
@@ -89,13 +89,7 @@ public class FriendsUIScript : MonoBehaviour {
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = Camera.main.transform.position + new Vector3(0f, 0f, 35f);
         messageBox.SetMessage(friendName+" remove you.");
-
-        if (CheckIfFriendAlreadyInList(friendName))
-        {
-            Destroy(friendList[friendName]);
-            friendList.Remove(friendName);
-        }
-
+        SocketIO.Emit("getMyFriends", new JSONObject(myJsonParser.MessageToJson(NetworkRegisterLogin.UserName)));
     }
 
     private bool CheckIfFriendAlreadyInList(string friendName)
