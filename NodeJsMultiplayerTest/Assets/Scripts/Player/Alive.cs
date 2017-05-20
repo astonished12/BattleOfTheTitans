@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Alive : MonoBehaviour {
@@ -45,7 +46,42 @@ public class Alive : MonoBehaviour {
         }
         else if(!isAlive && GetComponent<NetworkEntity>().isTower)
         {
-             Invoke("DestroyTower", 1.0f);
+            Debug.Log(gameObject.name);
+            if (GetComponent<NetworkEntity>().ownerFlag)
+            {
+                if (gameObject.name == "NexusA(Clone)")
+                {
+                    Debug.Log("Defeat");
+                    NetworkRegisterLogin.lastMatch = false;
+                }
+                if (gameObject.name == "NexusBRemote(Clone)")
+                {
+                    Debug.Log("Victory");
+                    NetworkRegisterLogin.lastMatch = true;
+                }
+                Invoke("DestroyNexus", 1.0f);
+            }
+            else if (GetComponent<NetworkEntity>().ownerFlag == false)
+            {
+
+                if (gameObject.name == "NexusARemote(Clone)")
+                {
+                    Debug.Log("Victory");
+                    NetworkRegisterLogin.lastMatch = true;
+                }
+                if (gameObject.name == "NexusB(Clone)")
+                {
+                    Debug.Log("Defeat");
+                    NetworkRegisterLogin.lastMatch = false;
+                }
+                Invoke("DestroyNexus", 1.0f);
+            }
+            else
+            {
+                Invoke("DestroyTower", 1.0f);
+            }
+            
+
         }
         else if(!isAlive && GetComponent<CreepAi>())
         {
@@ -55,7 +91,7 @@ public class Alive : MonoBehaviour {
 
     public void OnHealUp(int damage)
     {
-        if (isAlive && !GetComponent<FollowTower>() && !GetComponent<CreepAi>())
+        if (isAlive && !GetComponent<NetworkEntity>().isTower && !GetComponent<CreepAi>())
         {
             if (curHealth + damage < maxHealth)
             {
@@ -103,6 +139,12 @@ public class Alive : MonoBehaviour {
     {
         Destroy(gameObject);
     }
+    private void DestroyNexus()
+    {
+        Destroy(gameObject);
+        SceneManager.LoadScene(5);
+
+    }
     private void DestroyMinion()
     {
         GetComponent<Animator>().SetTrigger("dead");
@@ -113,4 +155,6 @@ public class Alive : MonoBehaviour {
         float ratio = curHealth / maxHealth;
         healthBar.rectTransform.localScale = new Vector3(ratio, 1, 1);
     }
+
+
 }

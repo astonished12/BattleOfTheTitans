@@ -78,17 +78,10 @@ public class Menu : MonoBehaviour {
 
     }
 
- 
-   /* public void SendPlay()
-    {
-        SocketIO.Emit("play");
-    }*/
-
     private void OnRoomIsFull(SocketIOEvent obj)
     {
         joinStatus.text = "Room is full. Refresh and chose another";
     }
-    // Update is called once per frame
 
 
     public void RefreshList()

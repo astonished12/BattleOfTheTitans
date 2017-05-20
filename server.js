@@ -424,12 +424,12 @@ var onNewMessageChat = function(data){
         message:data["message"]
     })
 }
-setInterval(function(){
+/*setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
 
 },40);
-
+*/
 
 
 
