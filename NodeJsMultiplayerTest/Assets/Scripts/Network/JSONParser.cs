@@ -18,6 +18,11 @@ public class JSONParser {
     {
         return string.Format(@"{{""message"":""{0}""}}", message);
     }
+
+    public string MessageToPersonToJson(string message, string destination)
+    {
+        return string.Format(@"{{""message"":""{0}"",""destination"":""{1}""}}", message, destination);
+    }
     public string MinionsDataToJsonFollow(string idFollower, string id)
     {
         return string.Format(@"{{""idFollower"":""{0}"",""idTarget"":""{1}""}}", idFollower, id);

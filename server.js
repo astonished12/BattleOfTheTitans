@@ -61,6 +61,7 @@ io.sockets.on('connection', function(socket){
     socket.on("getMyFriends",onRequireFriends);
     socket.on("searchFriend",onSearchFriend);
     socket.on("removeFriend",onRemoveFriend);
+    socket.on("newMessageGlobalChat",onNewMessageGlobalChat);
 });
 
 var onRegister = function(data){
@@ -186,6 +187,11 @@ var onRemoveFriend = function(data){
         dbM.RemoveFriend(mapNameInGameIdDatabase[globalPlayersLogged[this.id]], data["friendName"]);
         io.sockets.emit('updateListFriends');
     }
+}
+
+var onNewMessageGlobalChat = function(data){
+
+    console.log("Jucatorul "+this.id+" a scris "+data["message"] + "lui "+data["destination"]);
 }
 var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
