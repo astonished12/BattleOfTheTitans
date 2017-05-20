@@ -45,7 +45,7 @@ public class Alive : MonoBehaviour {
         }
         else if(!isAlive && GetComponent<NetworkEntity>().isTower)
         {
-            Invoke("DestroyTower", 1.0f);
+             Invoke("DestroyTower", 1.0f);
         }
         else if(!isAlive && GetComponent<CreepAi>())
         {

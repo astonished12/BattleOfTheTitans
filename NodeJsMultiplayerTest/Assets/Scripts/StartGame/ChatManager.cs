@@ -9,7 +9,7 @@ public class ChatManager : MonoBehaviour {
     private SocketIOComponent SocketIO;
     public static Dictionary<string, GameObject> chatList = new Dictionary<string, GameObject>();
     public static Dictionary<string,    ArrayList> entries = new Dictionary<string, ArrayList>();
-    GameObject chatPrefab;
+    public GameObject chatPrefab;
     JSONParser myJsonParser = new JSONParser();
 
     private void Awake()
@@ -23,27 +23,27 @@ public class ChatManager : MonoBehaviour {
     private void OnMessageOnGlobalChat(SocketIOEvent Obj)
     {
         string socket_id = myJsonParser.ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
-        string name_sender = myJsonParser.ElementFromJsonToString(Obj.data["name"].ToString())[1];
+        string listener = myJsonParser.ElementFromJsonToString(Obj.data["name"].ToString())[1];
         string message = myJsonParser.ElementFromJsonToString(Obj.data["message"].ToString())[1];
-        if (!chatList.ContainsKey(name_sender)){
+        if (!chatList.ContainsKey(listener)){
             GameObject chat = Instantiate(chatPrefab);
-            chat.transform.FindChild("To").GetComponent<Text>().text = name_sender;
+            chat.transform.FindChild("To").GetComponent<Text>().text = listener;
             chat.transform.SetParent(gameObject.transform, false);
-            chatList.Add(name_sender, chat);
+            chatList.Add(listener, chat);
         }
 
-        chatList[name_sender].GetComponent<ChatUiScript>().inputField = message;
+        chatList[listener].GetComponent<ChatUiScript>().inputField = message;
 
-        chatList[name_sender].GetComponent<ChatUiScript>().senderId = socket_id;
-        if (chatList[name_sender].GetComponent<ChatUiScript>().newMessage)
+        chatList[listener].GetComponent<ChatUiScript>().senderId = socket_id;
+        if (chatList[listener].GetComponent<ChatUiScript>().newMessage)
         {
-            chatList[name_sender].GetComponent<ChatUiScript>().AddChatEntry(name_sender, chatList[name_sender].GetComponent<ChatUiScript>().inputField, true);
+            chatList[listener].GetComponent<ChatUiScript>().AddChatEntry(NetworkRegisterLogin.UserName, chatList[listener].GetComponent<ChatUiScript>().inputField, true);
         }
         else
         {
-            chatList[name_sender].GetComponent<ChatUiScript>().AddChatEntry(name_sender, chatList[name_sender].GetComponent<ChatUiScript>().inputField, false);
+            chatList[listener].GetComponent<ChatUiScript>().AddChatEntry(listener, chatList[listener].GetComponent<ChatUiScript>().inputField, false);
         }
-        chatList[name_sender].GetComponent<ChatUiScript>().newMessage = false;
+        chatList[listener].GetComponent<ChatUiScript>().newMessage = false;
         
     }
 }

@@ -195,7 +195,7 @@ var onNewMessageGlobalChat = function(data){
     
      io.to(socketId).emit("newMessageGlobalChat",{
             socket_id : this.id,
-            name : globalPlayersLogged[this.id],
+            name :globalPlayersLogged[this.id],
             message : data["message"]
         }); 
     
