@@ -55,7 +55,7 @@ var DatabaseManager = function(){
             }
         });
     }
-    
+
     this.MakeLoginOnOff = function(_username, status){
         this.connection.query('UPDATE users SET isOnline = ? WHERE username = ?', [status, _username]);
     }
@@ -86,7 +86,7 @@ var DatabaseManager = function(){
         });        
 
     } 
-    
+
     this.RemoveFriend = function(myId, nameFriend, cb){
         var _idUser, _idFriend;
         console.log(" Idu meu este "+myId);
@@ -111,7 +111,7 @@ var DatabaseManager = function(){
         });        
 
     } 
-    
+
     this.GetListOfFriendById = function(myId, cb){
         this.connection.query('Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = ?) and users.idUser = friends.idFriend',myId, function(err, rows, fields) {
             if (err)
@@ -152,7 +152,7 @@ var DatabaseManager = function(){
 
 
     }
-    
+
 }
 
 //Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = 5) and users.idUser = friends.idFriend ;
