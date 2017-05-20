@@ -16,9 +16,13 @@ public class StartChat : MonoBehaviour {
     public void FriendOnlineOnClick(Button button)
     {
         GameObject chat = Instantiate(chatPrefab);
-
-        chat.transform.FindChild("To").GetComponent<Text>().text = button.transform.FindChild("Text").GetComponent<Text>().text;
-        chat.transform.SetParent(GameObject.Find("Canvas").transform, false);
+        string friendName = button.transform.FindChild("Text").GetComponent<Text>().text;
+        if (!ChatManager.chatList.ContainsKey(friendName))
+        {
+            chat.transform.FindChild("To").GetComponent<Text>().text = friendName;
+            chat.transform.SetParent(GameObject.Find("Canvas").transform, false);
+            ChatManager.chatList.Add(friendName, chat);
+        }
     }
 
    

@@ -190,8 +190,19 @@ var onRemoveFriend = function(data){
 }
 
 var onNewMessageGlobalChat = function(data){
-
     console.log("Jucatorul "+this.id+" a scris "+data["message"] + "lui "+data["destination"]);
+    var socketId = getUserOnlineSocket(data["destination"],this.id);
+    
+     io.to(socketId).emit("newMessageGlobalChat",{
+            socket_id : this.id,
+            name : globalPlayersLogged[this.id],
+            message : data["message"]
+        }); 
+    this.emit("newMessageGlobalChat",{
+            socket_id : this.id,
+            name : globalPlayersLogged[this.id],
+            message : data["message"]
+        });
 }
 var onNewRoom = function(data){
     var roomName = "Room "+roomNo;
