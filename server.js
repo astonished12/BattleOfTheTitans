@@ -198,9 +198,10 @@ var onNewMessageGlobalChat = function(data){
             name : globalPlayersLogged[this.id],
             message : data["message"]
         }); 
+    
     this.emit("newMessageGlobalChat",{
             socket_id : this.id,
-            name : globalPlayersLogged[this.id],
+            name : data["destination"],
             message : data["message"]
         });
 }

@@ -8,7 +8,8 @@ public class ChatManager : MonoBehaviour {
 
     private SocketIOComponent SocketIO;
     public static Dictionary<string, GameObject> chatList = new Dictionary<string, GameObject>();
-    public GameObject chatPrefab;
+    public static Dictionary<string,    ArrayList> entries = new Dictionary<string, ArrayList>();
+    GameObject chatPrefab;
     JSONParser myJsonParser = new JSONParser();
 
     private void Awake()
@@ -24,7 +25,7 @@ public class ChatManager : MonoBehaviour {
         string socket_id = myJsonParser.ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];
         string name_sender = myJsonParser.ElementFromJsonToString(Obj.data["name"].ToString())[1];
         string message = myJsonParser.ElementFromJsonToString(Obj.data["message"].ToString())[1];
-        if (!chatList.ContainsKey(name_sender) && name_sender!=NetworkRegisterLogin.UserName){
+        if (!chatList.ContainsKey(name_sender)){
             GameObject chat = Instantiate(chatPrefab);
             chat.transform.FindChild("To").GetComponent<Text>().text = name_sender;
             chat.transform.SetParent(gameObject.transform, false);

@@ -27,18 +27,7 @@ public class ChatUiScript : MonoBehaviour {
     {
         rect = GetComponent<RectTransform>();
         initialScale = gameObject.transform.localScale;
-        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
-        foreach (ChatEntry ent in entries)
-        {
-            GameObject newMessage = Instantiate(newMessagePrefab);
-            newMessage.transform.SetParent(transform.FindChild("ScrollData").transform.FindChild("Viewport").GetChild(0).transform, false);
-            if (ent.isMine)
-                newMessage.GetComponent<Text>().color = Color.white;
-            else
-                newMessage.GetComponent<Text>().color = Color.green;
-
-            newMessage.GetComponent<Text>().text = (ent.timeTag + " " + ent.name + ": " + ent.message);
-        }
+        SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();        
     }
     public void OnCloseButtonPressed()
     {
