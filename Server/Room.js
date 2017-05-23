@@ -12,6 +12,8 @@ var  Room = function (id,name, maxPlayers) {
         this.minionsId = [];
         this.lastTimeSpawn = -999;
         this.spawnCheck = false;
+        this.towers = {};
+        this.minions = {};
     };
 
 Room.prototype.SpawnMinions = function(io){

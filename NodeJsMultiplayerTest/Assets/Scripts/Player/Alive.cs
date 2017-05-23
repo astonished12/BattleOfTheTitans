@@ -47,34 +47,38 @@ public class Alive : MonoBehaviour {
         else if(!isAlive && GetComponent<NetworkEntity>().isTower)
         {
             Debug.Log(gameObject.name);
-            if (GetComponent<NetworkEntity>().ownerFlag)
+            if (GameObject.FindGameObjectWithTag("Player").GetComponent<NetworkEntity>().ownerFlag)
             {
                 if (gameObject.name == "NexusA(Clone)")
                 {
                     Debug.Log("Defeat");
                     NetworkRegisterLogin.lastMatch = false;
+                    Invoke("DestroyNexus", 1.0f);
                 }
                 if (gameObject.name == "NexusBRemote(Clone)")
                 {
                     Debug.Log("Victory");
                     NetworkRegisterLogin.lastMatch = true;
+                    Invoke("DestroyNexus", 1.0f);
                 }
-                Invoke("DestroyNexus", 1.0f);
+               
             }
-            else if (GetComponent<NetworkEntity>().ownerFlag == false)
+            else if (GameObject.FindGameObjectWithTag("Player").GetComponent<NetworkEntity>().ownerFlag == false)
             {
 
                 if (gameObject.name == "NexusARemote(Clone)")
                 {
                     Debug.Log("Victory");
                     NetworkRegisterLogin.lastMatch = true;
+                    Invoke("DestroyNexus", 1.0f);
                 }
                 if (gameObject.name == "NexusB(Clone)")
                 {
                     Debug.Log("Defeat");
                     NetworkRegisterLogin.lastMatch = false;
+                    Invoke("DestroyNexus", 1.0f);
+
                 }
-                Invoke("DestroyNexus", 1.0f);
             }
             else
             {

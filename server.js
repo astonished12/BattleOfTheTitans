@@ -16,6 +16,7 @@ console.log("Server started.");
 var ControllerPlayer = require("./Server/ControllerPlayer");
 var Room = require("./Server/Room.js");
 var DatabaseManager = require("./Server/DatabaseManager.js");
+var Tower = require("./Server/Tower.js");
 var dbM = new DatabaseManager();
 
 var io = require('socket.io')(serv,{});
@@ -212,13 +213,38 @@ var onNewRoom = function(data){
     var room = new Room(this.id,roomName,2); 
     var player = new ControllerPlayer(this.id,globalPlayersLogged[this.id],-88,0,4.5,"true");
     room.PLAYERS[this.id] = player;
+    var idTower,newTower;
 
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
-    room.towersId.push(shortid.generate());
+    idTower = shortid.generate();
+    room.towersId.push(idTower);
+    newTower = new Tower();
+    room.towers[idTower] = newTower;
+
+    idTower = shortid.generate();
+    room.towersId.push(idTower);
+    newTower = new Tower();
+    room.towers[idTower] = newTower;  
+
+    idTower = shortid.generate();
+    room.towersId.push(idTower);
+    newTower = new Tower();
+    room.towers[idTower] = newTower;
+
+    idTower = shortid.generate();
+    room.towersId.push(idTower);
+    newTower = new Tower();
+    room.towers[idTower] = newTower;
+
+    idTower = shortid.generate();
+    room.towersId.push(idTower);
+    newTower = new Tower();
+    room.towers[idTower] = newTower;
+
+    idTower = shortid.generate();
+    room.towersId.push(idTower);
+    newTower = new Tower();
+    room.towers[idTower] = newTower;
+
 
     ROOMS[this.id] = room;
 
@@ -424,12 +450,12 @@ var onNewMessageChat = function(data){
         message:data["message"]
     })
 }
-/*setInterval(function(){
+setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
 
 },40);
-*/
+
 
 
 
