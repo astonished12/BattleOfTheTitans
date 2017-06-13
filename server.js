@@ -303,13 +303,11 @@ var onCharacterIdSelected = function(data){
     }
 }
 var onPlay = function(){  
-
     //console.log(mapingSocketRoom[this.id].PLAYERS);
-
     this.emit('identify',{     
-        x : mapingSocketRoom[this.id].PLAYERS[this.id].x,
-        y : mapingSocketRoom[this.id].PLAYERS[this.id].y,
-        z :mapingSocketRoom[this.id].PLAYERS[this.id].z,
+        x : mapingSocketRoom[this.id].PLAYERS[this.id].lastPosition.x,
+        y : mapingSocketRoom[this.id].PLAYERS[this.id].lastPosition.y,
+        z :mapingSocketRoom[this.id].PLAYERS[this.id].lastPosition.z,
         owner : mapingSocketRoom[this.id].PLAYERS[this.id].isOwner,
         name : mapingSocketRoom[this.id].PLAYERS[this.id].name,
         socket_id : this.id,
@@ -352,12 +350,12 @@ var onSocketDisconnect = function(){
 
 var onMoveClient = function(data){
     console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
-    mapingSocketRoom[this.id].PLAYERS[this.id].updatePositions(data);
+    mapingSocketRoom[this.id].PLAYERS[this.id].updatePositions(data["destination"]);
     this.broadcast.to(mapingSocketRoom[this.id].name).emit("playerMove",{
         socket_id:this.id,
-        x : data["x"],
-        y : data["y"],
-        z : data["z"],
+        x : data["destination"]["x"],
+        y : data["destination"]["y"],
+        z : data["destination"]["z"],
     });
 };
 
@@ -450,11 +448,12 @@ var onNewMessageChat = function(data){
         message:data["message"]
     })
 }
-setInterval(function(){
+
+/*setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
 
-},40);
+},40);*/
 
 
 

@@ -13,8 +13,6 @@ public class Heap
         currentSize = 0;
         heapArray = new Node[maxSize];
     }
-
-
     public bool IsEmpty()
     {
         return currentSize == 0;
@@ -28,7 +26,6 @@ public class Heap
         GoUp(currentSize);
         return true;
     }
-
     public Node GetRoot()
     {
         Node node = heapArray[1];
@@ -37,7 +34,6 @@ public class Heap
             GoDown(1);
         return node;
     }
-
     public bool Contains(Node n)
     {
         return Equals(n, heapArray[n.heapIndex]);
@@ -58,12 +54,11 @@ public class Heap
             GoDown(bun);
         }
     }
-
     private void GoUp(int p)
     {
         while (p > 1 && heapArray[p].CompareTo(heapArray[p / 2])<0)
         {
-            Swap(p, p / 2); // schimb fiu cu tata
+            Swap(p, p / 2); 
             p /= 2;
         }
     }

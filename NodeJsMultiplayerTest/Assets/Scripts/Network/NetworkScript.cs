@@ -77,7 +77,7 @@ public class NetworkScript : MonoBehaviour
                 bool ownerFlagAux = Convert.ToBoolean(myJsonParser.ElementFromJsonToString(playerData.GetField("isOwner").ToString())[1]);
                 string playerName = myJsonParser.ElementFromJsonToString(playerData.GetField("name").ToString())[1];
                 //Debug.Log(" la remote avem owner " + playerData["isOwner"]+ " "+ ownerFlagAux);
-                spawner.SpawnPlayer(playerKey, noRemoteCharacters, playerName, myJsonParser.GetVectorPositionFromJson(playerData), ownerFlagAux);
+                spawner.SpawnPlayer(playerKey, noRemoteCharacters, playerName, myJsonParser.GetVectorPositionFromJson(playerData.GetField("lastPosition")), ownerFlagAux);
             }
         }
         

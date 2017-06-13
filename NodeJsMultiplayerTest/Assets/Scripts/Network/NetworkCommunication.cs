@@ -6,11 +6,14 @@ using UnityEngine;
 public class NetworkCommunication : MonoBehaviour {
 
     JSONParser myJsonParser = new JSONParser();
-    public void SendLastPositionToNodeServer(Vector3 endPosition)
+    public void SendLastPositionToNodeServer(Vector3 currentPositions, Vector3 destinationPosition)
     {
-        NetworkScript.SocketIO.Emit("move",new JSONObject(myJsonParser.Vector3ToJsonObject(endPosition)));
-    }
-    
+        JSONObject pack = new JSONObject(JSONObject.Type.OBJECT);
+        pack.AddField("current", new JSONObject(myJsonParser.Vector3ToJsonObject(currentPositions)));
+        pack.AddField("destination", new JSONObject(myJsonParser.Vector3ToJsonObject(destinationPosition)));
+
+        NetworkScript.SocketIO.Emit("move",pack);
+    }   
 
     public void SendPlayerIdToFollow(string id)
     {

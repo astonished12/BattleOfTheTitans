@@ -40,12 +40,8 @@ public class NavagiateToPosition : MonoBehaviour
         path = pathfinder.AStar(transform.position, currentTargetPosition);
         SetDestination(path);
         target.SetTargetTransform(null);
-
-    }
-
-   
-    public void SetDestination(List<Node> _path)
-    {
+      }   
+    public void SetDestination(List<Node> _path){
         targetSuccesfull = false;
         GetComponent<Animator>().SetBool("atDestination", false);
         path = _path;
@@ -53,8 +49,7 @@ public class NavagiateToPosition : MonoBehaviour
         StopCoroutine("FollowPath");
         StartCoroutine("FollowPath");
     }
-    IEnumerator FollowPath()
-    {
+    IEnumerator FollowPath(){
         Vector3 currentWaypoint = path[0].worldPosition;
         while (true)
         {
@@ -72,7 +67,6 @@ public class NavagiateToPosition : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime);
             yield return null;
-
         }
     }
 

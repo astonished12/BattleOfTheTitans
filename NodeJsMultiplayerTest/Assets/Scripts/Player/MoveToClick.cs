@@ -26,7 +26,7 @@ public class MoveToClick : MonoBehaviour, IClickable {
             navigator.SetTargetPosition(hit.point);
 
             var networkCommunication = player.GetComponent<NetworkCommunication>();
-            networkCommunication.SendLastPositionToNodeServer(hit.point);
+            networkCommunication.SendLastPositionToNodeServer(player.transform.position,hit.point);
         }
     }
 

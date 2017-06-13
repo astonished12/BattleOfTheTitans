@@ -9,8 +9,6 @@ var DatabaseManager = function(){
     });
 
     this.connection.connect();
-
-
     this.InserIntoUsers = function(_username, _password, _email, cb){
         this.connection.query('SELECT * from users where username=?',_username, function(err, rows, fields) {
             if (err)
@@ -33,9 +31,7 @@ var DatabaseManager = function(){
                 cb("duplicate");
             }
         });
-
     }
-
     this.CheckLogin = function(_username, _password, cb){
         var myUser = {username: _username, password: _password};
         this.connection.query('SELECT * from users where username=? and password=?',[_username,_password], function(err, rows, fields) {
@@ -55,11 +51,9 @@ var DatabaseManager = function(){
             }
         });
     }
-
     this.MakeLoginOnOff = function(_username, status){
         this.connection.query('UPDATE users SET isOnline = ? WHERE username = ?', [status, _username]);
     }
-
     this.InsertFriend = function(myId, nameFriend, cb){
         var _idUser, _idFriend;
         console.log(" Idu meu este "+myId);
@@ -84,9 +78,7 @@ var DatabaseManager = function(){
                 });     
             }
         });        
-
     } 
-
     this.RemoveFriend = function(myId, nameFriend, cb){
         var _idUser, _idFriend;
         console.log(" Idu meu este "+myId);
@@ -109,9 +101,7 @@ var DatabaseManager = function(){
                 });     
             }
         });        
-
     } 
-
     this.GetListOfFriendById = function(myId, cb){
         this.connection.query('Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = ?) and users.idUser = friends.idFriend',myId, function(err, rows, fields) {
             if (err)
@@ -149,8 +139,6 @@ var DatabaseManager = function(){
                 callback(-1);
             }           
         });
-
-
     }
 
 }

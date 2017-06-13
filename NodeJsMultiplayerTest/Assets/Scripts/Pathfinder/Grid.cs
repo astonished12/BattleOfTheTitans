@@ -76,10 +76,8 @@ public class Grid : MonoBehaviour
             return gridTable[x, y];
         else
             return GetNeighborsByNode(gridTable[x, y])[0];
-
-
-
     }
+
 
     public List<Node> GetNeighborsByNode(Node node){
 

@@ -16,9 +16,7 @@ public class ChatManager : MonoBehaviour {
     {
         SocketIO = GameObject.Find("SocketRegisterLogin").GetComponent<SocketIOComponent>();
         SocketIO.On("newMessageGlobalChat", OnMessageOnGlobalChat);
-    }
-
-    
+    }   
 
     private void OnMessageOnGlobalChat(SocketIOEvent Obj)
     {
@@ -31,7 +29,6 @@ public class ChatManager : MonoBehaviour {
             chat.transform.SetParent(gameObject.transform, false);
             chatList.Add(listener, chat);
         }
-
         chatList[listener].GetComponent<ChatUiScript>().inputField = message;
 
         chatList[listener].GetComponent<ChatUiScript>().senderId = socket_id;
