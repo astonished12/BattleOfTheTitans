@@ -9,20 +9,28 @@
             y : 0,
             z : 0
         }
-        this.lastPosition ={
+        this.lastPosition = {
             x : _x,
             y : _y,
             z : _z
         }
+
+        this.speed = 5;
         //TO POSITION ON MOVE UPDATE        
         this.isOwner = isOwner;
         this.characterNumber = -99;
+        this.lastMoveTime = 0;
     };
 
-ControllerPlayer.prototype.updatePositions = function(data){
+ControllerPlayer.prototype.updateDestination = function(data){
     this.destination.x = data["x"];
     this.destination.y = data["y"];
     this.destination.z = data["z"];
+};
+ControllerPlayer.prototype.updateLastPosition = function(data){
+    this.lastPosition.x = data["x"];
+    this.lastPosition.y = data["y"];
+    this.lastPosition.z = data["z"];
 }
 
 module.exports = ControllerPlayer;

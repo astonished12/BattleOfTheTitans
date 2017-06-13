@@ -13,6 +13,7 @@ public class NetworkRegisterLogin : MonoBehaviour
     public static Dictionary<string,Room> RoomList = new Dictionary<string,Room>();
     public static int noCharacter;
     private static bool created = false;
+    public static string status;
     JSONParser myJsonParser = new JSONParser();
 
     public static bool registedSuccesfull = false;

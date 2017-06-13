@@ -348,15 +348,35 @@ var onSocketDisconnect = function(){
 }
 
 
+var epsilon = 0.15;
 var onMoveClient = function(data){
-    console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
-    mapingSocketRoom[this.id].PLAYERS[this.id].updatePositions(data["destination"]);
+   
+    mapingSocketRoom[this.id].PLAYERS[this.id].updateDestination(data["destination"]);
+
+    var elapsedTime = Date.now() - mapingSocketRoom[this.id].PLAYERS[this.id].lastMoveTime;
+    var posibleTravelLimit =  mapingSocketRoom[this.id].PLAYERS[this.id].speed * elapsedTime/1000;
+    var requstedDIstanceTraveled = lineDistance(mapingSocketRoom[this.id].PLAYERS[this.id].lastPosition,data.current);
+    //console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
+
+
+    console.log("travelLimit ",posibleTravelLimit,"requstedDis ",requstedDIstanceTraveled);
+
+    mapingSocketRoom[this.id].PLAYERS[this.id].lastMoveTime = Date.now();  
+    mapingSocketRoom[this.id].PLAYERS[this.id].updateLastPosition(data["current"]);
+
+    if(requstedDIstanceTraveled>posibleTravelLimit+epsilon){
+       io.to(mapingSocketRoom[this.id].name).emit("hacking",{socket_id:this.id});
+       console.log("Hacking");
+    }
+    else
+    {
     this.broadcast.to(mapingSocketRoom[this.id].name).emit("playerMove",{
         socket_id:this.id,
         x : data["destination"]["x"],
         y : data["destination"]["y"],
         z : data["destination"]["z"],
     });
+}
 };
 
 var onFollowClient = function(data){
@@ -449,6 +469,18 @@ var onNewMessageChat = function(data){
     })
 }
 
+function lineDistance(start,end){
+    var xs = 0;
+    var ys = 0;
+
+    xs = end.x - start.x;
+    xs *=xs;
+
+    ys = end.z - start.z;
+    ys *=ys;
+
+    return Math.sqrt(xs+ys);
+}
 /*setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    

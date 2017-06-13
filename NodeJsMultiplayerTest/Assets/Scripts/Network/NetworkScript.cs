@@ -5,6 +5,7 @@ using SocketIO;
 using System.Text.RegularExpressions;
 using System;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class NetworkScript : MonoBehaviour
 {
@@ -45,9 +46,25 @@ public class NetworkScript : MonoBehaviour
         SocketIO.On("minionFollowMinion", OnMinionFollowMinion);
         SocketIO.On("minionAttackMinion", OnMinionAttackMinion);
         SocketIO.On("towerAttack", OnTowerAttack);
+        SocketIO.On("hacking", OnHack);
     }
 
-    
+    private void OnHack(SocketIOEvent obj)
+    {
+        string socket_id = myJsonParser.ElementFromJsonToString(obj.data.GetField("socket_id").ToString())[1];
+        if(player.GetComponent<NetworkEntity>().Id == socket_id)
+        {
+            NetworkRegisterLogin.lastMatch = false;
+            NetworkRegisterLogin.status = "ihack";
+            SceneManager.LoadScene(5);
+        }
+        else
+        {
+            NetworkRegisterLogin.lastMatch = true;
+            NetworkRegisterLogin.status = "youhack";
+            SceneManager.LoadScene(5);
+        }
+    }
 
     void OnIdentify(SocketIOEvent Obj)
     {
