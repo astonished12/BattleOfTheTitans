@@ -141,7 +141,7 @@ public class NetworkScript : MonoBehaviour
         var followerOfPlaeryRequested = playerWhoDoRequest.GetComponent<Target>();
         followerOfPlaeryRequested.SetTargetTransform(target.transform);        
     }
-
+        
     private void OnFollowMinion(SocketIOEvent Obj)
     {
         string socket_id = myJsonParser.ElementFromJsonToString(Obj.data["socket_id"].ToString())[1];

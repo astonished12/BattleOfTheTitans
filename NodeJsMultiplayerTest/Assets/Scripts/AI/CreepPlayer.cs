@@ -39,20 +39,17 @@ public class CreepPlayer : MonoBehaviour {
                 float curDistance = GetDistanceBetweenPositions(enemy.transform.position, position);
                 if (curDistance < minDistance)
                 {
-
-                    if ((enemy.GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == 0 && enemy.GetComponent<FollowerMinion>().mustStop == 0) || ((GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == 0 && enemy.GetComponent<CreepAi>()==null)))
+                    if ((enemy.GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == 0 && enemy.GetComponent<FollowerMinion>().mustStop == 0) 
+                      || ((GetComponent<CreepAi>() && GetComponent<FollowerMinion>().mustStop == 0 && enemy.GetComponent<CreepAi>()==null)))
                         {
-                        //Debug.Log("DISTANTA DE URMARIRE  DINTRE " + gameObject.name + " si " + enemy.name + " ESTE " + curDistance);
                          GetComponent<FollowerMinion>().mustStop = 1;
                              if(enemy.GetComponent<CreepAi>())
                                 enemy.GetComponent<FollowerMinion>().mustStop = 1;
-                            //TO DO SEND TO SERVER AND FOLLOW THE REMOTE FROM THE OTHER CLIENT
                             GetComponent<NetworkCommunication>().SendMinionDataToFollow(GetComponent<NetworkEntity>().Id, enemy.GetComponent<NetworkEntity>().Id);
                             break;
                         }
                     }            
-        }
-     
+        }    
 
     }
 

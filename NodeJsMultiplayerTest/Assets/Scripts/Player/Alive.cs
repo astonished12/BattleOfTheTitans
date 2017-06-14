@@ -61,7 +61,11 @@ public class Alive : MonoBehaviour {
                     NetworkRegisterLogin.lastMatch = true;
                     Invoke("DestroyNexus", 1.0f);
                 }
-               
+                else
+                {
+                    Invoke("DestroyTower", 1.0f);
+                }
+
             }
             else if (GameObject.FindGameObjectWithTag("Player").GetComponent<NetworkEntity>().ownerFlag == false)
             {
@@ -77,14 +81,13 @@ public class Alive : MonoBehaviour {
                     Debug.Log("Defeat");
                     NetworkRegisterLogin.lastMatch = false;
                     Invoke("DestroyNexus", 1.0f);
-
+                }
+                else
+                {
+                    Invoke("DestroyTower", 1.0f);
                 }
             }
-            else
-            {
-                Invoke("DestroyTower", 1.0f);
-            }
-            
+             
 
         }
         else if(!isAlive && GetComponent<CreepAi>())
@@ -141,6 +144,7 @@ public class Alive : MonoBehaviour {
     }
     private void DestroyTower()
     {
+        Debug.Log("de ce nu se distruge");
         Destroy(gameObject);
     }
     private void DestroyNexus()

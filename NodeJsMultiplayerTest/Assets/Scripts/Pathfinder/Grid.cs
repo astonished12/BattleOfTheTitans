@@ -135,7 +135,6 @@ public class Grid : MonoBehaviour
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
-
         if (gridTable != null)
         {
             foreach (Node n in gridTable)

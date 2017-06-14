@@ -416,7 +416,6 @@ var onMinionFollowMinion = function(data){
 }
 var onMinionHasNoTarget = function(data){
     //console.log("Minionul "+data["idTarget"]+ " nu are inamici in jur") ;
-
     io.to(mapingSocketRoom[this.id].name).emit("minionHasNoTarget",{
         target_id:data["idTarget"]
     });
@@ -481,11 +480,11 @@ function lineDistance(start,end){
 
     return Math.sqrt(xs+ys);
 }
-/*setInterval(function(){
+setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
 
-},40);*/
+},40);
 
 
 

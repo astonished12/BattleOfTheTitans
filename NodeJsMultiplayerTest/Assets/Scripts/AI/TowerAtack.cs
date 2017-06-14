@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class TowerAtack : MonoBehaviour {
 
-
     public GameObject trackingObject;
     float trackingRange = 10f;
     float fieldOfView = 360;
@@ -42,12 +41,7 @@ public class TowerAtack : MonoBehaviour {
         {
             GetComponent<NetworkCommunication>().SendMinionsOrPlayerIdToServerForTowerAttacking(GetComponent<NetworkEntity>().Id, trackingObject.GetComponent<NetworkEntity>().Id);
         }
-
-
-    }
-   
-
-
+    } 
 }
 
 

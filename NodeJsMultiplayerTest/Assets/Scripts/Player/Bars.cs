@@ -15,7 +15,7 @@ public class Bars : MonoBehaviour
 
     void Update()
     {
-        transform.rotation = rotation;
+        transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.time * 20f);
         transform.position = transform.parent.position - position;
     }
 

@@ -50,7 +50,9 @@ public class NavagiateToPosition : MonoBehaviour
         StartCoroutine("FollowPath");
     }
     IEnumerator FollowPath(){
-        Vector3 currentWaypoint = path[0].worldPosition;
+        Vector3[] currentWaypoints = SimplifyPath(path);
+
+        Vector3 currentWaypoint = currentWaypoints[targetIndex];
         while (true)
         {
             if (transform.position == currentWaypoint)
@@ -64,7 +66,12 @@ public class NavagiateToPosition : MonoBehaviour
                 currentWaypoint = path[targetIndex].worldPosition;
                
             }
-            transform.rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
+            Vector3 rotateVector = currentWaypoint - transform.position;
+            if (rotateVector != Vector3.zero)
+            {
+                var rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
+                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * 10);
+            }
             transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime);
             yield return null;
         }
@@ -92,6 +99,22 @@ public class NavagiateToPosition : MonoBehaviour
             GetComponent<Target>().targetTransform = GetComponent<CreepAi>().final;
         }  
     }
-  
-    
+
+    Vector3[] SimplifyPath(List<Node> path)
+    {
+        List<Vector3> waypoints = new List<Vector3>();
+        Vector2 directionOld = Vector2.zero;
+
+        for (int i = 1; i < path.Count; i++)
+        {
+            Vector2 directionNew = new Vector2(path[i - 1].gridPosition.x - path[i].gridPosition.x, path[i - 1].gridPosition.y - path[i].gridPosition.y);
+            if (directionNew != directionOld)
+            {
+                waypoints.Add(path[i].worldPosition);
+            }
+            directionOld = directionNew;
+        }
+        return waypoints.ToArray();
+    }
+
 }
