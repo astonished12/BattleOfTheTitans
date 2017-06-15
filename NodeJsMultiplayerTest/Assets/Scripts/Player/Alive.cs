@@ -40,7 +40,10 @@ public class Alive : MonoBehaviour {
             animator.SetTrigger("dead");
             //CHECK IS ANOTHER PLAYER WHO KILL 
             if (owner && !owner.GetComponent<NetworkEntity>().isTower)
-              owner.GetComponent<Target>().targetTransform = null;
+            {
+                owner.GetComponent<Target>().targetTransform = null;
+
+            }
             Invoke("Respawn", respawnTime);
            
         }

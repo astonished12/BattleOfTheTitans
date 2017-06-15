@@ -13,11 +13,8 @@ public class Progress : MonoBehaviour {
 
     void OnGUI()
     {
-        GUI.contentColor = Color.red;
-        GUI.Box(new Rect(posOfHealthBar.x, posOfHealthBar.y, size.x, size.y), "K/D/A/M \n " + kills + '/'+ deaths + '/'+ assits+'/'+ minions + '\n');
         GUI.contentColor = Color.green;
-        GUI.Box(new Rect(posOfHealthBar.x, posOfHealthBar.y+size.y, size.x, size.y), "Health/Mana \n" + GameObject.FindGameObjectWithTag("Player").GetComponent<Alive>().curHealth+ '/' + GameObject.FindGameObjectWithTag("Player").GetComponent<Mana>().curMana + '\n');
-
+        GUI.Box(new Rect(posOfHealthBar.x, posOfHealthBar.y + size.y, size.x, size.y), "Health/Mana \n" + GameObject.FindGameObjectWithTag("Player").GetComponent<Alive>().curHealth + '/' + GameObject.FindGameObjectWithTag("Player").GetComponent<Mana>().curMana + '\n');
     }
 
 }

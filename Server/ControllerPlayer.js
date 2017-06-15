@@ -15,10 +15,7 @@
             z : _z
         }
 
-        this.speed = 5;
-        this.maxHp = 100;
-        this.currentHp = 100;
-        this.isAlive = true;
+        this.totalDamage = 0;
         //TO POSITION ON MOVE UPDATE        
         this.isOwner = isOwner;
         this.characterNumber = -99;

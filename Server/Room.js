@@ -38,5 +38,38 @@ Room.prototype.GenerateIdForMinions = function(){
     this.minionsId.push(shortid.generate());
     this.minionsId.push(shortid.generate());
 }
+Room.prototype.GetOponentName = function(){
+    var playerName;
+    for(var player in this.PLAYERS){
+            if(PLAYERS[player].isOwner===false){
+                playerName = PLAYERS[player].name;
+            }
+    }
+    return playerName;
+}
+Room.prototype.GetOwnerName = function(){
+    var playerName;
+    for(var player in this.PLAYERS){
+            if(PLAYERS[player].isOwner===true){
+                playerName = PLAYERS[player].name;
+            }
+    }
+    return playerName;
+}
 
+Room.prototype.CloseRoom = function(dbManager){
+        console.log(this);
+        var ownerName = this.GetOwnerName();
+        var oponentName = this.GetOponentName();
+       
+        dbManager.InserIntoUsers(this.PLAYERS[player].name,data["password"],data["email"], function(err) {
+            if(err)
+                console.log(err);
+            if(err==="duplicate")
+                socket.emit("usernameExist");
+            else
+                socket.emit("registerSuccesfull");
+        });
+    
+}
 module.exports = Room;

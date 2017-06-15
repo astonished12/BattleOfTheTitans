@@ -63,6 +63,7 @@ io.sockets.on('connection', function(socket){
     socket.on("searchFriend",onSearchFriend);
     socket.on("removeFriend",onRemoveFriend);
     socket.on("newMessageGlobalChat",onNewMessageGlobalChat);
+    socket.on("closeRoom",onCloseRoom);
 });
 
 var onRegister = function(data){
@@ -262,12 +263,15 @@ var onNewRoom = function(data){
 }
 
 var closeRoom = function(){
-    delete ROOMS[this.id];
-    delete mapingSocketRoom[this.id];
-    roomNo--;
-    this.broadcast.emit("closeRoom",{
-        socket_id : this.id,
-    });
+        if(ROOMS[this.id] && mapingSocketRoom[this.id]){
+        ROOMS[this.id].CloseRoom(dbM);
+        delete ROOMS[this.id];
+        delete mapingSocketRoom[this.id];
+        roomNo--;
+        this.broadcast.emit("closeRoom",{
+            socket_id : this.id,
+        });
+    }
 }
 
 var onJoinRoom = function(data){
@@ -433,6 +437,7 @@ var onMinionAttackMinion = function(data){
 var onClientAttack = function(data){
     console.log("Clientul "+this.id+" ataca "+data["idTarget"]);
 
+    mapingSocketRoom[this.id].PLAYERS[this.id].totalDamage += 10;
     io.to(mapingSocketRoom[this.id].name).emit("attackPlayer",{
         socket_id:this.id,
         target_id:data["idTarget"]
@@ -467,7 +472,9 @@ var onNewMessageChat = function(data){
         message:data["message"]
     })
 }
-
+var onCloseRoom = function(){
+    closeRoom();
+}
 function lineDistance(start,end){
     var xs = 0;
     var ys = 0;
@@ -480,11 +487,11 @@ function lineDistance(start,end){
 
     return Math.sqrt(xs+ys);
 }
-setInterval(function(){
+/*setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
 
-},40);
+},40);*/
 
 
 

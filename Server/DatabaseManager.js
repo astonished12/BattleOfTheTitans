@@ -141,6 +141,16 @@ var DatabaseManager = function(){
         });
     }
 
+    this.InsertIntoStatistics = function(_playerName, _oponentName, _checkOwner, _status, _totalDamage){
+        var newRowStatistics = { playerName: _playerName, opnentName : _oponentName, owner : _checkOwner, status: _status, totalDamage : _totalDamage };
+
+        self.connection.query('INSERT INTO statistics SET ?', newRowStatistics, function(err,res){
+            if(err) throw err;
+            succes = true;
+            console.log('Last insert ID:', res.insertId);
+        });
+    }
+
 }
 
 //Select distinct idFriend,username,isOnline from users join friends on users.idUser = friends.idFriend where users.idUser In (SELECT idFriend FROM users u natural join friends f where u.idUser = 5) and users.idUser = friends.idFriend ;
