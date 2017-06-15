@@ -42,38 +42,42 @@ public class NavagiateToPosition : MonoBehaviour
         target.SetTargetTransform(null);
       }   
     public void SetDestination(List<Node> _path){
-        targetSuccesfull = false;
-        GetComponent<Animator>().SetBool("atDestination", false);
+        targetSuccesfull = false;       
         path = _path;
         targetIndex = 0;
         StopCoroutine("FollowPath");
         StartCoroutine("FollowPath");
     }
-    IEnumerator FollowPath(){
+    IEnumerator FollowPath()
+    {
         Vector3[] currentWaypoints = SimplifyPath(path);
-
-        Vector3 currentWaypoint = currentWaypoints[targetIndex];
-        while (true)
+        if (targetIndex > 0 || targetIndex < currentWaypoints.Length)
         {
-            if (transform.position == currentWaypoint)
+            GetComponent<Animator>().SetBool("atDestination", false);
+            Vector3 currentWaypoint = currentWaypoints[targetIndex];
+            while (true)
             {
-                targetIndex++;
-                if (targetIndex >= path.Count - 1)
+                if (transform.position == currentWaypoint)
                 {
-                    targetSuccesfull = true;
-                    yield break;
+                    targetIndex++;
+                    if (targetIndex >= path.Count - 1)
+                    {
+                        targetSuccesfull = true;
+                        targetIndex = 0;
+                        yield break;
+                    }
+                    currentWaypoint = path[targetIndex].worldPosition;
+
                 }
-                currentWaypoint = path[targetIndex].worldPosition;
-               
+                Vector3 rotateVector = currentWaypoint - transform.position;
+                if (rotateVector != Vector3.zero)
+                {
+                    var rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
+                    transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * 10);
+                }
+                transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed * Time.deltaTime);
+                yield return null;
             }
-            Vector3 rotateVector = currentWaypoint - transform.position;
-            if (rotateVector != Vector3.zero)
-            {
-                var rotation = Quaternion.LookRotation(currentWaypoint - transform.position);
-                transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime * 10);
-            }
-            transform.position = Vector3.MoveTowards(transform.position, currentWaypoint, speed*Time.deltaTime);
-            yield return null;
         }
     }
 

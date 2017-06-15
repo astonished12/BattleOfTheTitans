@@ -1,7 +1,6 @@
 var shortid = require('shortid');
 
 var  Room = function (id,name, maxPlayers) {
-        //this.io = io;
         this.id = id;
         this.maxPlayers = maxPlayers;
         this.name = name;

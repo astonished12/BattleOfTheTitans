@@ -295,7 +295,7 @@ var onJoinRoom = function(data){
 }
 
 var onCharacterIdSelected = function(data){
-    console.log("Id character selected "+data["idCharacter"]);
+    //console.log("Id character selected "+data["idCharacter"]);
     mapingSocketRoom[this.id].PLAYERS[this.id].characterNumber = data["idCharacter"];
     mapingSocketRoom[this.id].confirmedCharacters += 1;
     if(mapingSocketRoom[this.id].confirmedCharacters == 2){
@@ -328,7 +328,7 @@ var onSocketDisconnect = function(){
             socket_id : this.id,
             name: mapingSocketRoom[this.id].PLAYERS[this.id].name
         });
-        console.log("Clinet id "+this.id+" disconnected.");
+        //console.log("Clinet id "+this.id+" disconnected.");
         delete mapingSocketRoom[this.id].PLAYERS[this.id]
         playerNo --;
     }
@@ -336,7 +336,7 @@ var onSocketDisconnect = function(){
     {
         if(ROOMS[this.id]) 
             delete ROOMS[this.id];
-        console.log("Clinet id "+this.id+" disconnected.");
+        //console.log("Clinet id "+this.id+" disconnected.");
     }
 
     if(globalPlayersLogged[this.id]){
@@ -348,7 +348,7 @@ var onSocketDisconnect = function(){
 }
 
 
-var epsilon = 0.15;
+var epsilon = 0.25;
 var onMoveClient = function(data){
    
     mapingSocketRoom[this.id].PLAYERS[this.id].updateDestination(data["destination"]);
@@ -359,14 +359,14 @@ var onMoveClient = function(data){
     //console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
 
 
-    console.log("travelLimit ",posibleTravelLimit,"requstedDis ",requstedDIstanceTraveled);
+    //console.log("travelLimit ",posibleTravelLimit,"requstedDis ",requstedDIstanceTraveled);
 
     mapingSocketRoom[this.id].PLAYERS[this.id].lastMoveTime = Date.now();  
     mapingSocketRoom[this.id].PLAYERS[this.id].updateLastPosition(data["current"]);
 
     if(requstedDIstanceTraveled>posibleTravelLimit+epsilon){
        io.to(mapingSocketRoom[this.id].name).emit("hacking",{socket_id:this.id});
-       console.log("Hacking");
+       //console.log("Hacking");
     }
     else
     {
@@ -380,7 +380,7 @@ var onMoveClient = function(data){
 };
 
 var onFollowClient = function(data){
-    console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
+    //console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
 
     this.broadcast.to(mapingSocketRoom[this.id].name).emit("followPlayer",{
         socket_id:this.id,
@@ -389,7 +389,7 @@ var onFollowClient = function(data){
 };
 
 var onFollowTower = function(data){
-    console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
+   // console.log("Clientul "+this.id+" urmareste pe "+data["idTarget"]);
 
     this.broadcast.to(mapingSocketRoom[this.id].name).emit("followTower",{
         socket_id:this.id,
@@ -398,7 +398,7 @@ var onFollowTower = function(data){
 };
 
 var onFollowMinion = function(data){
-    console.log("Clientul "+this.id+" urmareste pe minionul"+data["idTarget"]);
+    //console.log("Clientul "+this.id+" urmareste pe minionul"+data["idTarget"]);
 
     this.broadcast.to(mapingSocketRoom[this.id].name).emit("followMinion",{
         socket_id:this.id,
@@ -407,7 +407,7 @@ var onFollowMinion = function(data){
 };
 
 var onMinionFollowMinion = function(data){
-    console.log("Minionul "+data["idFollower"]+" urmareste pe "+data["idTarget"]);
+    //console.log("Minionul "+data["idFollower"]+" urmareste pe "+data["idTarget"]);
 
     io.to(mapingSocketRoom[this.id].name).emit("minionFollowMinion",{
         id_follower : data["idFollower"],
@@ -421,7 +421,7 @@ var onMinionHasNoTarget = function(data){
     });
 }
 var onMinionAttackMinion = function(data){
-    console.log("Minionul "+data["idAttacker"]+" ataca pe "+data["idTarget"]);
+    //console.log("Minionul "+data["idAttacker"]+" ataca pe "+data["idTarget"]);
 
     io.to(mapingSocketRoom[this.id].name).emit("minionAttackMinion",{
         id_attacker : data["idAttacker"],
@@ -431,7 +431,7 @@ var onMinionAttackMinion = function(data){
 
 
 var onClientAttack = function(data){
-    console.log("Clientul "+this.id+" ataca tureta "+data["idTarget"]);
+    console.log("Clientul "+this.id+" ataca "+data["idTarget"]);
 
     io.to(mapingSocketRoom[this.id].name).emit("attackPlayer",{
         socket_id:this.id,
@@ -449,7 +449,7 @@ var onTowerTarget = function(data){
 
 
 var OnKeyPressed = function(data){
-    console.log("Jucatorul " +this.id + " a apasat pe tasta "+data["key"]+" la pozitia "+JSON.stringify(data));
+    //console.log("Jucatorul " +this.id + " a apasat pe tasta "+data["key"]+" la pozitia "+JSON.stringify(data));
     io.to(mapingSocketRoom[this.id].name).emit("keyPressed",{
         user_id:this.id,
         key:data["key"],
@@ -460,7 +460,7 @@ var OnKeyPressed = function(data){
 };
 
 var onNewMessageChat = function(data){
-    console.log("Jucatorul "+this.id+" a scris "+data["message"]);
+    //console.log("Jucatorul "+this.id+" a scris "+data["message"]);
     io.to(mapingSocketRoom[this.id].name).emit("newMessage",{
         socket_id : this.id,
         name : globalPlayersLogged[this.id],

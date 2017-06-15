@@ -16,6 +16,9 @@
         }
 
         this.speed = 5;
+        this.maxHp = 100;
+        this.currentHp = 100;
+        this.isAlive = true;
         //TO POSITION ON MOVE UPDATE        
         this.isOwner = isOwner;
         this.characterNumber = -99;
