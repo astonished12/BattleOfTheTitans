@@ -41,8 +41,8 @@ Room.prototype.GenerateIdForMinions = function(){
 Room.prototype.GetOponentName = function(){
     var playerName;
     for(var player in this.PLAYERS){
-            if(PLAYERS[player].isOwner===false){
-                playerName = PLAYERS[player].name;
+            if(this.PLAYERS[player].isOwner==='false'){
+                playerName = this.PLAYERS[player].name;
             }
     }
     return playerName;
@@ -50,19 +50,31 @@ Room.prototype.GetOponentName = function(){
 Room.prototype.GetOwnerName = function(){
     var playerName;
     for(var player in this.PLAYERS){
-            if(PLAYERS[player].isOwner===true){
-                playerName = PLAYERS[player].name;
+            if(this.PLAYERS[player].isOwner==='true'){
+                playerName = this.PLAYERS[player].name;
             }
     }
     return playerName;
 }
 
+Room.prototype.CheckWin = function(name){
+    var result = false;
+     for(var player in this.PLAYERS){
+            if(this.PLAYERS[player].win === true){
+                result = true;
+            }
+    }
+    return result;
+}
+
 Room.prototype.CloseRoom = function(dbManager){
         console.log(this);
         var ownerName = this.GetOwnerName();
+        var statusOwner = this.CheckWin(ownerName);
         var oponentName = this.GetOponentName();
-       
-        dbManager.InserIntoUsers(this.PLAYERS[player].name,data["password"],data["email"], function(err) {
+        var statusOponent = this.CheckWin(ownerName);
+        console.log(ownerName+" "+oponentName+" "+statusOwner+" "+statusOponent);
+        /*dbManager.InserIntoUsers(ownerName, oponentName,true, function(err) {
             if(err)
                 console.log(err);
             if(err==="duplicate")
@@ -70,6 +82,6 @@ Room.prototype.CloseRoom = function(dbManager){
             else
                 socket.emit("registerSuccesfull");
         });
-    
+        */        
 }
 module.exports = Room;

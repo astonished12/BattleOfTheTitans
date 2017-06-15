@@ -273,7 +273,25 @@ var closeRoom = function(){
         });
     }
 }
+var closeRoomAfterMatch = function(result){    
+        if(ROOMS[this.id] && mapingSocketRoom[this.id]){
+            console.log("FIX AICI "+result);
+        if(result==="True"){
+            ROOMS[this.id].PLAYERS[this.id] = true;
+        }
+        if(result==="False"){
+            ROOMS[this.id].PLAYERS[this.id] = false;
+        }
 
+        ROOMS[this.id].CloseRoom(dbM);
+        delete ROOMS[this.id];
+        delete mapingSocketRoom[this.id];
+        roomNo--;
+        this.broadcast.emit("closeRoom",{
+            socket_id : this.id,
+        });
+    }
+}
 var onJoinRoom = function(data){
     if(ROOMS[data["idRoom"]].currentPlayers >= ROOMS[data["idRoom"]].maxPlayers)
     {
@@ -472,8 +490,9 @@ var onNewMessageChat = function(data){
         message:data["message"]
     })
 }
-var onCloseRoom = function(){
-    closeRoom();
+var onCloseRoom = function(data){          
+    closeRoomAfterMatch(data.result);    
+    
 }
 function lineDistance(start,end){
     var xs = 0;

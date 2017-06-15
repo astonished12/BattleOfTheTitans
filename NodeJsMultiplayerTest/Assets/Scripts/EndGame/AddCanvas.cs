@@ -44,7 +44,10 @@ public class AddCanvas : MonoBehaviour {
                 break;
 
         }
-        SocketIO.Emit("closeRoom");
+
+        JSONParser myJsonParser = new JSONParser();
+
+        SocketIO.Emit("closeRoom", new JSONObject(myJsonParser.StatusGame(NetworkRegisterLogin.lastMatch.ToString())));
     }
 
     public void MoveToMenu()

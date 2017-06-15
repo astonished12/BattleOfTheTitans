@@ -67,6 +67,9 @@ public class JSONParser {
     public string FriendNameToJson(string username)
     {
         return string.Format(@"{{""friendName"":""{0}""}}", username);
-
+    }
+    public string StatusGame(string result)
+    {
+        return string.Format(@"{{""result"":""{0}""}}", result);
     }
 }
