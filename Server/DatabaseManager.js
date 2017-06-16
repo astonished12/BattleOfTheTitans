@@ -141,13 +141,30 @@ var DatabaseManager = function(){
         });
     }
 
-    this.InsertIntoStatistics = function(_playerName, _oponentName, _checkOwner, _status, _totalDamage,cb){
-        var newRowStatistics = { playerName: _playerName, oponentName : _oponentName, owner : _checkOwner, status: _status, totalDamage : _totalDamage };
+    this.InsertIntoStatistics = function(_playerId, _oponentID, _checkOwner, _status, _totalDamage,cb){
+        var newRowStatistics = { idPlayer: _playerId, oponentId : _oponentID, owner : _checkOwner, status: _status, totalDamage : _totalDamage };
 
         self.connection.query('INSERT INTO statistics SET ?', newRowStatistics, function(err){
                 if(err) {
                 cb(err);
                 throw err;
+            }
+        });
+    }
+
+     this.GetListMatchesById = function(myId, cb){
+        this.connection.query('SELECT * FROM statistics where idPlayer = ?',myId, function(err, rows, fields) {
+            if (err)
+                cb(err);
+
+            console.log('The solution is: ', rows);
+            if(rows.length==0)
+            {
+                cb("noMatches")
+            }
+            else
+            {                
+                cb("Matches",rows);
             }
         });
     }

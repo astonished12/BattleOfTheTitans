@@ -64,6 +64,7 @@ io.sockets.on('connection', function(socket){
     socket.on("removeFriend",onRemoveFriend);
     socket.on("newMessageGlobalChat",onNewMessageGlobalChat);
     socket.on("closeRoomEnd",closeRoomAfterMatch);
+    socket.on("getMyMatches",onGetMyMatches);
 });
 
 var onRegister = function(data){
@@ -264,7 +265,6 @@ var onNewRoom = function(data){
 
 var closeRoom = function(){
         if(ROOMS[this.id] && mapingSocketRoom[this.id]){
-        ROOMS[this.id].CloseRoom(dbM);
         delete ROOMS[this.id];
         delete mapingSocketRoom[this.id];
         roomNo--;
@@ -283,8 +283,8 @@ var closeRoomAfterMatch = function(data){
             ROOMS[this.id].PLAYERS[this.id].win = false;
         }
 
-        ROOMS[this.id].CloseRoom(dbM);
-        
+        ROOMS[this.id].CloseRoom(dbM, mapNameInGameIdDatabase);
+
         delete ROOMS[this.id];
         delete mapingSocketRoom[this.id];
         roomNo--;
@@ -504,6 +504,24 @@ function lineDistance(start,end){
     ys *=ys;
 
     return Math.sqrt(xs+ys);
+}
+
+var onGetMyMatches = function(data){
+    var id = mapNameInGameIdDatabase[data["message"]];
+    var socket = this;
+    dbM.GetListMatchesById(id, function(status,listOfMatches){
+        if(status=="noMatches"){
+            console.log("No mathces for "+id);
+        }
+        if(status=="Matches"){                      
+            console.log("Lista meciurilor este :"+ listOfMatches);
+        }
+
+        socket.emit("listMatches",{            
+            matches : listOfMatches
+        });
+
+    });
 }
 /*setInterval(function(){
     for(var roomId in mapingSocketRoom)

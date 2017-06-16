@@ -77,21 +77,23 @@ Room.prototype.GetTotalDamageByName = function(_name){
     return total;
 }
 
-Room.prototype.CloseRoom = function(dbManager){
+Room.prototype.CloseRoom = function(dbManager, mapNameIdDatabase){
         console.log(this);
         var ownerName = this.GetOwnerName();
+        var ownerId = mapNameIdDatabase[ownerName];
         var statusOwner = this.CheckWin(ownerName);
         var totalDamageOwner = this.GetTotalDamageByName(ownerName);
         var oponentName = this.GetOponentName();
+        var oponentId = mapNameIdDatabase[oponentName];
         var statusOponent = this.CheckWin(oponentName);
         var oponenetDamage = this.GetTotalDamageByName(oponenetDamage);
-        console.log(ownerName+" "+oponentName+" "+statusOwner+" "+statusOponent);
-        dbManager.InsertIntoStatistics(ownerName, oponentName,true,statusOwner, totalDamageOwner,function(err) {
+        //console.log(ownerId+" "+oponentId+" "+statusOwner+" "+statusOponent);
+        dbManager.InsertIntoStatistics(ownerId, oponentId,true,statusOwner, totalDamageOwner,function(err) {
             if(err)
                 console.log(err);
             
         });
-        dbManager.InsertIntoStatistics(oponentName, ownerName,false,statusOponent,oponenetDamage, function(err) {
+        dbManager.InsertIntoStatistics(oponentId, ownerId,false,statusOponent,oponenetDamage, function(err) {
             if(err)
                 console.log(err);
             
