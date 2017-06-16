@@ -141,13 +141,14 @@ var DatabaseManager = function(){
         });
     }
 
-    this.InsertIntoStatistics = function(_playerName, _oponentName, _checkOwner, _status, _totalDamage){
-        var newRowStatistics = { playerName: _playerName, opnentName : _oponentName, owner : _checkOwner, status: _status, totalDamage : _totalDamage };
+    this.InsertIntoStatistics = function(_playerName, _oponentName, _checkOwner, _status, _totalDamage,cb){
+        var newRowStatistics = { playerName: _playerName, oponentName : _oponentName, owner : _checkOwner, status: _status, totalDamage : _totalDamage };
 
-        self.connection.query('INSERT INTO statistics SET ?', newRowStatistics, function(err,res){
-            if(err) throw err;
-            succes = true;
-            console.log('Last insert ID:', res.insertId);
+        self.connection.query('INSERT INTO statistics SET ?', newRowStatistics, function(err){
+                if(err) {
+                cb(err);
+                throw err;
+            }
         });
     }
 

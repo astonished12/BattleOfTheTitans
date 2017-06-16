@@ -57,31 +57,45 @@ Room.prototype.GetOwnerName = function(){
     return playerName;
 }
 
-Room.prototype.CheckWin = function(name){
+Room.prototype.CheckWin = function(_name){
     var result = false;
      for(var player in this.PLAYERS){
-            if(this.PLAYERS[player].win === true){
+            if(this.PLAYERS[player].win === true && this.PLAYERS[player].name === _name){
                 result = true;
             }
     }
     return result;
 }
 
+Room.prototype.GetTotalDamageByName = function(_name){
+ var total = 0;
+     for(var player in this.PLAYERS){
+            if(this.PLAYERS[player].name === _name){
+                total = this.PLAYERS[player].totalDamage;
+            }
+    }
+    return total;
+}
+
 Room.prototype.CloseRoom = function(dbManager){
         console.log(this);
         var ownerName = this.GetOwnerName();
         var statusOwner = this.CheckWin(ownerName);
+        var totalDamageOwner = this.GetTotalDamageByName(ownerName);
         var oponentName = this.GetOponentName();
-        var statusOponent = this.CheckWin(ownerName);
+        var statusOponent = this.CheckWin(oponentName);
+        var oponenetDamage = this.GetTotalDamageByName(oponenetDamage);
         console.log(ownerName+" "+oponentName+" "+statusOwner+" "+statusOponent);
-        /*dbManager.InserIntoUsers(ownerName, oponentName,true, function(err) {
+        dbManager.InsertIntoStatistics(ownerName, oponentName,true,statusOwner, totalDamageOwner,function(err) {
             if(err)
                 console.log(err);
-            if(err==="duplicate")
-                socket.emit("usernameExist");
-            else
-                socket.emit("registerSuccesfull");
+            
         });
-        */        
+        dbManager.InsertIntoStatistics(oponentName, ownerName,false,statusOponent,oponenetDamage, function(err) {
+            if(err)
+                console.log(err);
+            
+        });
+               
 }
 module.exports = Room;

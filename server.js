@@ -63,7 +63,7 @@ io.sockets.on('connection', function(socket){
     socket.on("searchFriend",onSearchFriend);
     socket.on("removeFriend",onRemoveFriend);
     socket.on("newMessageGlobalChat",onNewMessageGlobalChat);
-    socket.on("closeRoom",onCloseRoom);
+    socket.on("closeRoomEnd",closeRoomAfterMatch);
 });
 
 var onRegister = function(data){
@@ -273,17 +273,18 @@ var closeRoom = function(){
         });
     }
 }
-var closeRoomAfterMatch = function(result){    
+var closeRoomAfterMatch = function(data){    
         if(ROOMS[this.id] && mapingSocketRoom[this.id]){
-            console.log("FIX AICI "+result);
-        if(result==="True"){
-            ROOMS[this.id].PLAYERS[this.id] = true;
+            console.log("FIX AICI "+data.result);
+        if(data.result==="True"){
+            ROOMS[this.id].PLAYERS[this.id].win = true;
         }
-        if(result==="False"){
-            ROOMS[this.id].PLAYERS[this.id] = false;
+        if(data.result==="False"){
+            ROOMS[this.id].PLAYERS[this.id].win = false;
         }
 
         ROOMS[this.id].CloseRoom(dbM);
+        
         delete ROOMS[this.id];
         delete mapingSocketRoom[this.id];
         roomNo--;
@@ -490,10 +491,8 @@ var onNewMessageChat = function(data){
         message:data["message"]
     })
 }
-var onCloseRoom = function(data){          
-    closeRoomAfterMatch(data.result);    
-    
-}
+
+
 function lineDistance(start,end){
     var xs = 0;
     var ys = 0;
