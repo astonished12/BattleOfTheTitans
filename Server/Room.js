@@ -88,12 +88,12 @@ Room.prototype.CloseRoom = function(dbManager, mapNameIdDatabase){
         var statusOponent = this.CheckWin(oponentName);
         var oponenetDamage = this.GetTotalDamageByName(oponenetDamage);
         //console.log(ownerId+" "+oponentId+" "+statusOwner+" "+statusOponent);
-        dbManager.InsertIntoStatistics(ownerId, oponentId,true,statusOwner, totalDamageOwner,function(err) {
+        dbManager.InsertIntoStatistics(ownerId, ownerName, oponentId, oponentName, true,statusOwner, totalDamageOwner,function(err) {
             if(err)
                 console.log(err);
             
         });
-        dbManager.InsertIntoStatistics(oponentId, ownerId,false,statusOponent,oponenetDamage, function(err) {
+        dbManager.InsertIntoStatistics(oponentId, oponentName, ownerId, ownerName, false,statusOponent,oponenetDamage, function(err) {
             if(err)
                 console.log(err);
             

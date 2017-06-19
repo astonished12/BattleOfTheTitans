@@ -523,11 +523,11 @@ var onGetMyMatches = function(data){
 
     });
 }
-/*setInterval(function(){
+setInterval(function(){
     for(var roomId in mapingSocketRoom)
         mapingSocketRoom[roomId].SpawnMinions(io);    
 
-},40);*/
+},40);
 
 
 
