@@ -36,7 +36,7 @@ public class HistoryMatch : MonoBehaviour {
             string totalDmg = matches[i].GetField("totalDamage").ToString().Replace("\"","");
 
             GameObject newMatch = Instantiate(matchHistoryPrefab);
-            newMatch.name = "Match " + i+" (click to view stats)";
+            newMatch.transform.FindChild("Text").GetComponent<Text>().text = "Match " + i+" (click to view stats)";
             newMatch.transform.SetParent(contentParent.transform, false);
             newMatch.GetComponent<Match>().playerName = playerName;
             newMatch.GetComponent<Match>().oponentName = oponentName;

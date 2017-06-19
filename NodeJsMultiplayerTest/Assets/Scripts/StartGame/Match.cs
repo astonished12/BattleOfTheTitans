@@ -16,6 +16,29 @@ public class Match : MonoBehaviour {
 
         var messageBox = Helpers.BringMessageBox();
         messageBox.transform.position = GameObject.FindGameObjectWithTag("MainCamera").transform.position+new Vector3(0f,0f,20f);
-        messageBox.SetMessage(string.Format("Your name {0}\n Oponent name {1}" , playerName,oponentName));
+        messageBox.SetMessage(string.Format("You:{0}\n Oponent:{1} \n Owner:{2} \n Status:{3} \n TotalDmg:{4} \n" , playerName,oponentName, CheckOwner(owner), CheckVictory(status), totalDamage));
     }
-}
+    public string CheckOwner(string status)
+    {
+        if (status=="1")
+        {
+            return "True";
+        }
+        else
+        {
+            return "False";
+        }
+    }
+    public string CheckVictory(string status)
+    {
+        if (status=="1")
+        {
+            return "Victory";
+        }
+        else
+        {
+            return "Lose";
+        }
+    }
+}   
+

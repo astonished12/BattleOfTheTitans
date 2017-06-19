@@ -286,6 +286,7 @@ var closeRoomAfterMatch = function(data){
         ROOMS[this.id].CloseRoom(dbM, mapNameInGameIdDatabase);
 
         delete ROOMS[this.id];
+        console.log("STERG CAMERA "+ROOMS[this.id]);
         delete mapingSocketRoom[this.id];
         roomNo--;
         this.broadcast.emit("closeRoom",{
@@ -524,8 +525,8 @@ var onGetMyMatches = function(data){
     });
 }
 setInterval(function(){
-    for(var roomId in mapingSocketRoom)
-        mapingSocketRoom[roomId].SpawnMinions(io);    
+    for(var roomId in ROOMS)
+        ROOMS[roomId].SpawnMinions(io);    
 
 },40);
 
