@@ -17,6 +17,7 @@
 
         this.totalDamage = 0;
         this.win = false;
+        this.speed = 5;
         //TO POSITION ON MOVE UPDATE        
         this.isOwner = isOwner;
         this.characterNumber = -99;

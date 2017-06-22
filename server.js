@@ -380,11 +380,7 @@ var onMoveClient = function(data){
     var elapsedTime = Date.now() - mapingSocketRoom[this.id].PLAYERS[this.id].lastMoveTime;
     var posibleTravelLimit =  mapingSocketRoom[this.id].PLAYERS[this.id].speed * elapsedTime/1000;
     var requstedDIstanceTraveled = lineDistance(mapingSocketRoom[this.id].PLAYERS[this.id].lastPosition,data.current);
-    //console.log(mapingSocketRoom[this.id].PLAYERS[this.id].id+" is moving to "+JSON.stringify(data));
-
-
-    //console.log("travelLimit ",posibleTravelLimit,"requstedDis ",requstedDIstanceTraveled);
-
+    
     mapingSocketRoom[this.id].PLAYERS[this.id].lastMoveTime = Date.now();  
     mapingSocketRoom[this.id].PLAYERS[this.id].updateLastPosition(data["current"]);
 
