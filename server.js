@@ -209,7 +209,7 @@ var onNewMessageGlobalChat = function(data){
         });
 }
 var onNewRoom = function(data){
-    var roomName = "Room "+roomNo;
+    var roomName = globalPlayersLogged[this.id];
     roomNo++;
 
     var room = new Room(this.id,roomName,2); 
